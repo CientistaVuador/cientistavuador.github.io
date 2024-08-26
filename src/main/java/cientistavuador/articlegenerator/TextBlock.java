@@ -76,7 +76,7 @@ public class TextBlock {
                     if (currentBlockName != null && !name.equals("end")) {
                         throw new RuntimeException("Unclosed block at line " + currentLine);
                     }
-                    
+
                     if (name.equals("begin")) {
                         if (argument == null) {
                             throw new RuntimeException("Block without name at line " + currentLine);

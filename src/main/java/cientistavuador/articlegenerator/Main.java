@@ -27,9 +27,10 @@
 package cientistavuador.articlegenerator;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -37,16 +38,48 @@ import java.util.List;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
+    private static void delete(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return;
+        }
+        
+        if (Files.isDirectory(path)) {
+            for (Path other:Files.list(path).toList()) {
+                delete(other);
+            }
+        }
+        Files.delete(path);
+        System.out.println("Deleted "+path.toString());
+    }
+    
     public static void main(String[] args) throws IOException {
-        String text = Files.readString(Paths.get("rawarticles", "test.txt"));
-        List<TextBlock> blocks = TextBlock.parse(text);
-        for (TextBlock e:blocks) {
-            System.out.println(e.getName());
-            System.out.println(e.getArgument());
-            System.out.println("----");
+        Path articlesFolder = Path.of("articles");
+        delete(articlesFolder);
+        Files.createDirectories(articlesFolder);
+        
+        Path rawArticlesFolder = Path.of("rawarticles");
+        for (Path articleFile:Files.list(rawArticlesFolder).toList()) {
+            if (!Files.isRegularFile(articleFile)) {
+                continue;
+            }
+            if (!articleFile.toString().toLowerCase().endsWith(".txt")) {
+                continue;
+            }
+            Path outputHTML = articlesFolder.resolve(
+                    articleFile.getFileName().toString().split(Pattern.quote("."))[0]+".html"
+            );
+            Files.writeString(outputHTML,
+                    HTMLGenerator.generate(
+                            TextBlock.parse(
+                                    Files.readString(
+                                            articleFile,
+                                            StandardCharsets.UTF_8
+                                    )
+                            )
+                    ),
+                    StandardCharsets.UTF_8
+            );
+            System.out.println("Generated "+outputHTML.getFileName()+" from "+articleFile.getFileName());
         }
     }
     
