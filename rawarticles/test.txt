@@ -18,12 +18,12 @@ Suspendisse id arcu et sapien cursus mattis vel ut dolor.
 #SUBSECTION Fringilla at semper vitae, viverra sed justo.
 
 #BEGIN TEXT
-Maecenas sit amet massa sit amet dui hendrerit varius. Sed viverra enim
-vitae consectetur finibus. Morbi condimentum hendrerit sapien vitae volutpat.
-Pellentesque iaculis tempus metus id ornare. Donec vehicula semper nisi vel ultricies.
-Aliquam ac sodales libero, a viverra sem. Integer vestibulum elit a arcu molestie,
-vitae fermentum justo mattis. Etiam gravida, nisi at commodo semper, turpis diam luctus odio,
-at ultricies tortor arcu vel augue.
+ Maecenas sit amet massa sit amet dui hendrerit varius. Sed viverra enim
+ vitae consectetur finibus. Morbi condimentum hendrerit sapien vitae volutpat.
+ Pellentesque iaculis tempus metus id ornare. Donec vehicula semper nisi vel ultricies.
+ Aliquam ac sodales libero, a viverra sem. Integer vestibulum elit a arcu molestie,
+ vitae fermentum justo mattis. Etiam gravida, nisi at commodo semper, turpis diam luctus odio,
+ at ultricies tortor arcu vel augue.
 #END
 
 #SECTION Phasellus rhoncus sed nunc non

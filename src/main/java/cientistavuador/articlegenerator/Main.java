@@ -26,6 +26,11 @@
  */
 package cientistavuador.articlegenerator;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 /**
  *
  * @author Cien
@@ -35,8 +40,14 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) throws IOException {
+        String text = Files.readString(Paths.get("rawarticles", "test.txt"));
+        List<TextBlock> blocks = TextBlock.parse(text);
+        for (TextBlock e:blocks) {
+            System.out.println(e.getName());
+            System.out.println(e.getArgument());
+            System.out.println("----");
+        }
     }
     
 }
