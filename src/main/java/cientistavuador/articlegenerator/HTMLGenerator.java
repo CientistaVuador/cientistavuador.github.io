@@ -69,7 +69,7 @@ public class HTMLGenerator {
         StringBuilder b = new StringBuilder();
 
         b.append("<head>\n");
-        b.append(writeLink("stylesheet", "resources/style.css").indent(4));
+        b.append(writeLink("stylesheet", "../resources/style.css").indent(4));
         b.append("</head>");
 
         return b.toString();
