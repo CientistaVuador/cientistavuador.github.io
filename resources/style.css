@@ -40,12 +40,15 @@ header {
 .articleBody {
     max-width: 800px;
     margin: 0 auto;
+    text-align: justify;
+    text-justify: inter-word;
 }
 .index {
     white-space: pre;
     margin-bottom: 30px;
     margin-top: 30px;
     font-size: 75%;
+    line-height: 20px;
 }
 a:link {
     color: #a9b7c6;
@@ -60,7 +63,7 @@ h2 {
     font-size: 200%;
 }
 h3 {
-    font-size: 100%;
+    font-size: 110%;
 }
 .text {
     font-weight: 300;
@@ -72,6 +75,7 @@ h3 {
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
+    padding-right: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
     color: #e5ffbf;
@@ -85,6 +89,7 @@ h3 {
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
+    padding-right: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
     color: #fffccf;
@@ -98,6 +103,7 @@ h3 {
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
+    padding-right: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
     color: #ffdada;
@@ -112,6 +118,7 @@ h3 {
     box-shadow: 0px 0px 5px black;
     padding: 1px;
     padding-left: 15px;
+    padding-right: 15px;
     margin-bottom: 10px;
     margin-top: 10px;
     text-shadow: 0px 0px 2px #000000;

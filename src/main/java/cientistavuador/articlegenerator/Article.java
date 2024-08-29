@@ -136,17 +136,12 @@ public class Article {
         }
     }
 
-    public static String escapeHTML(String text, boolean escapeLineBreaks) {
+    public static String escapeHTML(String text) {
         StringBuilder b = new StringBuilder();
 
         for (int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
             switch (unicode) {
-                case '\n' -> {
-                    if (escapeLineBreaks) {
-                        b.append("<br/>");
-                    }
-                }
                 case '&' -> {
                     b.append("&amp;");
                     continue;
@@ -173,11 +168,7 @@ public class Article {
 
         return b.toString();
     }
-
-    public static String escapeHTML(String text) {
-        return escapeHTML(text, true);
-    }
-
+    
     public static enum ResourceType {
         TEXT, IMAGE, CODE, FINE, WARNING, SEVERE;
     }
@@ -241,7 +232,7 @@ public class Article {
 
             b.append("<div class=\"").append(clazz).append("\">\n");
             b.append("<").append(tag).append(">\n");
-            b.append(escapeHTML(getResource(), !this.type.equals(ResourceType.CODE)));
+            b.append(escapeHTML(getResource()));
             b.append("\n</").append(tag).append(">\n");
             b.append("</div>");
 
