@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -127,14 +129,16 @@ public class Article {
         }
     }
     
-    public static String escapeHTML(String text) {
+    public static String escapeHTML(String text, boolean escapeLineBreaks) {
         StringBuilder b = new StringBuilder();
         
         for (int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
             switch (unicode) {
                 case '\n' -> {
-                    b.append("<br/>");
+                    if (escapeLineBreaks) {
+                        b.append("<br/>");
+                    }
                 }
                 case '&' -> {
                     b.append("&amp;");
@@ -156,6 +160,55 @@ public class Article {
                     b.append("&#39;");
                     continue;
                 }
+            }
+            b.appendCodePoint(unicode);
+        }
+        
+        return b.toString();
+    }
+    
+    public static String escapeHTML(String text) {
+        return escapeHTML(text, true);
+    }
+    
+    public static String generateHTMLIndent(int n) {
+        return "\u0000".repeat(n);
+    }
+    
+    public static String indentHTML(String text, int n) {
+        if (text.isEmpty()) {
+            return text;
+        }
+        String indent = generateHTMLIndent(n);
+        return text.lines().map(s -> indent + s).collect(Collectors.joining("\n", "", "\n"));
+    }
+    
+    public static String parseHTMLIndent(String text) {
+        StringBuilder b = new StringBuilder();
+        
+        String prefix = "<!--";
+        String suffix = "-->";
+        int size = prefix.length() + suffix.length();
+        
+        boolean start = false;
+        int spaces = 0;
+        for (int i = 0; i < text.length(); i++) {
+            int unicode = text.codePointAt(i);
+            if (unicode == '\u0000') {
+                if (!start) {
+                    start = true;
+                    spaces = -size;
+                    b.append(prefix);
+                }
+                if (spaces >= 0) {
+                    b.append(' ');
+                }
+                spaces++;
+                continue;
+            }
+            if (start) {
+                b.append(suffix);
+                start = false;
             }
             b.appendCodePoint(unicode);
         }
@@ -200,7 +253,7 @@ public class Article {
             
             String tag = "p";
             if (this.type.equals(ResourceType.CODE)) {
-                tag = "code";
+                tag = "pre";
             }
             
             String clazz = "text";
@@ -223,7 +276,7 @@ public class Article {
                 b.append(" class=\"").append(clazz).append("\"");
             }
             b.append(">\n");
-            b.append(escapeHTML(getResource()));
+            b.append(escapeHTML(getResource(), !this.type.equals(ResourceType.CODE)));
             b.append("\n</").append(tag).append(">");
             
             return b.toString();
@@ -273,12 +326,12 @@ public class Article {
             
             String tag = "h" + (2 + depth);
             b.append("<section>\n");
-            b.append(" ".repeat(4)).append("<").append(tag).append(">").append(escapeHTML(getName())).append("</").append(tag).append(">\n");
+            b.append(generateHTMLIndent(4)).append("<").append(tag).append(">").append(escapeHTML(getName())).append("</").append(tag).append(">\n");
             for (Resource r:getResources()) {
-                b.append(r.toHTML().indent(4));
+                b.append(indentHTML(r.toHTML(), 4));
             }
             for (Section s:getChildren()) {
-                b.append(s.toHTML(depth + 1).indent(4));
+                b.append(indentHTML(s.toHTML(depth + 1), 4));
             }
             b.append("</section>");
             
@@ -333,19 +386,20 @@ public class Article {
         b.append("Date: ").append(getDate()).append("\n");
         b.append("-->\n");
         b.append("<html>\n");
-        b.append(writeHead().indent(4));
-        b.append(writeBody().indent(4));
+        b.append(indentHTML(writeHead(), 4));
+        b.append(indentHTML(writeBody(), 4));
         b.append("</html>");
         
-        return b.toString();
+        return parseHTMLIndent(b.toString());
     }
     
     private String writeHead() {
         StringBuilder b = new StringBuilder();
         
+        String indent = generateHTMLIndent(4);
         b.append("<head>\n");
-        b.append(" ".repeat(4)).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
-        b.append(" ".repeat(4)).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append(indent).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
+        b.append(indent).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append("</head>");
         
         return b.toString();
@@ -354,10 +408,11 @@ public class Article {
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
         
+        String indent = generateHTMLIndent(4);
         b.append("<header>\n");
-        b.append(" ".repeat(4)).append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append(" ".repeat(4)).append("<h4>").append(getId()).append("</h4>\n");
-        b.append(" ".repeat(4)).append("<h4>").append(getDate()).append("</h4>\n");
+        b.append(indent).append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
+        b.append(indent).append("<h4>").append(getId()).append("</h4>\n");
+        b.append(indent).append("<h4>").append(getDate()).append("</h4>\n");
         b.append("</header>");
         
         return b.toString();
@@ -367,9 +422,9 @@ public class Article {
         StringBuilder b = new StringBuilder();
         
         b.append("<body>\n");
-        b.append(writeHeader().indent(4));
+        b.append(indentHTML(writeHeader(), 4));
         for (Section sec:getSections()) {
-            b.append(sec.toHTML().indent(4));
+            b.append(indentHTML(sec.toHTML(), 4));
         }
         b.append("</body>");
         
