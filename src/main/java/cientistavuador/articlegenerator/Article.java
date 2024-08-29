@@ -171,51 +171,6 @@ public class Article {
         return escapeHTML(text, true);
     }
     
-    public static String generateHTMLIndent(int n) {
-        return "\u0000".repeat(n);
-    }
-    
-    public static String indentHTML(String text, int n) {
-        if (text.isEmpty()) {
-            return text;
-        }
-        String indent = generateHTMLIndent(n);
-        return text.lines().map(s -> indent + s).collect(Collectors.joining("\n", "", "\n"));
-    }
-    
-    public static String parseHTMLIndent(String text) {
-        StringBuilder b = new StringBuilder();
-        
-        String prefix = "<!--";
-        String suffix = "-->";
-        int size = prefix.length() + suffix.length();
-        
-        boolean start = false;
-        int spaces = 0;
-        for (int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i);
-            if (unicode == '\u0000') {
-                if (!start) {
-                    start = true;
-                    spaces = -size;
-                    b.append(prefix);
-                }
-                if (spaces >= 0) {
-                    b.append(' ');
-                }
-                spaces++;
-                continue;
-            }
-            if (start) {
-                b.append(suffix);
-                start = false;
-            }
-            b.appendCodePoint(unicode);
-        }
-        
-        return b.toString();
-    }
-    
     public static enum ResourceType {
         TEXT, IMAGE, CODE, FINE, WARNING, SEVERE;
     }
@@ -258,6 +213,12 @@ public class Article {
             
             String clazz = "text";
             switch (getType()) {
+                case IMAGE -> {
+                    clazz = "image";
+                }
+                case CODE -> {
+                    clazz = "code";
+                }
                 case FINE -> {
                     clazz = "fine";
                 }
@@ -271,13 +232,11 @@ public class Article {
             
             StringBuilder b = new StringBuilder();
             
-            b.append("<").append(tag);
-            if (!getType().equals(ResourceType.CODE)) {
-                b.append(" class=\"").append(clazz).append("\"");
-            }
-            b.append(">\n");
+            b.append("<div class=\"").append(clazz).append("\">\n");
+            b.append("<").append(tag).append(">\n");
             b.append(escapeHTML(getResource(), !this.type.equals(ResourceType.CODE)));
-            b.append("\n</").append(tag).append(">");
+            b.append("\n</").append(tag).append(">\n");
+            b.append("</div>");
             
             return b.toString();
         }
@@ -326,12 +285,12 @@ public class Article {
             
             String tag = "h" + (2 + depth);
             b.append("<section>\n");
-            b.append(generateHTMLIndent(4)).append("<").append(tag).append(">").append(escapeHTML(getName())).append("</").append(tag).append(">\n");
+            b.append("<").append(tag).append(">").append(escapeHTML(getName())).append("</").append(tag).append(">\n");
             for (Resource r:getResources()) {
-                b.append(indentHTML(r.toHTML(), 4));
+                b.append(r.toHTML()).append("\n");
             }
             for (Section s:getChildren()) {
-                b.append(indentHTML(s.toHTML(depth + 1), 4));
+                b.append(s.toHTML(depth + 1)).append("\n");
             }
             b.append("</section>");
             
@@ -386,20 +345,19 @@ public class Article {
         b.append("Date: ").append(getDate()).append("\n");
         b.append("-->\n");
         b.append("<html>\n");
-        b.append(indentHTML(writeHead(), 4));
-        b.append(indentHTML(writeBody(), 4));
+        b.append(writeHead()).append("\n");
+        b.append(writeBody()).append("\n");
         b.append("</html>");
         
-        return parseHTMLIndent(b.toString());
+        return b.toString();
     }
     
     private String writeHead() {
         StringBuilder b = new StringBuilder();
         
-        String indent = generateHTMLIndent(4);
         b.append("<head>\n");
-        b.append(indent).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
-        b.append(indent).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
+        b.append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append("</head>");
         
         return b.toString();
@@ -408,11 +366,10 @@ public class Article {
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
         
-        String indent = generateHTMLIndent(4);
         b.append("<header>\n");
-        b.append(indent).append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append(indent).append("<h4>").append(getId()).append("</h4>\n");
-        b.append(indent).append("<h4>").append(getDate()).append("</h4>\n");
+        b.append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
+        b.append("<h4>").append(getId()).append("</h4>\n");
+        b.append("<h4>").append(getDate()).append("</h4>\n");
         b.append("</header>");
         
         return b.toString();
@@ -422,10 +379,12 @@ public class Article {
         StringBuilder b = new StringBuilder();
         
         b.append("<body>\n");
-        b.append(indentHTML(writeHeader(), 4));
+        b.append(writeHeader()).append("\n");
+        b.append("<div class=\"articleBody\">\n");
         for (Section sec:getSections()) {
-            b.append(indentHTML(sec.toHTML(), 4));
+            b.append(sec.toHTML()).append("\n");
         }
+        b.append("</div>\n");
         b.append("</body>");
         
         return b.toString();
