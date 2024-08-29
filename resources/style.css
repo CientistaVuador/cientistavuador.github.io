@@ -41,53 +41,68 @@ header {
     max-width: 800px;
     margin: 0 auto;
 }
-h1 {
-    
+.index {
+    white-space: pre;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    font-size: 75%;
 }
-h4 {
-    
+a:link {
+    color: #a9b7c6;
+}
+a:visited {
+    color: #a9b7c6;
+}
+h1 {
+    font-size: 300%;
 }
 h2 {
-    
+    font-size: 200%;
 }
 h3 {
-    
+    font-size: 100%;
 }
 .text {
     font-weight: 300;
 }
 .fine {
     border-radius: 5px 30px 30px;
-    background-color: #009f00;
+    background-color: #57db57;
     font-family: sans-serif;
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
-    color: black;
+    color: #e5ffbf;
+    text-shadow: 0px 0px 1px #000000;
+    overflow: auto;
 }
 .warning {
     border-radius: 5px 30px 30px;
-    background-color: #b7b700;
+    background-color: #f0ba3b;
     font-family: sans-serif;
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
-    color: black;
+    color: #fffccf;
+    text-shadow: 0px 0px 1px #000000;
+    overflow: auto;
 }
 .severe {
     border-radius: 5px 30px 30px;
-    background-color: #9f0000;
+    background-color: #ec3333;
     font-family: sans-serif;
     box-shadow: 3px 3px 5px black;
     padding: 1px;
     padding-left: 30px;
     margin-bottom: 10px;
     margin-top: 10px;
-    color: black;
+    color: #ffdada;
+    text-shadow: 0px 0px 1px #000000;
+    overflow: auto;
 }
 .code {
     color: #cccccc;
