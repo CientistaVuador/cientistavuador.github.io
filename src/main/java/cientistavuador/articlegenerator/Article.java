@@ -372,7 +372,7 @@ public class Article {
 
         b.append("<header>\n");
         b.append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append("<h3>").append(getId()).append("</h3>\n");
+        b.append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
         b.append("<h3>").append(getDate()).append("</h3>\n");
         b.append("</header>");
 
@@ -399,7 +399,7 @@ public class Article {
     private String writeIndex() {
         StringBuilder b = new StringBuilder();
 
-        b.append("<div class=\"index\">\n");
+        b.append("<div class=\"index\">");
         for (Section e:getSections()) {
             b.append(writeSectionIndex(e, 0)).append("\n");
         }
