@@ -203,12 +203,7 @@ public class Article {
                 }
                 return "<img src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
             }
-
-            String tag = "p";
-            if (this.type.equals(ResourceType.CODE)) {
-                tag = "pre";
-            }
-
+            
             String clazz = "text";
             switch (getType()) {
                 case IMAGE -> {
@@ -230,12 +225,12 @@ public class Article {
 
             StringBuilder b = new StringBuilder();
 
-            b.append("<div class=\"").append(clazz).append("\">\n");
-            b.append("<").append(tag).append(">\n");
+            b.append("<div class=\"").append(clazz).append("\">");
+            b.append("<p>");
             b.append(escapeHTML(getResource()));
-            b.append("\n</").append(tag).append(">\n");
+            b.append("</p>");
             b.append("</div>");
-
+            
             return b.toString();
         }
 
