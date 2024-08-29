@@ -1,5 +1,5 @@
 #ID 0
-
+#DATE 2024/08/27
 #TITLE Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 #SECTION Commodo dolor. Suspendisse v
@@ -125,4 +125,4 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
 }
 #END
 
-#IMAGE testimage.jpg
+#IMAGE ../resources/testimage.jpg

@@ -164,6 +164,14 @@ public class TextBlock {
     public String getArgument() {
         return argument;
     }
+    
+    public String getArgumentNotNull() {
+        String arg = getArgument();
+        if (arg == null) {
+            throw new NullPointerException("Argument is null at line "+getLine());
+        }
+        return arg;
+    }
 
     public boolean isMultiLine() {
         return multiLine;

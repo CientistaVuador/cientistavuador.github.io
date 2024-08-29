@@ -42,45 +42,41 @@ public class Main {
         if (!Files.exists(path)) {
             return;
         }
-        
+
         if (Files.isDirectory(path)) {
-            for (Path other:Files.list(path).toList()) {
+            for (Path other : Files.list(path).toList()) {
                 delete(other);
             }
         }
         Files.delete(path);
-        System.out.println("Deleted "+path.toString());
+        System.out.println("Deleted " + path.toString());
     }
-    
+
     public static void main(String[] args) throws IOException {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         Files.createDirectories(articlesFolder);
-        
+
         Path rawArticlesFolder = Path.of("rawarticles");
-        for (Path articleFile:Files.list(rawArticlesFolder).toList()) {
+        for (Path articleFile : Files.list(rawArticlesFolder).toList()) {
             if (!Files.isRegularFile(articleFile)) {
                 continue;
             }
             if (!articleFile.toString().toLowerCase().endsWith(".txt")) {
                 continue;
             }
-            Path outputHTML = articlesFolder.resolve(
-                    articleFile.getFileName().toString().split(Pattern.quote("."))[0]+".html"
-            );
-            Files.writeString(outputHTML,
-                    HTMLGenerator.generate(
-                            TextBlock.parse(
-                                    Files.readString(
-                                            articleFile,
-                                            StandardCharsets.UTF_8
-                                    )
-                            )
-                    ),
-                    StandardCharsets.UTF_8
-            );
-            System.out.println("Generated "+outputHTML.getFileName()+" from "+articleFile.getFileName());
+            try {
+                Article c = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
+                Path outputHTML = articlesFolder.resolve(
+                        articleFile.getFileName().toString().split(Pattern.quote("."))[0] + ".html"
+                );
+                Files.writeString(outputHTML, c.toHTML(), StandardCharsets.UTF_8);
+                System.out.println("Generated " + outputHTML.getFileName() + " from " + articleFile.getFileName());
+            } catch (Throwable t) {
+                System.out.println("Failed to compile: "+articleFile.getFileName());
+                throw t;
+            }
         }
     }
-    
+
 }
