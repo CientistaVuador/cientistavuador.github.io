@@ -28,15 +28,21 @@ package cientistavuador.articlegenerator;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -136,6 +142,8 @@ public class Article {
         }
     }
 
+    public static final String INDENT = " ".repeat(4);
+
     public static String escapeHTML(String text) {
         StringBuilder b = new StringBuilder();
 
@@ -168,7 +176,7 @@ public class Article {
 
         return b.toString();
     }
-    
+
     public static enum ResourceType {
         TEXT, IMAGE, CODE, FINE, WARNING, SEVERE;
     }
@@ -194,21 +202,39 @@ public class Article {
             return resource;
         }
 
+        private String toImageHTML() {
+            String altPlaceholder;
+            {
+                String[] split = getResource().split("/");
+                altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
+            }
+            return "<img class=\"image\" src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
+        }
+        
+        private String toCodeHTML() {
+            StringBuilder b = new StringBuilder();
+            
+            b.append("<div class=\"code\">\n");
+            Stream<String> lines = getResource().lines();
+            for (String line:lines.toList()) {
+                b.append(INDENT).append("<pre><code>").append(escapeHTML(line)).append("</code></pre>").append("<br/>\n");
+            }
+            b.append("</div>");
+            
+            return b.toString();
+        }
+        
         public String toHTML() {
             if (this.type.equals(ResourceType.IMAGE)) {
-                String altPlaceholder;
-                {
-                    String[] split = getResource().split("/");
-                    altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
-                }
-                return "<img src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
+                return toImageHTML();
+            }
+            
+            if (this.type.equals(ResourceType.CODE)) {
+                return toCodeHTML();
             }
             
             String clazz = "text";
             switch (getType()) {
-                case IMAGE -> {
-                    clazz = "image";
-                }
                 case CODE -> {
                     clazz = "code";
                 }
@@ -224,12 +250,10 @@ public class Article {
             }
 
             StringBuilder b = new StringBuilder();
-
-            b.append("<div class=\"").append(clazz).append("\">");
-            b.append("<p>");
-            b.append(escapeHTML(getResource()));
+            
+            b.append("<p class=\"").append(clazz).append("\">\n");
+            b.append(escapeHTML(getResource()).indent(4));
             b.append("</p>");
-            b.append("</div>");
             
             return b.toString();
         }
@@ -238,24 +262,29 @@ public class Article {
 
     public static class Section {
 
-        private final int id;
+        private final String id;
         private final Article article;
         private final Section parent;
         private final String name;
         private final List<Section> children = new ArrayList<>();
         private final List<Resource> resources = new ArrayList<>();
+        private final AtomicInteger subSectionIds = new AtomicInteger(1);
 
         public Section(Article article, Section parent, String name) {
             Objects.requireNonNull(article, "Article is null.");
             Objects.requireNonNull(name, "Name is null.");
 
-            this.id = article.requestSectionId();
+            if (parent != null) {
+                this.id = parent.getId() + "." + parent.requestSubSectionId();
+            } else {
+                this.id = Integer.toString(article.requestSectionId());
+            }
             this.article = article;
             this.parent = parent;
             this.name = name;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
@@ -271,6 +300,14 @@ public class Article {
             return name;
         }
 
+        public String getFullName() {
+            return getId() + " " + getName();
+        }
+
+        public String getFullNameEncoded() {
+            return URLEncoder.encode(getFullName(), StandardCharsets.UTF_8);
+        }
+
         public List<Section> getChildren() {
             return children;
         }
@@ -279,17 +316,22 @@ public class Article {
             return resources;
         }
 
+        public int requestSubSectionId() {
+            return this.subSectionIds.getAndIncrement();
+        }
+
         private String toHTML(int depth) {
             StringBuilder b = new StringBuilder();
 
             String tag = "h" + (2 + depth);
-            b.append("<section id=\"section_").append(getId()).append("\">\n");
-            b.append("<").append(tag).append(">").append(escapeHTML(getName())).append("</").append(tag).append(">\n");
+            
+            b.append("<section id=\"").append(getFullNameEncoded()).append("\">\n");
+            b.append(INDENT).append("<").append(tag).append(" class=\"").append(tag).append("\">").append(escapeHTML(getFullName())).append("</").append(tag).append(">\n");
             for (Resource r : getResources()) {
-                b.append(r.toHTML()).append("\n");
+                b.append(r.toHTML().indent(4));
             }
             for (Section s : getChildren()) {
-                b.append(s.toHTML(depth + 1)).append("\n");
+                b.append(s.toHTML(depth + 1).indent(4));
             }
             b.append("</section>");
 
@@ -305,7 +347,9 @@ public class Article {
     private final String date;
     private final String title;
     private final List<Section> sections = new ArrayList<>();
-    private final AtomicInteger sectionsIds = new AtomicInteger();
+    private final AtomicInteger sectionsIds = new AtomicInteger(1);
+    
+    private String keywords = null;
 
     public Article(int id, String date, String title) {
         Objects.requireNonNull(date, "Date is null.");
@@ -328,6 +372,10 @@ public class Article {
         return title;
     }
 
+    public String getTitleEncoded() {
+        return URLEncoder.encode(getTitle(), StandardCharsets.UTF_8);
+    }
+
     public List<Section> getSections() {
         return sections;
     }
@@ -335,7 +383,182 @@ public class Article {
     public int requestSectionId() {
         return this.sectionsIds.getAndIncrement();
     }
-
+    
+    private String clear(String s) {
+        StringBuilder b = new StringBuilder();
+        
+        for (int i = 0; i < s.length(); i++) {
+            int unicode = s.codePointAt(i);
+            if (unicode == ' ') {
+                b.append(' ');
+                continue;
+            }
+            if (!Character.isLetterOrDigit(unicode)) {
+                b.append(' ');
+                continue;
+            }
+            b.appendCodePoint(unicode);
+        }
+        
+        return b.toString();
+    }
+    
+    private boolean isOnlyDigits(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.codePointAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void findWords(List<String> list, Section section) {
+        for (Resource resource:section.getResources()) {
+            String cleared = clear(resource.getResource());
+            String[] split = cleared.split(" ");
+            for (String word:split) {
+                if (word.isBlank() || word.length() == 1) {
+                    continue;
+                }
+                if (isOnlyDigits(word)) {
+                    continue;
+                }
+                list.add(word.toLowerCase());
+            }
+        }
+        
+        for (Section child:section.getChildren()) {
+            findWords(list, child);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public String getKeywords() {
+        if (this.keywords != null) {
+            return this.keywords;
+        }
+        List<String> words = new ArrayList<>();
+        for (Section section:getSections()) {
+            findWords(words, section);
+        }
+        
+        Map<String, Integer> wordCount = new HashMap<>();
+        for (String word:words) {
+            Integer current = wordCount.get(word);
+            if (current == null) {
+                current = 0;
+            }
+            current++;
+            wordCount.put(word, current);
+        }
+        
+        Entry<String, Integer>[] set = wordCount.entrySet().toArray(Entry[]::new);
+        Comparator<Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
+        Arrays.sort(set, comparator.reversed());
+        
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 64; i++) {
+            if (i >= set.length) {
+                break;
+            }
+            builder.append(set[i].getKey());
+            if (i != set.length - 1 && i != 63) {
+                builder.append(", ");
+            }
+        }
+        this.keywords = builder.toString();
+        
+        return this.keywords;
+    }
+    
+    private String writeHead() {
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<head>\n");
+        b.append(INDENT).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
+        b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
+        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
+        b.append(INDENT).append("<style>").append("pre { display: inline; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".header { text-align: center; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".article { max-width: 800px; margin: 0 auto; text-align: justify; text-justify: inter-word; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".fine { color: green; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".warning { color: orange; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".severe { color: red; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".code { overflow: auto; }").append("</style>\n");
+        b.append(INDENT).append("<style>").append(".image { max-width: 800px; margin-top: 10px; margin-bottom: 10px; }").append("</style>\n");
+        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append("</head>");
+        
+        return b.toString();
+    }
+    
+    private String writeHeader() {
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<header class=\"header\">\n");
+        b.append(INDENT).append("<h1 class=\"h1\">").append(escapeHTML(getTitle())).append("</h1>\n");
+        b.append(INDENT).append("<h3 class=\"h3\">").append(String.format("%04d", getId())).append("</h3>\n");
+        b.append(INDENT).append("<h3 class=\"h3\">").append(getDate()).append("</h3>\n");
+        b.append("</header>");
+        
+        return b.toString();
+    }
+    
+    private String writeSectionIndex(Section section, int depth) {
+        StringBuilder b = new StringBuilder();
+        
+        b
+                .append("<pre>")
+                .append(" ".repeat(4 * depth))
+                .append("</pre><a class=\"indexLink\" href=\"#")
+                .append(section.getFullNameEncoded())
+                .append("\">")
+                .append(section.getFullName())
+                .append("</a><br/>\n")
+                ;
+        for (Section e:section.getChildren()) {
+            b.append(writeSectionIndex(e, depth + 1).indent(4));
+        }
+        
+        return b.toString();
+    }
+    
+    private String writeIndices() {
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<div class=\"indices\">\n");
+        for (Section s:getSections()) {
+            b.append(writeSectionIndex(s, 0).indent(4));
+        }
+        b.append("</div>");
+        
+        return b.toString();
+    }
+    
+    private String writeArticle() {
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<div class=\"article\">\n");
+        b.append(writeIndices().indent(4));
+        for (Section s:getSections()) {
+            b.append(s.toHTML().indent(4));
+        }
+        b.append("</div>");
+        
+        return b.toString();
+    }
+    
+    private String writeBody() {
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<body class=\"body\">\n");
+        b.append(writeHeader().indent(4));
+        b.append(writeArticle().indent(4));
+        b.append("</body>");
+        
+        return b.toString();
+    }
+    
     public String toHTML() {
         StringBuilder b = new StringBuilder();
 
@@ -349,77 +572,9 @@ public class Article {
         b.append("Date: ").append(getDate()).append("\n");
         b.append("-->\n");
         b.append("<html>\n");
-        b.append(writeHead()).append("\n");
-        b.append(writeBody()).append("\n");
+        b.append(writeHead().indent(4));
+        b.append(writeBody().indent(4));
         b.append("</html>");
-
-        return b.toString();
-    }
-
-    private String writeHead() {
-        StringBuilder b = new StringBuilder();
-
-        b.append("<head>\n");
-        b.append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
-        b.append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
-        b.append("</head>");
-
-        return b.toString();
-    }
-
-    private String writeHeader() {
-        StringBuilder b = new StringBuilder();
-
-        b.append("<header>\n");
-        b.append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
-        b.append("<h3>").append(getDate()).append("</h3>\n");
-        b.append("</header>");
-
-        return b.toString();
-    }
-
-    private String writeSectionIndex(Section section, int depth) {
-        StringBuilder b = new StringBuilder();
-
-        b.append(" ".repeat(depth * 4)).append("<a href=\"#section_").append(section.getId()).append("\">").append(escapeHTML(section.getName())).append("</a>");
-        if (!section.getChildren().isEmpty()) {
-            b.append("\n");
-            for (int i = 0; i < section.getChildren().size(); i++) {
-                b.append(writeSectionIndex(section.getChildren().get(i), depth + 1));
-                if (i != section.getChildren().size() - 1) {
-                    b.append("\n");
-                }
-            }
-        }
-        
-        return b.toString();
-    }
-
-    private String writeIndex() {
-        StringBuilder b = new StringBuilder();
-
-        b.append("<div class=\"index\">");
-        for (Section e:getSections()) {
-            b.append(writeSectionIndex(e, 0)).append("\n");
-        }
-        b.append("</div>");
-        
-        return b.toString();
-    }
-
-    private String writeBody() {
-        StringBuilder b = new StringBuilder();
-
-        b.append("<body>\n");
-        b.append(writeHeader()).append("\n");
-        b.append("<div class=\"articleBody\">\n");
-        b.append(writeIndex()).append("\n");
-        for (Section sec : getSections()) {
-            b.append(sec.toHTML()).append("\n");
-        }
-        b.append("</div>\n");
-        b.append("</body>");
 
         return b.toString();
     }

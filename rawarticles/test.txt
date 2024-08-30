@@ -104,7 +104,7 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
             break encode;
         }
         
-        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS);
+        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df 
         exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);
         
         intensity = LOOKUP_TABLE[exp];

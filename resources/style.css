@@ -28,23 +28,19 @@ For more information, please refer to <https://unlicense.org>
     Created on : 26 de ago. de 2024, 20:15:55
     Author     : Cien
 */
-body {
+.body {
     background-color: #3c3f41;
     color: #a9b7c6;
     font-family: sans-serif;
     font-weight: 600;
 }
-header {
-    text-align: center;
+.header {
+    
 }
-.articleBody {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: justify;
-    text-justify: inter-word;
+.article {
+    
 }
-.index {
-    white-space: pre;
+.indices {
     margin-bottom: 30px;
     margin-top: 30px;
     font-size: 75%;
@@ -58,19 +54,19 @@ header {
     border-color: #a9b7c6;
     padding-bottom: 10px;
 }
-a:link {
+.indexLink:link {
     color: #a9b7c6;
 }
-a:visited {
+.indexLink:visited {
     color: #a9b7c6;
 }
-h1 {
+.h1 {
     font-size: 300%;
 }
-h2 {
+.h2 {
     font-size: 200%;
 }
-h3 {
+.h3 {
     font-size: 110%;
 }
 .text {
@@ -80,8 +76,8 @@ h3 {
     border-radius: 5px 30px 30px;
     background-color: #57db57;
     font-family: sans-serif;
-    box-shadow: 0px 0px 5px black;
-    padding: 1px;
+    box-shadow: 0px 0px 3px black;
+    padding: 5px;
     padding-left: 30px;
     padding-right: 30px;
     margin-bottom: 10px;
@@ -94,8 +90,8 @@ h3 {
     border-radius: 5px 30px 30px;
     background-color: #f0ba3b;
     font-family: sans-serif;
-    box-shadow: 0px 0px 5px black;
-    padding: 1px;
+    box-shadow: 0px 0px 3px black;
+    padding: 5px;
     padding-left: 30px;
     padding-right: 30px;
     margin-bottom: 10px;
@@ -108,8 +104,8 @@ h3 {
     border-radius: 5px 30px 30px;
     background-color: #ec3333;
     font-family: sans-serif;
-    box-shadow: 0px 0px 5px black;
-    padding: 1px;
+    box-shadow: 0px 0px 3px black;
+    padding: 5px;
     padding-left: 30px;
     padding-right: 30px;
     margin-bottom: 10px;
@@ -124,18 +120,12 @@ h3 {
     background-color: #272822;
     font-family: monospace;
     box-shadow: 0px 0px 5px black;
-    padding: 1px;
+    padding: 5px;
     padding-left: 15px;
     padding-right: 15px;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    overflow: auto;
-    white-space: pre;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
-img {
-    max-width: 800px;
-    max-height: 800px;
-}
-.red {
-    color: red;
+.image {
+    
 }

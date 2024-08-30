@@ -128,130 +128,157 @@ Id: 0
 Date: 2024/08/27
 -->
 <html>
-<head>
-<title>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</title>
-<link rel="stylesheet" href="../resources/style.css" type="text/css"/>
-</head>
-<body>
-<header>
-<h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
-<h3>0000</h3>
-<h3>2024/08/27</h3>
-</header>
-<div class="articleBody">
-<div class="index"><a href="#section_0">Commodo dolor. Suspendisse v</a>
-    <a href="#section_1">Sed viverra enim vitae consectetu</a>
-    <a href="#section_2">Fringilla at semper vitae, viverra sed justo.</a>
-<a href="#section_3">Phasellus rhoncus sed nunc non</a>
-    <a href="#section_4">Etiam gravida, nisi at commodo semper,</a>
-    <a href="#section_5">Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</a>
-</div>
-<section id="section_0">
-<h2>Commodo dolor. Suspendisse v</h2>
-<section id="section_1">
-<h3>Sed viverra enim vitae consectetu</h3>
-<div class="text"><p>Proin convallis condimentum commodo. Phasellus eu mauris vitae ipsum sollicitudin
-iaculis id sed diam. Integer non nulla rutrum leo ultrices congue sit amet eleifend elit.
-Maecenas efficitur porttitor risus sit amet iaculis. Phasellus sit amet justo eu elit dictum
-tristique. Curabitur diam odio, vehicula venenatis tincidunt non, ullamcorper id dolor. 
-Pellentesque sodales aliquam nisi, suscipit mattis nisl suscipit sed. Donec non ligula nisl.
-Suspendisse id arcu et sapien cursus mattis vel ut dolor.</p></div>
-</section>
-<section id="section_2">
-<h3>Fringilla at semper vitae, viverra sed justo.</h3>
-<div class="text"><p> Maecenas sit amet massa sit amet dui hendrerit varius. Sed viverra enim
- vitae consectetur finibus. Morbi condimentum hendrerit sapien vitae volutpat.
- Pellentesque iaculis tempus metus id ornare. Donec vehicula semper nisi vel ultricies.
- Aliquam ac sodales libero, a viverra sem. Integer vestibulum elit a arcu molestie,
- vitae fermentum justo mattis. Etiam gravida, nisi at commodo semper, turpis diam luctus odio,
- at ultricies tortor arcu vel augue.</p></div>
-</section>
-</section>
-<section id="section_3">
-<h2>Phasellus rhoncus sed nunc non</h2>
-<section id="section_4">
-<h3>Etiam gravida, nisi at commodo semper,</h3>
-<div class="text"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
-condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
-torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
-non laoreet nibh. Aliquam maximus odio vel augue rhoncus, hendrerit mattis metus pellentesque.
-Duis eget sodales nibh, quis volutpat dui. Sed sit amet odio ut felis porttitor rhoncus vel ac
-eros. Morbi a bibendum purus. Suspendisse potenti. Suspendisse cursus dui at purus fermentum,
-accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, luctus interdum
-nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
-ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit amet tortor.
-Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.</p></div>
-</section>
-<section id="section_5">
-<h3>Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</h3>
-<div class="text"><p>Mauris elit nisl, tincidunt in enim vel, varius commodo dolor. Suspendisse vitae tempor enim
-Quisque sodales massa eget suscipit interdum. Aliquam erat volutpat. Donec in augue tincidunt
-porta elit non, ornare tellus. Etiam rutrum, lectus sit amet gravida aliquam, nibh ante lacinia
-purus, eget porta nunc justo eget lacus. Quisque in dui eleifend, finibus nibh ac, tincidunt
-tellus. Phasellus non vehicula diam, a tristique eros. Vestibulum metus arcu, elementum at
-ornare eu, congue eget quam. Suspendisse potenti. Donec convallis sem nec leo ultrices vulputate.</p></div>
-<div class="fine"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Nunc sollicitudin feugiat tortor, maximus dapibus neque dictum sit amet.
-Praesent in urna consequat, auctor lorem sit amet, efficitur augue.
-Nunc fringilla tincidunt ultrices. Nunc luctus lorem id pulvinar volutpat.
-Etiam semper tellus massa,
-sed accumsan nunc porta et. Donec posuere nunc.</p></div>
-<div class="warning"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam faucibus ligula
-sed nunc feugiat laoreet. Donec vel feugiat lacus. Suspendisse ultricies dui
-non augue tempor, in pellentesque ante tristique. Sed sed cursus quam. Quisque
-volutpat molestie ex.
-Nunc interdum mi non vulputate pulvinar. Pellentesque finibus in felis sit amet porta.</p></div>
-<div class="severe"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-Proin tellus libero, hendrerit vitae urna in, dictum accumsan massa.
-Orci varius natoque penatibus et magnis dis parturient montes,
-nascetur ridiculus mus. Ut nibh turpis, lobortis non vestibulum blandit,
-cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.</p></div>
-<div class="code"><p>private static void encodeTo(float r, float g, float b, int index, byte[] data) {
-    int mR = 255;
-    int mG = 255;
-    int mB = 255;
-    int exp = 255;
-    
-    encode:
-    {
-        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {
-            break encode;
-        }
-        r = Math.min(Math.max(r, 0f), MAX_VALUE);
-        g = Math.min(Math.max(g, 0f), MAX_VALUE);
-        b = Math.min(Math.max(b, 0f), MAX_VALUE);
-        
-        float intensity = Math.max(r, Math.max(g, b));
-        if (intensity &lt; MIN_VALUE) {
-            mR = 0;
-            mG = 0;
-            mB = 0;
-            exp = 0;
-            break encode;
-        }
-        
-        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS);
-        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);
-        
-        intensity = LOOKUP_TABLE[exp];
-        
-        r /= intensity;
-        g /= intensity;
-        b /= intensity;
-        
-        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);
-        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);
-        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);
-    }
-    
-    data[0 + index] = (byte) mR;
-    data[1 + index] = (byte) mG;
-    data[2 + index] = (byte) mB;
-    data[3 + index] = (byte) exp;
-}</p></div>
-<img src="../resources/testimage.jpg" alt="testimage"/>
-</section>
-</section>
-</div>
-</body>
+    <head>
+        <title>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</title>
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="math, sit, amet, max, non, dfg, sed, nunc, elit, min, in, dolor, exp, suspendisse, float, vel, intensity, lorem, pellentesque, ipsum, aliquam, donec, ut, vitae, eget, augue, id, tincidunt, nibh, int, dui, consectetur, volutpat, at, phasellus, byte, index, nisl, condimentum, data, ac, arcu, porta, ultricies, suscipit, varius, et, eu, mattis, quisque, sodales, finibus, luctus, diam, ultrices, tristique, cursus, adipiscing, odio, mauris, mb, mg, mr, tellus"/>
+        <style>pre { display: inline; }</style>
+        <style>.header { text-align: center; }</style>
+        <style>.article { max-width: 800px; margin: 0 auto; text-align: justify; text-justify: inter-word; }</style>
+        <style>.fine { color: green; padding-left: 30px; padding-right: 30px; }</style>
+        <style>.warning { color: orange; padding-left: 30px; padding-right: 30px; }</style>
+        <style>.severe { color: red; padding-left: 30px; padding-right: 30px; }</style>
+        <style>.code { overflow: auto; }</style>
+        <style>.image { max-width: 800px; margin-top: 10px; margin-bottom: 10px; }</style>
+        <link rel="stylesheet" href="../resources/style.css" type="text/css"/>
+    </head>
+    <body class="body">
+        <header class="header">
+            <h1 class="h1">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
+            <h3 class="h3">0000</h3>
+            <h3 class="h3">2024/08/27</h3>
+        </header>
+        <div class="article">
+            <div class="indices">
+                <pre></pre><a class="indexLink" href="#1+Commodo+dolor.+Suspendisse+v">1 Commodo dolor. Suspendisse v</a><br/>
+                    <pre>    </pre><a class="indexLink" href="#1.1+Sed+viverra+enim+vitae+consectetu">1.1 Sed viverra enim vitae consectetu</a><br/>
+                    <pre>    </pre><a class="indexLink" href="#1.2+Fringilla+at+semper+vitae%2C+viverra+sed+justo.">1.2 Fringilla at semper vitae, viverra sed justo.</a><br/>
+                <pre></pre><a class="indexLink" href="#2+Phasellus+rhoncus+sed+nunc+non">2 Phasellus rhoncus sed nunc non</a><br/>
+                    <pre>    </pre><a class="indexLink" href="#2.1+Etiam+gravida%2C+nisi+at+commodo+semper%2C">2.1 Etiam gravida, nisi at commodo semper,</a><br/>
+                    <pre>    </pre><a class="indexLink" href="#2.2+Quisque+finibus+lectus+eget+orci+convallis%2C+ut+pellentesque+nibh+suscipit.">2.2 Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</a><br/>
+            </div>
+            <section id="1+Commodo+dolor.+Suspendisse+v">
+                <h2 class="h2">1 Commodo dolor. Suspendisse v</h2>
+                <section id="1.1+Sed+viverra+enim+vitae+consectetu">
+                    <h3 class="h3">1.1 Sed viverra enim vitae consectetu</h3>
+                    <p class="text">
+                        Proin convallis condimentum commodo. Phasellus eu mauris vitae ipsum sollicitudin
+                        iaculis id sed diam. Integer non nulla rutrum leo ultrices congue sit amet eleifend elit.
+                        Maecenas efficitur porttitor risus sit amet iaculis. Phasellus sit amet justo eu elit dictum
+                        tristique. Curabitur diam odio, vehicula venenatis tincidunt non, ullamcorper id dolor. 
+                        Pellentesque sodales aliquam nisi, suscipit mattis nisl suscipit sed. Donec non ligula nisl.
+                        Suspendisse id arcu et sapien cursus mattis vel ut dolor.
+                    </p>
+                </section>
+                <section id="1.2+Fringilla+at+semper+vitae%2C+viverra+sed+justo.">
+                    <h3 class="h3">1.2 Fringilla at semper vitae, viverra sed justo.</h3>
+                    <p class="text">
+                         Maecenas sit amet massa sit amet dui hendrerit varius. Sed viverra enim
+                         vitae consectetur finibus. Morbi condimentum hendrerit sapien vitae volutpat.
+                         Pellentesque iaculis tempus metus id ornare. Donec vehicula semper nisi vel ultricies.
+                         Aliquam ac sodales libero, a viverra sem. Integer vestibulum elit a arcu molestie,
+                         vitae fermentum justo mattis. Etiam gravida, nisi at commodo semper, turpis diam luctus odio,
+                         at ultricies tortor arcu vel augue.
+                    </p>
+                </section>
+            </section>
+            <section id="2+Phasellus+rhoncus+sed+nunc+non">
+                <h2 class="h2">2 Phasellus rhoncus sed nunc non</h2>
+                <section id="2.1+Etiam+gravida%2C+nisi+at+commodo+semper%2C">
+                    <h3 class="h3">2.1 Etiam gravida, nisi at commodo semper,</h3>
+                    <p class="text">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
+                        condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
+                        torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
+                        non laoreet nibh. Aliquam maximus odio vel augue rhoncus, hendrerit mattis metus pellentesque.
+                        Duis eget sodales nibh, quis volutpat dui. Sed sit amet odio ut felis porttitor rhoncus vel ac
+                        eros. Morbi a bibendum purus. Suspendisse potenti. Suspendisse cursus dui at purus fermentum,
+                        accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, luctus interdum
+                        nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
+                        ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit amet tortor.
+                        Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
+                    </p>
+                </section>
+                <section id="2.2+Quisque+finibus+lectus+eget+orci+convallis%2C+ut+pellentesque+nibh+suscipit.">
+                    <h3 class="h3">2.2 Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</h3>
+                    <p class="text">
+                        Mauris elit nisl, tincidunt in enim vel, varius commodo dolor. Suspendisse vitae tempor enim
+                        Quisque sodales massa eget suscipit interdum. Aliquam erat volutpat. Donec in augue tincidunt
+                        porta elit non, ornare tellus. Etiam rutrum, lectus sit amet gravida aliquam, nibh ante lacinia
+                        purus, eget porta nunc justo eget lacus. Quisque in dui eleifend, finibus nibh ac, tincidunt
+                        tellus. Phasellus non vehicula diam, a tristique eros. Vestibulum metus arcu, elementum at
+                        ornare eu, congue eget quam. Suspendisse potenti. Donec convallis sem nec leo ultrices vulputate.
+                    </p>
+                    <p class="fine">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Nunc sollicitudin feugiat tortor, maximus dapibus neque dictum sit amet.
+                        Praesent in urna consequat, auctor lorem sit amet, efficitur augue.
+                        Nunc fringilla tincidunt ultrices. Nunc luctus lorem id pulvinar volutpat.
+                        Etiam semper tellus massa,
+                        sed accumsan nunc porta et. Donec posuere nunc.
+                    </p>
+                    <p class="warning">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam faucibus ligula
+                        sed nunc feugiat laoreet. Donec vel feugiat lacus. Suspendisse ultricies dui
+                        non augue tempor, in pellentesque ante tristique. Sed sed cursus quam. Quisque
+                        volutpat molestie ex.
+                        Nunc interdum mi non vulputate pulvinar. Pellentesque finibus in felis sit amet porta.
+                    </p>
+                    <p class="severe">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Proin tellus libero, hendrerit vitae urna in, dictum accumsan massa.
+                        Orci varius natoque penatibus et magnis dis parturient montes,
+                        nascetur ridiculus mus. Ut nibh turpis, lobortis non vestibulum blandit,
+                        cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.
+                    </p>
+                    <div class="code">
+                        <pre><code>private static void encodeTo(float r, float g, float b, int index, byte[] data) {</code></pre><br/>
+                        <pre><code>    int mR = 255;</code></pre><br/>
+                        <pre><code>    int mG = 255;</code></pre><br/>
+                        <pre><code>    int mB = 255;</code></pre><br/>
+                        <pre><code>    int exp = 255;</code></pre><br/>
+                        <pre><code>    </code></pre><br/>
+                        <pre><code>    encode:</code></pre><br/>
+                        <pre><code>    {</code></pre><br/>
+                        <pre><code>        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {</code></pre><br/>
+                        <pre><code>            break encode;</code></pre><br/>
+                        <pre><code>        }</code></pre><br/>
+                        <pre><code>        r = Math.min(Math.max(r, 0f), MAX_VALUE);</code></pre><br/>
+                        <pre><code>        g = Math.min(Math.max(g, 0f), MAX_VALUE);</code></pre><br/>
+                        <pre><code>        b = Math.min(Math.max(b, 0f), MAX_VALUE);</code></pre><br/>
+                        <pre><code>        </code></pre><br/>
+                        <pre><code>        float intensity = Math.max(r, Math.max(g, b));</code></pre><br/>
+                        <pre><code>        if (intensity &lt; MIN_VALUE) {</code></pre><br/>
+                        <pre><code>            mR = 0;</code></pre><br/>
+                        <pre><code>            mG = 0;</code></pre><br/>
+                        <pre><code>            mB = 0;</code></pre><br/>
+                        <pre><code>            exp = 0;</code></pre><br/>
+                        <pre><code>            break encode;</code></pre><br/>
+                        <pre><code>        }</code></pre><br/>
+                        <pre><code>        </code></pre><br/>
+                        <pre><code>        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df </code></pre><br/>
+                        <pre><code>        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);</code></pre><br/>
+                        <pre><code>        </code></pre><br/>
+                        <pre><code>        intensity = LOOKUP_TABLE[exp];</code></pre><br/>
+                        <pre><code>        </code></pre><br/>
+                        <pre><code>        r /= intensity;</code></pre><br/>
+                        <pre><code>        g /= intensity;</code></pre><br/>
+                        <pre><code>        b /= intensity;</code></pre><br/>
+                        <pre><code>        </code></pre><br/>
+                        <pre><code>        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);</code></pre><br/>
+                        <pre><code>        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);</code></pre><br/>
+                        <pre><code>        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);</code></pre><br/>
+                        <pre><code>    }</code></pre><br/>
+                        <pre><code>    </code></pre><br/>
+                        <pre><code>    data[0 + index] = (byte) mR;</code></pre><br/>
+                        <pre><code>    data[1 + index] = (byte) mG;</code></pre><br/>
+                        <pre><code>    data[2 + index] = (byte) mB;</code></pre><br/>
+                        <pre><code>    data[3 + index] = (byte) exp;</code></pre><br/>
+                        <pre><code>}</code></pre><br/>
+                    </div>
+                    <img class="image" src="../resources/testimage.jpg" alt="testimage"/>
+                </section>
+            </section>
+        </div>
+    </body>
 </html>
