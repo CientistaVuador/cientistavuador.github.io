@@ -43,6 +43,19 @@ ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit ame
 Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
 #END
 
+#BEGIN TEXT
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
+condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
+torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
+non laoreet nibh. Aliquam maximus odio vel augue rhoncus, hendrerit mattis metus pellentesque.
+Duis eget sodales nibh, quis volutpat dui. Sed sit amet odio ut felis porttitor rhoncus vel ac
+eros. Morbi a bibendum purus. Suspendisse potenti. Suspendisse cursus dui at purus fermentum,
+accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, luctus interdum
+nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
+ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit amet tortor.
+Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
+#END
+
 #SUBSECTION Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.
 
 #BEGIN TEXT

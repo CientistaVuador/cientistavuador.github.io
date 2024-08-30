@@ -208,16 +208,16 @@ public class Article {
                 String[] split = getResource().split("/");
                 altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
             }
-            return "<img class=\"image\" src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
+            return "<img style=\"max-width: 800px; margin-top: 10px; margin-bottom: 10px;\" class=\"image\" src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
         }
         
         private String toCodeHTML() {
             StringBuilder b = new StringBuilder();
             
-            b.append("<div class=\"code\">\n");
+            b.append("<div style=\"overflow: auto;\" class=\"code\">\n");
             Stream<String> lines = getResource().lines();
             for (String line:lines.toList()) {
-                b.append(INDENT).append("<pre><code>").append(escapeHTML(line)).append("</code></pre>").append("<br/>\n");
+                b.append(INDENT).append("<pre style=\"display: inline;\"><code>").append(escapeHTML(line)).append("</code></pre>").append("<br/>\n");
             }
             b.append("</div>");
             
@@ -233,25 +233,26 @@ public class Article {
                 return toCodeHTML();
             }
             
+            String style = "text-indent: 2em;";
             String clazz = "text";
             switch (getType()) {
-                case CODE -> {
-                    clazz = "code";
-                }
                 case FINE -> {
+                    style = "color: green; padding-left: 30px; padding-right: 30px;";
                     clazz = "fine";
                 }
                 case WARNING -> {
+                    style = "color: orange; padding-left: 30px; padding-right: 30px;";
                     clazz = "warning";
                 }
                 case SEVERE -> {
+                    style = "color: red; padding-left: 30px; padding-right: 30px;";
                     clazz = "severe";
                 }
             }
 
             StringBuilder b = new StringBuilder();
             
-            b.append("<p class=\"").append(clazz).append("\">\n");
+            b.append("<p style=\"").append(style).append("\" class=\"").append(clazz).append("\">\n");
             b.append(escapeHTML(getResource()).indent(4));
             b.append("</p>");
             
@@ -478,15 +479,7 @@ public class Article {
         b.append(INDENT).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
-        b.append(INDENT).append("<style>").append("pre { display: inline; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".header { text-align: center; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".article { max-width: 800px; margin: 0 auto; text-align: justify; text-justify: inter-word; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".fine { color: green; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".warning { color: orange; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".severe { color: red; padding-left: 30px; padding-right: 30px; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".code { overflow: auto; }").append("</style>\n");
-        b.append(INDENT).append("<style>").append(".image { max-width: 800px; margin-top: 10px; margin-bottom: 10px; }").append("</style>\n");
-        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        //b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append("</head>");
         
         return b.toString();
@@ -495,7 +488,7 @@ public class Article {
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<header class=\"header\">\n");
+        b.append("<header style=\"text-align: center;\" class=\"header\">\n");
         b.append(INDENT).append("<h1 class=\"h1\">").append(escapeHTML(getTitle())).append("</h1>\n");
         b.append(INDENT).append("<h3 class=\"h3\">").append(String.format("%04d", getId())).append("</h3>\n");
         b.append(INDENT).append("<h3 class=\"h3\">").append(getDate()).append("</h3>\n");
@@ -508,9 +501,9 @@ public class Article {
         StringBuilder b = new StringBuilder();
         
         b
-                .append("<pre>")
-                .append(" ".repeat(4 * depth))
-                .append("</pre><a class=\"indexLink\" href=\"#")
+                .append("<a style=\"display: inline-block; text-indent: ")
+                .append(depth * 2)
+                .append("em;\" class=\"indexLink\" href=\"#")
                 .append(section.getFullNameEncoded())
                 .append("\">")
                 .append(section.getFullName())
@@ -538,7 +531,7 @@ public class Article {
     private String writeArticle() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<div class=\"article\">\n");
+        b.append("<div style=\"max-width: 800px; margin: 0 auto; text-align: justify; text-justify: inter-word;\" class=\"article\">\n");
         b.append(writeIndices().indent(4));
         for (Section s:getSections()) {
             b.append(s.toHTML().indent(4));
