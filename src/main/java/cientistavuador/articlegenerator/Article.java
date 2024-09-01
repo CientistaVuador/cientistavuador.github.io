@@ -474,7 +474,7 @@ public class Article {
         b.append(INDENT).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
+        b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append("</head>");
 
