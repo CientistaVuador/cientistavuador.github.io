@@ -216,7 +216,7 @@ public class Article {
             b.append("<ol class=\"code\">\n");
             Stream<String> lines = getResource().lines();
             for (String line : lines.toList()) {
-                b.append(INDENT).append(INDENT).append("<li><code style=\"white-space: pre;\">").append(escapeHTML(line)).append("</code></li>\n");
+                b.append(INDENT).append(INDENT).append("<li><code>").append(escapeHTML(line)).append("</code></li>\n");
             }
             b.append("</ol>");
 
@@ -497,16 +497,14 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b
-                .append("<li><a style=\"display: inline-block; text-indent: ")
-                .append(depth * 2)
-                .append("em;\" class=\"indexLink\" href=\"#")
+                .append("<li><a href=\"#")
                 .append(section.getFullNameEncoded())
                 .append("\">")
                 .append(section.getFullName())
                 .append("</a></li>\n");
         if (!section.getChildren().isEmpty()) {
             b.append("<li>\n");
-            b.append(INDENT).append("<ol style=\"list-style-type: none; padding: 0; margin: 0;\">\n");
+            b.append(INDENT).append("<ol>\n");
             for (Section e : section.getChildren()) {
                 b.append(writeSectionIndex(e, depth + 1).indent(4 + 4 + (depth * 4)));
             }
@@ -520,7 +518,7 @@ public class Article {
     private String writeIndices() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<ol style=\"list-style-type: none;\" class=\"indices\">\n");
+        b.append("<ol class=\"indices\">\n");
         for (Section s : getSections()) {
             b.append(writeSectionIndex(s, 0).indent(4));
         }
@@ -546,7 +544,7 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<a class=\"footerLink\" href=\"articles.html\">").append(escapeHTML("<<<")).append("</a>\n");
+        b.append(INDENT).append("<a href=\"articles.html\">").append(escapeHTML("<<<")).append("</a>\n");
         b.append("</footer>");
 
         return b.toString();
