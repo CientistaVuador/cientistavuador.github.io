@@ -29,61 +29,115 @@ For more information, please refer to <https://unlicense.org>
     Author     : Cien
 */
 .body {
-    
+    font-family: sans-serif;
+    line-height: 1.65em;
+    text-align: justify;
+    text-justify: inter-word;
 }
 .header {
-    
+    text-align: center;
 }
 .h1 {
-    
+    line-height: 1.65em;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 .h2 {
-    
+    line-height: 1.65em;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 .h3 {
-    
+    line-height: 1.65em;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 .article {
-    
+    max-width: 800px;
+    justify-content: center;
+    margin: 0 auto;
 }
 .indices {
-    
+    border-style: inset;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-width: 2px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-color: gray;
+    font-size: 90%;
 }
 .indexLink:link {
-    
+    color: dimgray;
 }
 .indexLink:visited {
-    
+    color: dimgray;
 }
 .text {
-    
-}
-
-.fine .warning .severe {
-    
+    text-indent: 2em;
 }
 .fine {
-    
+    text-indent: 2em;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: #57db57;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px black;
+    border-style: solid;
+    border-color: #42a842;
 }
 .warning {
-    
+    text-indent: 2em;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: #f0ad3a;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px black;
+    border-style: solid;
+    border-color: #da8f10;
 }
 .severe {
-    
+    text-indent: 2em;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: #ec3333;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px black;
+    border-style: solid;
+    border-color: #b72727;
 }
-
 .code {
-    
+    color: #eeeeee;
+    border-radius: 1px;
+    background-color: #272822;
+    overflow: auto;
+    font-family: monospace;
+    line-height: 1.25em;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px black;
 }
 .image {
-    
+    max-width: 800px;
 }
 .footer {
-    
+    color: black;
+    text-align: center;
+    font-size: 1.65em;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 .footerLink:link {
-    
+    color: dimgray;
+    text-decoration: none;
 }
 .footerLink:visited {
-    
+    color: dimgray;
+    text-decoration: none;
 }
