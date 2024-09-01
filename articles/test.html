@@ -44,15 +44,23 @@ Date: 2024/08/27
             <h3 class="h3">0000</h3>
             <h3 class="h3">2024/08/27</h3>
         </header>
-        <div class="article">
-            <div class="indices">
-                <a style="display: inline-block; text-indent: 0em;" class="indexLink" href="#1+Commodo+dolor.+Suspendisse+v">1 Commodo dolor. Suspendisse v</a><br/>
-                    <a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#1.1+Sed+viverra+enim+vitae+consectetu">1.1 Sed viverra enim vitae consectetu</a><br/>
-                    <a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#1.2+Fringilla+at+semper+vitae%2C+viverra+sed+justo.">1.2 Fringilla at semper vitae, viverra sed justo.</a><br/>
-                <a style="display: inline-block; text-indent: 0em;" class="indexLink" href="#2+Phasellus+rhoncus+sed+nunc+non">2 Phasellus rhoncus sed nunc non</a><br/>
-                    <a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#2.1+Etiam+gravida%2C+nisi+at+commodo+semper%2C">2.1 Etiam gravida, nisi at commodo semper,</a><br/>
-                    <a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#2.2+Quisque+finibus+lectus+eget+orci+convallis%2C+ut+pellentesque+nibh+suscipit.">2.2 Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</a><br/>
-            </div>
+        <main class="article">
+            <ol style="list-style-type: none;" class="indices">
+                <li><a style="display: inline-block; text-indent: 0em;" class="indexLink" href="#1+Commodo+dolor.+Suspendisse+v">1 Commodo dolor. Suspendisse v</a></li>
+                <li>
+                    <ol style="list-style-type: none; padding: 0; margin: 0;">
+                        <li><a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#1.1+Sed+viverra+enim+vitae+consectetu">1.1 Sed viverra enim vitae consectetu</a></li>
+                        <li><a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#1.2+Fringilla+at+semper+vitae%2C+viverra+sed+justo.">1.2 Fringilla at semper vitae, viverra sed justo.</a></li>
+                    </ol>
+                </li>
+                <li><a style="display: inline-block; text-indent: 0em;" class="indexLink" href="#2+Phasellus+rhoncus+sed+nunc+non">2 Phasellus rhoncus sed nunc non</a></li>
+                <li>
+                    <ol style="list-style-type: none; padding: 0; margin: 0;">
+                        <li><a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#2.1+Etiam+gravida%2C+nisi+at+commodo+semper%2C">2.1 Etiam gravida, nisi at commodo semper,</a></li>
+                        <li><a style="display: inline-block; text-indent: 2em;" class="indexLink" href="#2.2+Quisque+finibus+lectus+eget+orci+convallis%2C+ut+pellentesque+nibh+suscipit.">2.2 Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.</a></li>
+                    </ol>
+                </li>
+            </ol>
             <section id="1+Commodo+dolor.+Suspendisse+v">
                 <h2 class="h2">1 Commodo dolor. Suspendisse v</h2>
                 <section id="1.1+Sed+viverra+enim+vitae+consectetu">
@@ -139,57 +147,57 @@ Date: 2024/08/27
                         nascetur ridiculus mus. Ut nibh turpis, lobortis non vestibulum blandit,
                         cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.
                     </p>
-                    <div class="code">
-                        <pre style="display: inline;"><code>private static void encodeTo(float r, float g, float b, int index, byte[] data) {</code></pre><br/>
-                        <pre style="display: inline;"><code>    int mR = 255;</code></pre><br/>
-                        <pre style="display: inline;"><code>    int mG = 255;</code></pre><br/>
-                        <pre style="display: inline;"><code>    int mB = 255;</code></pre><br/>
-                        <pre style="display: inline;"><code>    int exp = 255;</code></pre><br/>
-                        <pre style="display: inline;"><code>    </code></pre><br/>
-                        <pre style="display: inline;"><code>    encode:</code></pre><br/>
-                        <pre style="display: inline;"><code>    {</code></pre><br/>
-                        <pre style="display: inline;"><code>        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {</code></pre><br/>
-                        <pre style="display: inline;"><code>            break encode;</code></pre><br/>
-                        <pre style="display: inline;"><code>        }</code></pre><br/>
-                        <pre style="display: inline;"><code>        r = Math.min(Math.max(r, 0f), MAX_VALUE);</code></pre><br/>
-                        <pre style="display: inline;"><code>        g = Math.min(Math.max(g, 0f), MAX_VALUE);</code></pre><br/>
-                        <pre style="display: inline;"><code>        b = Math.min(Math.max(b, 0f), MAX_VALUE);</code></pre><br/>
-                        <pre style="display: inline;"><code>        </code></pre><br/>
-                        <pre style="display: inline;"><code>        float intensity = Math.max(r, Math.max(g, b));</code></pre><br/>
-                        <pre style="display: inline;"><code>        if (intensity &lt; MIN_VALUE) {</code></pre><br/>
-                        <pre style="display: inline;"><code>            mR = 0;</code></pre><br/>
-                        <pre style="display: inline;"><code>            mG = 0;</code></pre><br/>
-                        <pre style="display: inline;"><code>            mB = 0;</code></pre><br/>
-                        <pre style="display: inline;"><code>            exp = 0;</code></pre><br/>
-                        <pre style="display: inline;"><code>            break encode;</code></pre><br/>
-                        <pre style="display: inline;"><code>        }</code></pre><br/>
-                        <pre style="display: inline;"><code>        </code></pre><br/>
-                        <pre style="display: inline;"><code>        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df </code></pre><br/>
-                        <pre style="display: inline;"><code>        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);</code></pre><br/>
-                        <pre style="display: inline;"><code>        </code></pre><br/>
-                        <pre style="display: inline;"><code>        intensity = LOOKUP_TABLE[exp];</code></pre><br/>
-                        <pre style="display: inline;"><code>        </code></pre><br/>
-                        <pre style="display: inline;"><code>        r /= intensity;</code></pre><br/>
-                        <pre style="display: inline;"><code>        g /= intensity;</code></pre><br/>
-                        <pre style="display: inline;"><code>        b /= intensity;</code></pre><br/>
-                        <pre style="display: inline;"><code>        </code></pre><br/>
-                        <pre style="display: inline;"><code>        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);</code></pre><br/>
-                        <pre style="display: inline;"><code>        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);</code></pre><br/>
-                        <pre style="display: inline;"><code>        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);</code></pre><br/>
-                        <pre style="display: inline;"><code>    }</code></pre><br/>
-                        <pre style="display: inline;"><code>    </code></pre><br/>
-                        <pre style="display: inline;"><code>    data[0 + index] = (byte) mR;</code></pre><br/>
-                        <pre style="display: inline;"><code>    data[1 + index] = (byte) mG;</code></pre><br/>
-                        <pre style="display: inline;"><code>    data[2 + index] = (byte) mB;</code></pre><br/>
-                        <pre style="display: inline;"><code>    data[3 + index] = (byte) exp;</code></pre><br/>
-                        <pre style="display: inline;"><code>}</code></pre><br/>
-                    </div>
+                    <ol class="code">
+                            <li><code style="white-space: pre;">private static void encodeTo(float r, float g, float b, int index, byte[] data) {</code></li>
+                            <li><code style="white-space: pre;">    int mR = 255;</code></li>
+                            <li><code style="white-space: pre;">    int mG = 255;</code></li>
+                            <li><code style="white-space: pre;">    int mB = 255;</code></li>
+                            <li><code style="white-space: pre;">    int exp = 255;</code></li>
+                            <li><code style="white-space: pre;">    </code></li>
+                            <li><code style="white-space: pre;">    encode:</code></li>
+                            <li><code style="white-space: pre;">    {</code></li>
+                            <li><code style="white-space: pre;">        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {</code></li>
+                            <li><code style="white-space: pre;">            break encode;</code></li>
+                            <li><code style="white-space: pre;">        }</code></li>
+                            <li><code style="white-space: pre;">        r = Math.min(Math.max(r, 0f), MAX_VALUE);</code></li>
+                            <li><code style="white-space: pre;">        g = Math.min(Math.max(g, 0f), MAX_VALUE);</code></li>
+                            <li><code style="white-space: pre;">        b = Math.min(Math.max(b, 0f), MAX_VALUE);</code></li>
+                            <li><code style="white-space: pre;">        </code></li>
+                            <li><code style="white-space: pre;">        float intensity = Math.max(r, Math.max(g, b));</code></li>
+                            <li><code style="white-space: pre;">        if (intensity &lt; MIN_VALUE) {</code></li>
+                            <li><code style="white-space: pre;">            mR = 0;</code></li>
+                            <li><code style="white-space: pre;">            mG = 0;</code></li>
+                            <li><code style="white-space: pre;">            mB = 0;</code></li>
+                            <li><code style="white-space: pre;">            exp = 0;</code></li>
+                            <li><code style="white-space: pre;">            break encode;</code></li>
+                            <li><code style="white-space: pre;">        }</code></li>
+                            <li><code style="white-space: pre;">        </code></li>
+                            <li><code style="white-space: pre;">        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df </code></li>
+                            <li><code style="white-space: pre;">        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);</code></li>
+                            <li><code style="white-space: pre;">        </code></li>
+                            <li><code style="white-space: pre;">        intensity = LOOKUP_TABLE[exp];</code></li>
+                            <li><code style="white-space: pre;">        </code></li>
+                            <li><code style="white-space: pre;">        r /= intensity;</code></li>
+                            <li><code style="white-space: pre;">        g /= intensity;</code></li>
+                            <li><code style="white-space: pre;">        b /= intensity;</code></li>
+                            <li><code style="white-space: pre;">        </code></li>
+                            <li><code style="white-space: pre;">        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);</code></li>
+                            <li><code style="white-space: pre;">        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);</code></li>
+                            <li><code style="white-space: pre;">        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);</code></li>
+                            <li><code style="white-space: pre;">    }</code></li>
+                            <li><code style="white-space: pre;">    </code></li>
+                            <li><code style="white-space: pre;">    data[0 + index] = (byte) mR;</code></li>
+                            <li><code style="white-space: pre;">    data[1 + index] = (byte) mG;</code></li>
+                            <li><code style="white-space: pre;">    data[2 + index] = (byte) mB;</code></li>
+                            <li><code style="white-space: pre;">    data[3 + index] = (byte) exp;</code></li>
+                            <li><code style="white-space: pre;">}</code></li>
+                    </ol>
                     <img class="image" src="../resources/testimage.jpg" alt="testimage"/>
                 </section>
             </section>
-        </div>
+        </main>
         <footer class="footer">
-            <a class="footerLink" href="articles.html">&lt;----</a>
+            <a class="footerLink" href="articles.html">&lt;&lt;&lt;</a>
         </footer>
     </body>
 </html>

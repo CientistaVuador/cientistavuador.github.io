@@ -58,6 +58,9 @@ For more information, please refer to <https://unlicense.org>
     margin: 0 auto;
 }
 .indices {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
     border-style: inset;
     border-left: none;
     border-right: none;
@@ -117,7 +120,10 @@ For more information, please refer to <https://unlicense.org>
     overflow: auto;
     font-family: monospace;
     line-height: 1.25em;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    margin: 0;
     margin-bottom: 10px;
     margin-top: 10px;
     border-radius: 10px;
@@ -130,9 +136,9 @@ For more information, please refer to <https://unlicense.org>
     height: auto;
 }
 .footer {
-    color: black;
+    font-family: monospace;
     text-align: center;
-    font-size: 1.65em;
+    font-size: 2em;
     margin-top: 30px;
     margin-bottom: 30px;
 }
