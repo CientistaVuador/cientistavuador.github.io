@@ -32,11 +32,14 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -475,12 +478,19 @@ public class Article {
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
+        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\">\n");
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("\n");
+        b.append(INDENT).append("<!-- OpenGraph -->\n");
+        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(escapeHTML(getTitle())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:type\" content=\"article\">\n");
+        b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\">\n");
+        b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append("</head>");
-
+        
         return b.toString();
     }
-
+    
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
 
@@ -573,6 +583,8 @@ public class Article {
         b.append("Title: ").append(escapeHTML(getTitle())).append("\n");
         b.append("Id: ").append(getId()).append("\n");
         b.append("Date: ").append(getDate()).append("\n");
+        b.append("\n");
+        b.append("Generated on ").append(new Date().toString()).append("\n");
         b.append("-->\n");
         b.append("<html>\n");
         b.append(writeHead().indent(4));
