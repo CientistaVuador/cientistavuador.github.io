@@ -56,13 +56,14 @@ public class Article {
     public static Article fromTextBlocks(List<TextBlock> blocks) {
         Objects.requireNonNull(blocks, "Blocks is null.");
 
-        if (blocks.size() < 3) {
-            throw new RuntimeException("List must have at least 3 elements.");
+        if (blocks.size() < 4) {
+            throw new RuntimeException("List must have at least 4 elements.");
         }
 
         TextBlock idBlock = blocks.get(0);
         TextBlock dateBlock = blocks.get(1);
         TextBlock titleBlock = blocks.get(2);
+        TextBlock descriptionBlock = blocks.get(3);
 
         if (!idBlock.getName().equals("id")) {
             throw new RuntimeException("First block must be the id.");
@@ -79,13 +80,19 @@ public class Article {
         if (!titleBlock.getName().equals("title")) {
             throw new RuntimeException("Third block must be the title.");
         }
+        
+        String description = descriptionBlock.getArgumentNotNull();
+        
+        if (!descriptionBlock.getName().equals("description")) {
+            throw new RuntimeException("Fourth block must be the description.");
+        }
 
         String title = titleBlock.getArgumentNotNull();
 
-        Article article = new Article(id, date, title);
+        Article article = new Article(id, date, title, description);
 
-        List<TextBlock> sub = blocks.subList(3, blocks.size());
-
+        List<TextBlock> sub = blocks.subList(4, blocks.size());
+        
         Section parentSection = null;
         Section currentSection = null;
 
@@ -345,18 +352,21 @@ public class Article {
     private final int id;
     private final String date;
     private final String title;
+    private final String description;
     private final List<Section> sections = new ArrayList<>();
     private final AtomicInteger sectionsIds = new AtomicInteger(1);
 
     private String keywords = null;
 
-    public Article(int id, String date, String title) {
+    public Article(int id, String date, String title, String description) {
         Objects.requireNonNull(date, "Date is null.");
         Objects.requireNonNull(title, "Name is null.");
+        Objects.requireNonNull(description, "Description is null.");
 
         this.id = id;
         this.date = date;
         this.title = title;
+        this.description = description;
     }
 
     public int getId() {
@@ -369,6 +379,10 @@ public class Article {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getTitleEncoded() {
@@ -478,11 +492,12 @@ public class Article {
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
-        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\">\n");
+        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(escapeHTML(getTitle())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(escapeHTML(getDescription())).append("\">\n");
         b.append(INDENT).append("<meta name=\"og:type\" content=\"article\">\n");
         b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\">\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
@@ -496,10 +511,11 @@ public class Article {
 
         b.append("<header class=\"header\">\n");
         b.append(INDENT).append("<h1 class=\"h1\">").append(escapeHTML(getTitle())).append("</h1>\n");
+        b.append(INDENT).append("<h2 class=\"h2\">").append(escapeHTML(getDescription())).append("</h2>\n");
         b.append(INDENT).append("<h3 class=\"h3\">").append(String.format("%04d", getId())).append("</h3>\n");
         b.append(INDENT).append("<h3 class=\"h3\">").append(getDate()).append("</h3>\n");
         b.append("</header>");
-
+        
         return b.toString();
     }
 

@@ -37,9 +37,12 @@ For more information, please refer to <https://unlicense.org>
 .header {
     text-align: center;
 }
+.header h2, .header h3 {
+    font-size: 90%;
+    color: #030303;
+}
 .h1 {
     line-height: 1.65em;
-    margin-top: 50px;
     margin-bottom: 50px;
 }
 .h2 {
