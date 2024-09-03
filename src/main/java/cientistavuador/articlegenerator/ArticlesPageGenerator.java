@@ -100,7 +100,7 @@ public class ArticlesPageGenerator {
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<header>\n");
+        b.append("<header class=\"header\">\n");
         b.append(INDENT).append("<h1>").append("Articles").append("</h1>\n");
         b.append("</header>");
         
@@ -136,7 +136,7 @@ public class ArticlesPageGenerator {
     private String writeMain() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<main>\n");
+        b.append("<main class=\"articles\">\n");
         b.append(writeArticles().indent(4));
         b.append("</main>");
         
@@ -146,7 +146,7 @@ public class ArticlesPageGenerator {
     private String writeFooter() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<footer>\n");
+        b.append("<footer class=\"footer\">\n");
         b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
         
@@ -156,7 +156,7 @@ public class ArticlesPageGenerator {
     private String writeBody() {
         StringBuilder b = new StringBuilder();
         
-        b.append("<body>\n");
+        b.append("<body class=\"body\">\n");
         b.append(writeHeader().indent(4));
         b.append(writeMain().indent(4));
         b.append(writeFooter().indent(4));

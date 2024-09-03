@@ -41,24 +41,20 @@ For more information, please refer to <https://unlicense.org>
     font-size: 90%;
     color: #101010;
 }
-.h1 {
-    line-height: 1.65em;
-    margin-bottom: 50px;
+.article, .articles {
+    max-width: 800px;
+    justify-content: center;
+    margin: 0 auto;
 }
-.h2 {
+.article h2 {
     line-height: 1.65em;
     margin-top: 40px;
     margin-bottom: 40px;
 }
-.h3 {
+.article h3 {
     line-height: 1.65em;
     margin-top: 30px;
     margin-bottom: 30px;
-}
-.article {
-    max-width: 800px;
-    justify-content: center;
-    margin: 0 auto;
 }
 .indices {
     margin: 0;
@@ -86,7 +82,7 @@ For more information, please refer to <https://unlicense.org>
 .text {
     text-indent: 2em;
 }
-.fine {
+.fine, .warning, .severe {
     text-indent: 2em;
     margin-left: 30px;
     margin-right: 30px;
@@ -97,31 +93,20 @@ For more information, please refer to <https://unlicense.org>
     border-style: solid;
     border-color: rgb(17, 160, 60);
 }
+.fine {
+    background-color: #4edd61;
+    border-color: rgb(17, 160, 60);
+}
 .warning {
-    text-indent: 2em;
-    margin-left: 30px;
-    margin-right: 30px;
     background-color: #ecab32;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 3px black;
-    border-style: solid;
     border-color: #d39014;
 }
 .severe {
-    text-indent: 2em;
-    margin-left: 30px;
-    margin-right: 30px;
     background-color: rgb(236, 33, 33);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 3px black;
-    border-style: solid;
     border-color: #f46969;
 }
 .code {
     color: #eeeeee;
-    border-radius: 1px;
     background-color: #272822;
     overflow: auto;
     font-family: monospace;
@@ -147,15 +132,37 @@ For more information, please refer to <https://unlicense.org>
 .footer {
     font-family: monospace;
     text-align: center;
-    font-size: 2em;
     margin-top: 30px;
     margin-bottom: 30px;
 }
 .footer a:link {
     color: dimgray;
-    text-decoration: none;
 }
 .footer a:visited {
     color: dimgray;
-    text-decoration: none;
+}
+
+.articles ol {
+    list-style-type: none;
+}
+.articles ol {
+    margin: 0;
+    padding: 0;
+}
+.articles section {
+    border-style: solid;
+    border-radius: 1px;
+    border-color: gray;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.articles a:link {
+    color: #303030;
+}
+.articles a:visited {
+    color: #303030;
 }

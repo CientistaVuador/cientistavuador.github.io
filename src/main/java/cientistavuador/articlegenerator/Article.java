@@ -520,12 +520,12 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<header class=\"header\">\n");
-        b.append(INDENT).append("<h1 class=\"h1\">").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append(INDENT).append("<h2 class=\"h2\">").append(escapeHTML(getDescription())).append("</h2>\n");
-        b.append(INDENT).append("<h3 class=\"h3\">").append(String.format("%04d", getId())).append("</h3>\n");
-        b.append(INDENT).append("<h3 class=\"h3\">").append(getDate()).append("</h3>\n");
+        b.append(INDENT).append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
+        b.append(INDENT).append("<h2>").append(escapeHTML(getDescription())).append("</h2>\n");
+        b.append(INDENT).append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
+        b.append(INDENT).append("<h3>").append(getDate()).append("</h3>\n");
         b.append("</header>");
-
+        
         return b.toString();
     }
 
@@ -580,7 +580,7 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to main articles page")).append("</a>\n");
+        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to articles page")).append("</a>").append("</p>\n");
         b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
 
