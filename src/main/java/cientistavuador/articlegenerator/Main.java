@@ -30,6 +30,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -56,8 +60,11 @@ public class Main {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         Files.createDirectories(articlesFolder);
-
+        
+        List<Article> articles = new ArrayList<>();
+        
         Path rawArticlesFolder = Path.of("rawarticles");
+        Set<Integer> ids = new HashSet<>();
         for (Path articleFile : Files.list(rawArticlesFolder).toList()) {
             if (!Files.isRegularFile(articleFile)) {
                 continue;
@@ -67,16 +74,25 @@ public class Main {
             }
             try {
                 Article c = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
-                Path outputHTML = articlesFolder.resolve(
-                        articleFile.getFileName().toString().split(Pattern.quote("."))[0] + ".html"
-                );
-                Files.writeString(outputHTML, c.toHTML(), StandardCharsets.UTF_8);
-                System.out.println("Generated " + outputHTML.getFileName() + " from " + articleFile.getFileName());
+                articles.add(c);
+                System.out.println("Loaded " + c.getTitle() + ", ID: " + c.getId() + " from " + articleFile.getFileName());
+                
+                if (ids.contains(c.getId())) {
+                    throw new IllegalArgumentException(articleFile.toString()+" has duplicate id!");
+                }
+                ids.add(c.getId());
             } catch (Throwable t) {
                 System.out.println("Failed to compile: "+articleFile.getFileName());
                 throw t;
             }
         }
+        
+        for (Article c:articles) {
+            Files.writeString(articlesFolder.resolve(c.getId()+".html"), c.toHTML());
+            System.out.println("Written "+c.getTitle()+", ID: "+c.getId());
+        }
+        Files.writeString(articlesFolder.resolve("articles.html"), ArticlesPageGenerator.generatePage(articles));
+        System.out.println("Written articles.html");
     }
 
 }

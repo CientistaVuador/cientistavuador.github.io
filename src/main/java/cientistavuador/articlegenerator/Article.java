@@ -32,14 +32,12 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -52,6 +50,77 @@ import java.util.stream.Stream;
  * @author Cien
  */
 public class Article {
+
+    private static String clear(String s) {
+        StringBuilder b = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            int unicode = s.codePointAt(i);
+            if (unicode == ' ') {
+                b.append(' ');
+                continue;
+            }
+            if (!Character.isLetterOrDigit(unicode)) {
+                b.append(' ');
+                continue;
+            }
+            b.appendCodePoint(unicode);
+        }
+
+        return b.toString();
+    }
+
+    private static boolean isOnlyDigits(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.codePointAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static String getKeywords(String text) {
+        List<String> words = new ArrayList<>();
+        String cleared = clear(text);
+        String[] split = cleared.split(" ");
+        for (String word : split) {
+            if (word.isBlank() || word.length() == 1) {
+                continue;
+            }
+            if (isOnlyDigits(word)) {
+                continue;
+            }
+            words.add(word.toLowerCase());
+        }
+
+        Map<String, Integer> wordCount = new HashMap<>();
+        for (String word : words) {
+            Integer current = wordCount.get(word);
+            if (current == null) {
+                current = 0;
+            }
+            current++;
+            wordCount.put(word, current);
+        }
+        
+        Entry<String, Integer>[] set = wordCount.entrySet().toArray(Entry[]::new);
+        Comparator<Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
+        Arrays.sort(set, comparator.reversed());
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 64; i++) {
+            if (i >= set.length) {
+                break;
+            }
+            builder.append(set[i].getKey());
+            if (i != set.length - 1 && i != 63) {
+                builder.append(", ");
+            }
+        }
+        
+        return builder.toString();
+    }
 
     public static Article fromTextBlocks(List<TextBlock> blocks) {
         Objects.requireNonNull(blocks, "Blocks is null.");
@@ -80,9 +149,9 @@ public class Article {
         if (!titleBlock.getName().equals("title")) {
             throw new RuntimeException("Third block must be the title.");
         }
-        
+
         String description = descriptionBlock.getArgumentNotNull();
-        
+
         if (!descriptionBlock.getName().equals("description")) {
             throw new RuntimeException("Fourth block must be the description.");
         }
@@ -92,7 +161,7 @@ public class Article {
         Article article = new Article(id, date, title, description);
 
         List<TextBlock> sub = blocks.subList(4, blocks.size());
-        
+
         Section parentSection = null;
         Section currentSection = null;
 
@@ -396,53 +465,19 @@ public class Article {
     public int requestSectionId() {
         return this.sectionsIds.getAndIncrement();
     }
-
-    private String clear(String s) {
+    
+    private String fullText(Section section) {
         StringBuilder b = new StringBuilder();
-
-        for (int i = 0; i < s.length(); i++) {
-            int unicode = s.codePointAt(i);
-            if (unicode == ' ') {
-                b.append(' ');
-                continue;
-            }
-            if (!Character.isLetterOrDigit(unicode)) {
-                b.append(' ');
-                continue;
-            }
-            b.appendCodePoint(unicode);
+        
+        for (Resource r:section.getResources()) {
+            b.append(r.getResource()).append(' ');
         }
-
+        
+        for (Section s:section.getChildren()) {
+            b.append(fullText(s)).append(' ');
+        }
+        
         return b.toString();
-    }
-
-    private boolean isOnlyDigits(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (!Character.isDigit(s.codePointAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void findWords(List<String> list, Section section) {
-        for (Resource resource : section.getResources()) {
-            String cleared = clear(resource.getResource());
-            String[] split = cleared.split(" ");
-            for (String word : split) {
-                if (word.isBlank() || word.length() == 1) {
-                    continue;
-                }
-                if (isOnlyDigits(word)) {
-                    continue;
-                }
-                list.add(word.toLowerCase());
-            }
-        }
-
-        for (Section child : section.getChildren()) {
-            findWords(list, child);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -450,37 +485,12 @@ public class Article {
         if (this.keywords != null) {
             return this.keywords;
         }
-        List<String> words = new ArrayList<>();
-        for (Section section : getSections()) {
-            findWords(words, section);
-        }
-
-        Map<String, Integer> wordCount = new HashMap<>();
-        for (String word : words) {
-            Integer current = wordCount.get(word);
-            if (current == null) {
-                current = 0;
-            }
-            current++;
-            wordCount.put(word, current);
-        }
-
-        Entry<String, Integer>[] set = wordCount.entrySet().toArray(Entry[]::new);
-        Comparator<Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
-        Arrays.sort(set, comparator.reversed());
-
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 64; i++) {
-            if (i >= set.length) {
-                break;
-            }
-            builder.append(set[i].getKey());
-            if (i != set.length - 1 && i != 63) {
-                builder.append(", ");
-            }
+        for (Section section : getSections()) {
+            builder.append(fullText(section)).append(' ');
         }
-        this.keywords = builder.toString();
-
+        this.keywords = getKeywords(builder.toString());
+        
         return this.keywords;
     }
 
@@ -497,15 +507,15 @@ public class Article {
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(escapeHTML(getTitle())).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(escapeHTML(getDescription())).append("\">\n");
-        b.append(INDENT).append("<meta name=\"og:type\" content=\"article\">\n");
-        b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\">\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(escapeHTML(getDescription())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:type\" content=\"article\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append("</head>");
-        
+
         return b.toString();
     }
-    
+
     private String writeHeader() {
         StringBuilder b = new StringBuilder();
 
@@ -515,7 +525,7 @@ public class Article {
         b.append(INDENT).append("<h3 class=\"h3\">").append(String.format("%04d", getId())).append("</h3>\n");
         b.append(INDENT).append("<h3 class=\"h3\">").append(getDate()).append("</h3>\n");
         b.append("</header>");
-        
+
         return b.toString();
     }
 
@@ -543,7 +553,7 @@ public class Article {
 
     private String writeIndices() {
         StringBuilder b = new StringBuilder();
-        
+
         b.append("<ol class=\"indices\">\n");
         for (Section s : getSections()) {
             b.append(writeSectionIndex(s, 0).indent(4));
@@ -570,7 +580,8 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<a href=\"articles.html\">").append(escapeHTML("<<<")).append("</a>\n");
+        b.append(INDENT).append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to main articles page")).append("</a>\n");
+        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
 
         return b.toString();
