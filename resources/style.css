@@ -31,8 +31,6 @@ For more information, please refer to <https://unlicense.org>
 .body {
     font-family: sans-serif;
     line-height: 1.65em;
-    text-align: justify;
-    text-justify: inter-word;
 }
 .header {
     text-align: center;
@@ -45,6 +43,10 @@ For more information, please refer to <https://unlicense.org>
     max-width: 800px;
     justify-content: center;
     margin: 0 auto;
+}
+.article p, .articles p {
+    text-align: justify;
+    text-justify: inter-word;
 }
 .article h2 {
     line-height: 1.65em;
@@ -141,7 +143,6 @@ For more information, please refer to <https://unlicense.org>
 .footer a:visited {
     color: dimgray;
 }
-
 .articles ol {
     list-style-type: none;
 }
@@ -150,8 +151,7 @@ For more information, please refer to <https://unlicense.org>
     padding: 0;
 }
 .articles section {
-    border-style: solid;
-    border-radius: 1px;
+    border-style: dashed;
     border-color: gray;
     border-left: none;
     border-right: none;

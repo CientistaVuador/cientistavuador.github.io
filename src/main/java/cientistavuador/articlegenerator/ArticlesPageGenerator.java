@@ -61,7 +61,9 @@ public class ArticlesPageGenerator {
         sortedList.addAll(articles);
         Comparator<Article> comparator = (o1, o2) -> Integer.compare(o1.getId(), o2.getId());
         sortedList.sort(comparator.reversed());
-        sortedList.addFirst(articleZero);
+        if (articleZero != null) {
+            sortedList.addFirst(articleZero);
+        }
         
         this.articles = sortedList;
     }
