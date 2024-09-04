@@ -214,7 +214,7 @@ public class Article {
 
     static {
         try {
-            LICENSE = Files.readString(Paths.get("resources", "license.txt"), StandardCharsets.UTF_8);
+            LICENSE = Files.readString(Paths.get("resources", "license.txt"), StandardCharsets.UTF_8).stripTrailing();
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }

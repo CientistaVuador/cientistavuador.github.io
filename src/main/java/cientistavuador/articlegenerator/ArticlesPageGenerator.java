@@ -90,7 +90,7 @@ public class ArticlesPageGenerator {
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append(INDENT).append("<meta name=\"og:title\" content=\"").append("Articles").append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append("Articles Page").append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append("Articles").append("\"/>\n");
         b.append(INDENT).append("<meta name=\"og:type\" content=\"website\"/>\n");
         b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
@@ -186,7 +186,7 @@ public class ArticlesPageGenerator {
                     .indent(4)
             );
         }
-        b.append("\n\n");
+        b.append("\n");
         b.append("Generated on ").append(new Date().toString()).append("\n");
         b.append("-->\n");
         b.append("<html>\n");
