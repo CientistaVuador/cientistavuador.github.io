@@ -580,7 +580,7 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to articles page")).append("</a>").append("</p>\n");
+        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to Articles")).append("</a>").append("</p>\n");
         b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
 

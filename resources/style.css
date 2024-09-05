@@ -28,7 +28,12 @@ For more information, please refer to <https://unlicense.org>
     Created on : 26 de ago. de 2024, 20:15:55
     Author     : Cien
 */
+:root {
+    color-scheme: dark;
+}
 .body {
+    background-color: #303030;
+    color: #DDDDDD;
     font-family: sans-serif;
     line-height: 1.65em;
 }
@@ -37,7 +42,6 @@ For more information, please refer to <https://unlicense.org>
 }
 .header h2, .header h3 {
     font-size: 90%;
-    color: #101010;
 }
 .article, .articles {
     max-width: 800px;
@@ -73,10 +77,10 @@ For more information, please refer to <https://unlicense.org>
     font-size: 90%;
 }
 .indices a:link {
-    color: dimgray;
+    color: #DDDDDD;
 }
 .indices a:visited {
-    color: dimgray;
+    color: #DDDDDD;
 }
 .indices ol {
     list-style-type: none;
@@ -88,6 +92,7 @@ For more information, please refer to <https://unlicense.org>
     text-indent: 2em;
     margin-left: 30px;
     margin-right: 30px;
+    color: #000000;
     background-color: #4edd61;
     padding: 15px;
     border-radius: 10px;
@@ -96,7 +101,7 @@ For more information, please refer to <https://unlicense.org>
     border-color: rgb(17, 160, 60);
 }
 .fine {
-    background-color: #4edd61;
+    background-color: #42bc52;
     border-color: rgb(17, 160, 60);
 }
 .warning {
@@ -104,8 +109,8 @@ For more information, please refer to <https://unlicense.org>
     border-color: #d39014;
 }
 .severe {
-    background-color: rgb(236, 33, 33);
-    border-color: #f46969;
+    background-color: #b71919;
+    border-color: #880b0b;
 }
 .code {
     color: #eeeeee;
@@ -138,31 +143,33 @@ For more information, please refer to <https://unlicense.org>
     margin-bottom: 30px;
 }
 .footer a:link {
-    color: dimgray;
+    color: #DDDDDD;
 }
 .footer a:visited {
-    color: dimgray;
+    color: #DDDDDD;
 }
 .articles ol {
     list-style-type: none;
-}
-.articles ol {
     margin: 0;
     padding: 0;
 }
 .articles section {
-    border-style: dashed;
+    border-style: solid;
     border-color: gray;
     border-left: none;
     border-right: none;
     border-top: none;
-    margin: 0px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    border-radius: 3px;
+    margin: 15px;
+    padding: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #272822;
+    box-shadow: 0px 0px 3px black;
 }
 .articles a:link {
-    color: #303030;
+    color: #DDDDDD;
 }
 .articles a:visited {
-    color: #303030;
+    color: #DDDDDD;
 }
