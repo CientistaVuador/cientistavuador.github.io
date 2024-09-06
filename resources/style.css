@@ -132,13 +132,15 @@ For more information, please refer to <https://unlicense.org>
 }
 .list {
     color: #eeeeee;
-    text-indent: 0.5em;
     line-height: 1.35em;
     padding-top: 2px;
     padding-bottom: 2px;
     margin: 30px;
     margin-bottom: 5px;
     margin-top: 5px;
+}
+.list p {
+    margin-left: 10px;
 }
 .code code {
     white-space: pre;
