@@ -115,8 +115,9 @@ For more information, please refer to <https://unlicense.org>
     border-color: #d39014;
 }
 .severe {
-    background-color: #e02323;
-    border-color: #a50d0d;
+    color: #FFFFFF;
+    background-color: #9B1212;
+    border-color: #6E0C0C;
 }
 .code {
     color: #eeeeee;
