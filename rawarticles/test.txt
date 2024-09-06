@@ -37,11 +37,6 @@ Curabitur diam odio, vehicula venenatis tincidunt non.
     ,~\~~text~\~~ -> crossed -> ~~~text~~~
     ,_\__text_\__ -> underline -> ___text___
     ,[\[[link:\::text]\]] -> link -> [[[link:::text]]]
-    ,all -> 
-        ```///
-        public static void ___main___(String[] args) { 
-        //~~~code~~~ ***download java*** [[[https://adoptium.net/:::here]]] }
-        ///```
 [;<;>]
 
 [text]
