@@ -78,7 +78,7 @@ public class Article {
         }
         return true;
     }
-    
+
     @SuppressWarnings("unchecked")
     public static String getKeywords(String text) {
         List<String> words = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Article {
             current++;
             wordCount.put(word, current);
         }
-        
+
         Entry<String, Integer>[] set = wordCount.entrySet().toArray(Entry[]::new);
         Comparator<Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
         Arrays.sort(set, comparator.reversed());
@@ -118,7 +118,7 @@ public class Article {
                 builder.append(", ");
             }
         }
-        
+
         return builder.toString();
     }
 
@@ -155,9 +155,9 @@ public class Article {
         if (!descriptionBlock.getName().equals("description")) {
             throw new RuntimeException("Fourth block must be the description.");
         }
-        
+
         String title = titleBlock.getTitleFormatted();
-        
+
         Article article = new Article(id, date, title, description);
 
         List<TextBlock> sub = blocks.subList(4, blocks.size());
@@ -228,7 +228,6 @@ public class Article {
 
     public static final String INDENT = " ".repeat(4);
 
-    
     public static enum ResourceType {
         TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST, HTML;
     }
@@ -275,30 +274,30 @@ public class Article {
 
             return b.toString();
         }
-        
+
         private String toListHTML(boolean ordered) {
             StringBuilder b = new StringBuilder();
-            
+
             if (ordered) {
                 b.append("<ol class=\"list\">\n");
             } else {
                 b.append("<ul class=\"list\">\n");
             }
-            
+
             String[] formatted = TextBlock.getListFormatted(getResource());
             for (int i = 0; i < formatted.length; i++) {
                 b.append(INDENT).append("<li><p>").append(HTMLTranslator.escapeAndTranslate(formatted[i])).append("</p></li>\n");
             }
-            
+
             if (ordered) {
                 b.append("</ol>");
             } else {
                 b.append("</ul>");
             }
-            
+
             return b.toString();
         }
-        
+
         public String toHTML() {
             switch (this.type) {
                 case IMAGE -> {
@@ -317,7 +316,7 @@ public class Article {
                     return TextBlock.getCodeFormatted(getResource());
                 }
             }
-            
+
             String clazz = "text";
             switch (getType()) {
                 case FINE -> {
@@ -472,18 +471,18 @@ public class Article {
     public int requestSectionId() {
         return this.sectionsIds.getAndIncrement();
     }
-    
+
     private String fullText(Section section) {
         StringBuilder b = new StringBuilder();
-        
-        for (Resource r:section.getResources()) {
+
+        for (Resource r : section.getResources()) {
             b.append(r.getResource()).append(' ');
         }
-        
-        for (Section s:section.getChildren()) {
+
+        for (Section s : section.getChildren()) {
             b.append(fullText(s)).append(' ');
         }
-        
+
         return b.toString();
     }
 
@@ -497,7 +496,7 @@ public class Article {
             builder.append(fullText(section)).append(' ');
         }
         this.keywords = getKeywords(builder.toString());
-        
+
         return this.keywords;
     }
 
@@ -533,7 +532,7 @@ public class Article {
         b.append(INDENT).append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
         b.append(INDENT).append("<h3>").append(getDate()).append("</h3>\n");
         b.append("</header>");
-        
+
         return b.toString();
     }
 
@@ -589,9 +588,20 @@ public class Article {
 
         b.append("<footer class=\"footer\">\n");
         b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(HTMLTranslator.escape("<<< Return to Articles")).append("</a>").append("</p>\n");
+        b.append(
+                """
+                <script src="https://utteranc.es/client.js"
+                        repo="CientistaVuador/cientistavuador.github.io"
+                        issue-term="{ARTICLE-ID-HERE}"
+                        label="comments"
+                        theme="github-dark"
+                        crossorigin="anonymous"
+                        async="async">
+                </script>
+                """.replace("{ARTICLE-ID-HERE}", "Article "+Integer.toString(getId())).indent(4));
         b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(HTMLTranslator.escape("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
-
+        
         return b.toString();
     }
 

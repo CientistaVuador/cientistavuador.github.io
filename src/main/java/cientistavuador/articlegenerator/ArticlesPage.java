@@ -149,6 +149,17 @@ public class ArticlesPage {
         StringBuilder b = new StringBuilder();
         
         b.append("<footer class=\"footer\">\n");
+        b.append(
+                """
+                <script src="https://utteranc.es/client.js"
+                        repo="CientistaVuador/cientistavuador.github.io"
+                        issue-term="Articles Page"
+                        label="comments"
+                        theme="github-dark"
+                        crossorigin="anonymous"
+                        async="async">
+                </script>
+                """.indent(4));
         b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(HTMLTranslator.escape("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
         

@@ -247,12 +247,6 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
 [;<;>]
 
 [html]
-<script src="https://utteranc.es/client.js"
-        repo="CientistaVuador/cientistavuador.github.io"
-        issue-term="test"
-        label="comment"
-        theme="github-dark"
-        crossorigin="anonymous"
-        async="async">
-</script>
+<p>Raw HTML</p>
+<button>A Button</button>
 [;<;>]
