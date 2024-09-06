@@ -19,7 +19,30 @@ Curabitur diam odio, vehicula venenatis tincidunt non.
     ,sed accumsan nunc porta et. Donec posuere nunc.
 [;<;>]
 
+[text] List of elements: [;<;>]
+
+[ulist]
+    ,```[id] id [;<;>];```
+    ,```[date] date [;<;>];```
+    ,```[title] title [;<;>];```
+    ,```[description] description [;<;>];```
+    ,```[section] section [;<;>];```
+    ,```[subsection] section [;<;>];```
+    ,```[text] text [;<;>];```
+    ,```[fine] fine [;<;>];```
+    ,```[warning] warning [;<;>];```
+    ,```[severe] severe [;<;>];```
+    ,```[image] image url [;<;>];```
+    ,```[olist] this,, is,, a,, ordered,, list [;<;>];```
+    ,```[ulist] this,, is,, a,, unordered,, list [;<;>];```
+    ,```///a*b*c///```
+[;<;>]
+
 [text] Unordered List: [;<;>]
+
+[text]
+[id][id][id]
+[;<;>]
 
 [ulist]
     ,lorem sit amet
@@ -221,4 +244,15 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
                 .toArray(String[]::new);
     }
 
+[;<;>]
+
+[html]
+<script src="https://utteranc.es/client.js"
+        repo="CientistaVuador/cientistavuador.github.io"
+        issue-term="test"
+        label="comment"
+        theme="github-dark"
+        crossorigin="anonymous"
+        async="async">
+</script>
 [;<;>]

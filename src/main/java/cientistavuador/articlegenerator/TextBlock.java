@@ -126,6 +126,16 @@ public class TextBlock {
                 }
                 b.appendCodePoint(unicode);
                 if (sequenceCounter == 6) {
+                    int nextUnicode = 0;
+                    if (i < (text.length() - 1)) {
+                        nextUnicode = text.codePointAt(i + 1);
+                    }
+                    if (nextUnicode == ';') {
+                        sequenceCounter = 0;
+                        i++;
+                        continue;
+                    }
+                    
                     b.setLength(b.length() - 6);
 
                     if (blockAttribute == null) {
@@ -248,9 +258,38 @@ public class TextBlock {
                 .stripIndent();
     }
 
+    public static String[] splitByComma(String text) {
+        List<String> list = new ArrayList<>();
+        
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int unicode = text.codePointAt(i);
+            
+            if (unicode == ',') {
+                int nextUnicode = 0;
+                if (i < (text.length() - 1)) {
+                    nextUnicode = text.codePointAt(i + 1);
+                }
+                if (nextUnicode == ',') {
+                    i++;
+                    b.append(',');
+                    continue;
+                }
+                list.add(b.toString());
+                b.setLength(0);
+                continue;
+            }
+            
+            b.appendCodePoint(unicode);
+        }
+        list.add(b.toString());
+        
+        return list.toArray(String[]::new);
+    }
+    
     public static String[] getListFormatted(String text) {
         return Stream
-                .of(text.split(Pattern.quote(",")))
+                .of(splitByComma(text))
                 .map(s -> getTitleFormatted(s))
                 .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);

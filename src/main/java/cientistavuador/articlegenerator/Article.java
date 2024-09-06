@@ -180,7 +180,7 @@ public class Article {
                     parentSection.getChildren().add(child);
                     currentSection = child;
                 }
-                case "text", "image", "code", "fine", "warning", "severe", "olist", "ulist" -> {
+                case "text", "image", "code", "fine", "warning", "severe", "olist", "ulist", "html" -> {
                     if (currentSection == null) {
                         throw new RuntimeException("No parent section for block at line " + block.getLine());
                     }
@@ -202,6 +202,8 @@ public class Article {
                             type = ResourceType.ORDERED_LIST;
                         case "ulist" ->
                             type = ResourceType.UNORDERED_LIST;
+                        case "html" ->
+                            type = ResourceType.HTML;
                     }
                     currentSection.getResources().add(new Resource(type, block.getRawText()));
                 }
@@ -228,7 +230,7 @@ public class Article {
 
     
     public static enum ResourceType {
-        TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST;
+        TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST, HTML;
     }
 
     public static class Resource {
@@ -298,22 +300,24 @@ public class Article {
         }
         
         public String toHTML() {
-            if (this.type.equals(ResourceType.IMAGE)) {
-                return toImageHTML();
-            }
-
-            if (this.type.equals(ResourceType.CODE)) {
-                return toCodeHTML();
+            switch (this.type) {
+                case IMAGE -> {
+                    return toImageHTML();
+                }
+                case CODE -> {
+                    return toCodeHTML();
+                }
+                case ORDERED_LIST -> {
+                    return toListHTML(true);
+                }
+                case UNORDERED_LIST -> {
+                    return toListHTML(false);
+                }
+                case HTML -> {
+                    return TextBlock.getCodeFormatted(getResource());
+                }
             }
             
-            if (this.type.equals(ResourceType.ORDERED_LIST)) {
-                return toListHTML(true);
-            }
-            
-            if (this.type.equals(ResourceType.UNORDERED_LIST)) {
-                return toListHTML(false);
-            }
-
             String clazz = "text";
             switch (getType()) {
                 case FINE -> {
