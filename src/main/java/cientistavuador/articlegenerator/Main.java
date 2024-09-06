@@ -90,7 +90,7 @@ public class Main {
             Files.writeString(articlesFolder.resolve(c.getId()+".html"), c.toHTML());
             System.out.println("Written "+c.getTitle()+", ID: "+c.getId());
         }
-        Files.writeString(articlesFolder.resolve("articles.html"), ArticlesPageGenerator.generatePage(articles));
+        Files.writeString(articlesFolder.resolve("articles.html"), ArticlesPage.generatePage(articles));
         System.out.println("Written articles.html");
     }
 

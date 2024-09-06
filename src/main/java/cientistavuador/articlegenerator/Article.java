@@ -226,39 +226,7 @@ public class Article {
 
     public static final String INDENT = " ".repeat(4);
 
-    public static String escapeHTML(String text) {
-        StringBuilder b = new StringBuilder();
-
-        for (int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i);
-            switch (unicode) {
-                case '&' -> {
-                    b.append("&amp;");
-                    continue;
-                }
-                case '<' -> {
-                    b.append("&lt;");
-                    continue;
-                }
-                case '>' -> {
-                    b.append("&gt;");
-                    continue;
-                }
-                case '"' -> {
-                    b.append("&quot;");
-                    continue;
-                }
-                case '\'' -> {
-                    b.append("&#39;");
-                    continue;
-                }
-            }
-            b.appendCodePoint(unicode);
-        }
-
-        return b.toString();
-    }
-
+    
     public static enum ResourceType {
         TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST;
     }
@@ -299,7 +267,7 @@ public class Article {
             b.append("<ol class=\"code\">\n");
             Stream<String> lines = TextBlock.getCodeFormatted(getResource()).lines();
             for (String line : lines.toList()) {
-                b.append(INDENT).append(INDENT).append("<li><code>").append(escapeHTML(line)).append("</code></li>\n");
+                b.append(INDENT).append("<li><code>").append(HTMLTranslator.escape(line)).append("</code></li>\n");
             }
             b.append("</ol>");
 
@@ -317,7 +285,7 @@ public class Article {
             
             String[] formatted = TextBlock.getListFormatted(getResource());
             for (int i = 0; i < formatted.length; i++) {
-                b.append(INDENT).append("<li><p>").append(escapeHTML(formatted[i])).append("</p></li>\n");
+                b.append(INDENT).append("<li><p>").append(HTMLTranslator.escapeAndTranslate(formatted[i])).append("</p></li>\n");
             }
             
             if (ordered) {
@@ -362,7 +330,7 @@ public class Article {
             StringBuilder b = new StringBuilder();
 
             b.append("<p class=\"").append(clazz).append("\">\n");
-            b.append(escapeHTML(TextBlock.getParagraphFormatted(getResource())).indent(4));
+            b.append(HTMLTranslator.escapeAndTranslate(TextBlock.getParagraphFormatted(getResource())).indent(4));
             b.append("</p>");
 
             return b.toString();
@@ -436,7 +404,7 @@ public class Article {
             String tag = "h" + (2 + depth);
 
             b.append("<section id=\"").append(getFullNameEncoded()).append("\">\n");
-            b.append(INDENT).append("<").append(tag).append(" class=\"").append(tag).append("\">").append(escapeHTML(getFullName())).append("</").append(tag).append(">\n");
+            b.append(INDENT).append("<").append(tag).append(" class=\"").append(tag).append("\">").append(HTMLTranslator.escape(getFullName())).append("</").append(tag).append(">\n");
             for (Resource r : getResources()) {
                 b.append(r.toHTML().indent(4));
             }
@@ -533,7 +501,7 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<head>\n");
-        b.append(INDENT).append("<title>").append(escapeHTML(getTitle())).append("</title>\n");
+        b.append(INDENT).append("<title>").append(HTMLTranslator.escape(getTitle())).append("</title>\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
@@ -541,8 +509,8 @@ public class Article {
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
-        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(escapeHTML(getTitle())).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(escapeHTML(getDescription())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(HTMLTranslator.escape(getTitle())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(HTMLTranslator.escape(getDescription())).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"og:type\" content=\"article\"/>\n");
         b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
@@ -555,8 +523,8 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<header class=\"header\">\n");
-        b.append(INDENT).append("<h1>").append(escapeHTML(getTitle())).append("</h1>\n");
-        b.append(INDENT).append("<h2>").append(escapeHTML(getDescription())).append("</h2>\n");
+        b.append(INDENT).append("<h1>").append(HTMLTranslator.escape(getTitle())).append("</h1>\n");
+        b.append(INDENT).append("<h2>").append(HTMLTranslator.escape(getDescription())).append("</h2>\n");
         b.append(INDENT).append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
         b.append(INDENT).append("<h3>").append(getDate()).append("</h3>\n");
         b.append("</header>");
@@ -615,8 +583,8 @@ public class Article {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(escapeHTML("<<< Return to Articles")).append("</a>").append("</p>\n");
-        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
+        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(HTMLTranslator.escape("<<< Return to Articles")).append("</a>").append("</p>\n");
+        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(HTMLTranslator.escape("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
 
         return b.toString();
@@ -642,7 +610,7 @@ public class Article {
         b.append("\n");
         b.append(LICENSE);
         b.append("\n\n");
-        b.append("Title: ").append(escapeHTML(getTitle())).append("\n");
+        b.append("Title: ").append(HTMLTranslator.escape(getTitle())).append("\n");
         b.append("Id: ").append(getId()).append("\n");
         b.append("Date: ").append(getDate()).append("\n");
         b.append("\n");

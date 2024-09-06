@@ -10,6 +10,40 @@ Curabitur diam odio, vehicula venenatis tincidunt non.
 
 [subsection] Sed viverra enim vitae consectetu [;<;>]
 
+[text] Ordered List: [;<;>]
+
+[olist]
+    ,sed nunc feugiat laoreet.
+    ,ornare eu, congue eget quam. Suspendisse potenti.
+    ,Quisque sodales massa eget suscipit interdum.
+    ,sed accumsan nunc porta et. Donec posuere nunc.
+[;<;>]
+
+[text] Unordered List: [;<;>]
+
+[ulist]
+    ,lorem sit amet
+    ,maximus dapibus neque dictum sit amet
+    ,Donec vel feugiat
+    ,nunc feugiat laoreet
+[;<;>]
+
+[text] Formatting: [;<;>]
+
+[ulist]
+    ,/\//text/\// -> italic -> ///text///
+    ,*\**text*\** -> bold -> ***text***
+    ,`\``text`\`` -> code -> ```code```
+    ,~\~~text~\~~ -> crossed -> ~~~text~~~
+    ,_\__text_\__ -> underline -> ___text___
+    ,[\[[link:\::text]\]] -> link -> [[[link:::text]]]
+    ,all -> 
+        ```///
+        public static void ___main___(String[] args) { 
+        //~~~code~~~ ***download java*** [[[https://adoptium.net/:::here]]] }
+        ///```
+[;<;>]
+
 [text]
 Proin convallis condimentum commodo. Phasellus eu mauris vitae ipsum sollicitudin
 iaculis id sed diam. Integer non nulla rutrum leo ultrices congue sit amet eleifend elit.
@@ -51,8 +85,8 @@ Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
 condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
 torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
-non laoreet nibh. Aliquam maximus odio vel augue rhoncus, hendrerit mattis metus pellentesque.
-Duis eget sodales nibh, quis volutpat dui. Sed sit amet odio ut felis porttitor rhoncus vel ac
+non laoreet nibh. ///Aliquam maximus odio vel augue rhoncus, hendrerit mattis metus pellentesque.
+Duis eget sodales nibh,/// quis volutpat dui. Sed sit amet odio ut felis porttitor rhoncus vel ac
 eros. Morbi a bibendum purus. Suspendisse potenti. Suspendisse cursus dui at purus fermentum,
 accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, luctus interdum
 nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
@@ -65,35 +99,17 @@ Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
 [text]
 Mauris elit nisl, tincidunt in enim vel, varius commodo dolor. Suspendisse vitae tempor enim
 Quisque sodales massa eget suscipit interdum. Aliquam erat volutpat. Donec in augue tincidunt
-porta elit non, ornare tellus. Etiam rutrum, lectus sit amet gravida aliquam, nibh ante lacinia
+porta elit non, ```ornare tellus. Etiam rutrum, lectus``` sit amet gravida aliquam, nibh ante lacinia
 purus, eget porta nunc justo eget lacus. Quisque in dui eleifend, finibus nibh ac, tincidunt
 tellus. Phasellus non vehicula diam, a tristique eros. Vestibulum metus arcu, elementum at
 ornare eu, congue eget quam. Suspendisse potenti. Donec convallis sem nec leo ultrices vulputate.
-[;<;>]
-
-[text] Ordered List: [;<;>]
-
-[olist]
-    ,sed nunc feugiat laoreet.
-    ,ornare eu, congue eget quam. Suspendisse potenti.
-    ,Quisque sodales massa eget suscipit interdum.
-    ,sed accumsan nunc porta et. Donec posuere nunc.
-[;<;>]
-
-[text] Unordered List: [;<;>]
-
-[ulist]
-    ,lorem sit amet
-    ,maximus dapibus neque dictum sit amet
-    ,Donec vel feugiat
-    ,nunc feugiat laoreet
 [;<;>]
 
 [fine]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Nunc sollicitudin feugiat tortor, maximus dapibus neque dictum sit amet.
 Praesent in urna consequat, auctor lorem sit amet, efficitur augue.
-Nunc fringilla tincidunt ultrices. Nunc luctus lorem id pulvinar volutpat.
+Nunc fringilla ~~~tincidunt~~~ ultrices. Nunc luctus lorem id pulvinar volutpat.
 Etiam semper tellus massa,
 sed accumsan nunc porta et. Donec posuere nunc.
 [;<;>]
@@ -101,7 +117,7 @@ sed accumsan nunc porta et. Donec posuere nunc.
 [warning]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam faucibus ligula
 sed nunc feugiat laoreet. Donec vel feugiat lacus. Suspendisse ultricies dui
-non augue tempor, in pellentesque ante tristique. Sed sed cursus quam. Quisque
+non augue tempor, in ***pellentesque*** ante tristique. Sed sed cursus quam. Quisque
 volutpat molestie ex.
 Nunc interdum mi non vulputate pulvinar. Pellentesque finibus in felis sit amet porta.
 [;<;>]
@@ -109,12 +125,13 @@ Nunc interdum mi non vulputate pulvinar. Pellentesque finibus in felis sit amet 
 [severe]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Proin tellus libero, hendrerit vitae urna in, dictum accumsan massa.
-Orci varius natoque penatibus et magnis dis parturient montes,
+Orci varius ___natoque___ penatibus et magnis dis parturient montes,
 nascetur ridiculus mus. Ut nibh turpis, lobortis non vestibulum blandit,
 cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.
 [;<;>]
 
 [code]
+
 private static void encodeTo(float r, float g, float b, int index, byte[] data) {
     int mR = 255;
     int mG = 255;
@@ -158,6 +175,7 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
     data[2 + index] = (byte) mB;
     data[3 + index] = (byte) exp;
 }
+
 [;<;>]
 
 [image] ../resources/testimage.jpg [;<;>]

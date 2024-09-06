@@ -30,7 +30,7 @@ Title: id arcu et sapien cursus mattis
 Id: 1
 Date: 2024/08/27 By Cien
 
-Generated on Thu Sep 05 22:38:19 BRT 2024
+Generated on Fri Sep 06 01:55:28 BRT 2024
 -->
 <html>
     <head>
@@ -172,49 +172,49 @@ Generated on Thu Sep 05 22:38:19 BRT 2024
                         cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.
                     </p>
                     <ol class="code">
-                            <li><code>private static void encodeTo(float r, float g, float b, int index, byte[] data) {</code></li>
-                            <li><code>    int mR = 255;</code></li>
-                            <li><code>    int mG = 255;</code></li>
-                            <li><code>    int mB = 255;</code></li>
-                            <li><code>    int exp = 255;</code></li>
-                            <li><code></code></li>
-                            <li><code>    encode:</code></li>
-                            <li><code>    {</code></li>
-                            <li><code>        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {</code></li>
-                            <li><code>            break encode;</code></li>
-                            <li><code>        }</code></li>
-                            <li><code>        r = Math.min(Math.max(r, 0f), MAX_VALUE);</code></li>
-                            <li><code>        g = Math.min(Math.max(g, 0f), MAX_VALUE);</code></li>
-                            <li><code>        b = Math.min(Math.max(b, 0f), MAX_VALUE);</code></li>
-                            <li><code></code></li>
-                            <li><code>        float intensity = Math.max(r, Math.max(g, b));</code></li>
-                            <li><code>        if (intensity &lt; MIN_VALUE) {</code></li>
-                            <li><code>            mR = 0;</code></li>
-                            <li><code>            mG = 0;</code></li>
-                            <li><code>            mB = 0;</code></li>
-                            <li><code>            exp = 0;</code></li>
-                            <li><code>            break encode;</code></li>
-                            <li><code>        }</code></li>
-                            <li><code></code></li>
-                            <li><code>        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df</code></li>
-                            <li><code>        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);</code></li>
-                            <li><code></code></li>
-                            <li><code>        intensity = LOOKUP_TABLE[exp];</code></li>
-                            <li><code></code></li>
-                            <li><code>        r /= intensity;</code></li>
-                            <li><code>        g /= intensity;</code></li>
-                            <li><code>        b /= intensity;</code></li>
-                            <li><code></code></li>
-                            <li><code>        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);</code></li>
-                            <li><code>        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);</code></li>
-                            <li><code>        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);</code></li>
-                            <li><code>    }</code></li>
-                            <li><code></code></li>
-                            <li><code>    data[0 + index] = (byte) mR;</code></li>
-                            <li><code>    data[1 + index] = (byte) mG;</code></li>
-                            <li><code>    data[2 + index] = (byte) mB;</code></li>
-                            <li><code>    data[3 + index] = (byte) exp;</code></li>
-                            <li><code>}</code></li>
+                        <li><code>private static void encodeTo(float r, float g, float b, int index, byte[] data) {</code></li>
+                        <li><code>    int mR = 255;</code></li>
+                        <li><code>    int mG = 255;</code></li>
+                        <li><code>    int mB = 255;</code></li>
+                        <li><code>    int exp = 255;</code></li>
+                        <li><code></code></li>
+                        <li><code>    encode:</code></li>
+                        <li><code>    {</code></li>
+                        <li><code>        if (!Float.isFinite(r) || !Float.isFinite(g) || !Float.isFinite(b)) {</code></li>
+                        <li><code>            break encode;</code></li>
+                        <li><code>        }</code></li>
+                        <li><code>        r = Math.min(Math.max(r, 0f), MAX_VALUE);</code></li>
+                        <li><code>        g = Math.min(Math.max(g, 0f), MAX_VALUE);</code></li>
+                        <li><code>        b = Math.min(Math.max(b, 0f), MAX_VALUE);</code></li>
+                        <li><code></code></li>
+                        <li><code>        float intensity = Math.max(r, Math.max(g, b));</code></li>
+                        <li><code>        if (intensity &lt; MIN_VALUE) {</code></li>
+                        <li><code>            mR = 0;</code></li>
+                        <li><code>            mG = 0;</code></li>
+                        <li><code>            mB = 0;</code></li>
+                        <li><code>            exp = 0;</code></li>
+                        <li><code>            break encode;</code></li>
+                        <li><code>        }</code></li>
+                        <li><code></code></li>
+                        <li><code>        exp = (int) Math.ceil((Math.log(intensity) * INVERSE_LOG_BASE) + BIAS); gdfg dfg dfg fdg fdg fdg dfg fd gfd gdf gfdg dfg dfg dfg dfg dfg dfg df gdfg dfg df</code></li>
+                        <li><code>        exp = Math.min(Math.max(exp, 0), MAX_EXPONENT);</code></li>
+                        <li><code></code></li>
+                        <li><code>        intensity = LOOKUP_TABLE[exp];</code></li>
+                        <li><code></code></li>
+                        <li><code>        r /= intensity;</code></li>
+                        <li><code>        g /= intensity;</code></li>
+                        <li><code>        b /= intensity;</code></li>
+                        <li><code></code></li>
+                        <li><code>        mR = Math.min(Math.max(Math.round(r * 255f), 0), 255);</code></li>
+                        <li><code>        mG = Math.min(Math.max(Math.round(g * 255f), 0), 255);</code></li>
+                        <li><code>        mB = Math.min(Math.max(Math.round(b * 255f), 0), 255);</code></li>
+                        <li><code>    }</code></li>
+                        <li><code></code></li>
+                        <li><code>    data[0 + index] = (byte) mR;</code></li>
+                        <li><code>    data[1 + index] = (byte) mG;</code></li>
+                        <li><code>    data[2 + index] = (byte) mB;</code></li>
+                        <li><code>    data[3 + index] = (byte) exp;</code></li>
+                        <li><code>}</code></li>
                     </ol>
                     <img class="image" src="../resources/testimage.jpg" alt="testimage"/>
                 </section>

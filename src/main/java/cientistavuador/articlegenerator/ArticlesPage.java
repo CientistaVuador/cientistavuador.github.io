@@ -28,7 +28,6 @@ package cientistavuador.articlegenerator;
 
 import static cientistavuador.articlegenerator.Article.INDENT;
 import static cientistavuador.articlegenerator.Article.LICENSE;
-import static cientistavuador.articlegenerator.Article.escapeHTML;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,15 +38,15 @@ import java.util.stream.Collectors;
  *
  * @author Cien
  */
-public class ArticlesPageGenerator {
+public class ArticlesPage {
 
     public static String generatePage(List<Article> articles) {
-        return new ArticlesPageGenerator(articles).generate();
+        return new ArticlesPage(articles).generate();
     }
     
     private final List<Article> articles;
     
-    private ArticlesPageGenerator(List<Article> articles) {
+    private ArticlesPage(List<Article> articles) {
         Article articleZero = null;
         for (Article a:articles) {
             if (a.getId() == 0) {
@@ -114,9 +113,9 @@ public class ArticlesPageGenerator {
         
         b.append("<li>\n");
         b.append(INDENT.repeat(1)).append("<section>\n");
-        b.append(INDENT.repeat(2)).append("<h2>").append("<a href=\"").append(article.getId()).append(".html").append("\">").append(String.format("%04d", article.getId())).append(" - ").append(escapeHTML(article.getTitle())).append("</a>").append("</h2>\n");
-        b.append(INDENT.repeat(2)).append("<p>").append(escapeHTML(article.getDescription())).append("</p>\n");
-        b.append(INDENT.repeat(2)).append("<p>").append(escapeHTML(article.getDate())).append("</p>\n");
+        b.append(INDENT.repeat(2)).append("<h2>").append("<a href=\"").append(article.getId()).append(".html").append("\">").append(String.format("%04d", article.getId())).append(" - ").append(HTMLTranslator.escape(article.getTitle())).append("</a>").append("</h2>\n");
+        b.append(INDENT.repeat(2)).append("<p>").append(HTMLTranslator.escape(article.getDescription())).append("</p>\n");
+        b.append(INDENT.repeat(2)).append("<p>").append(HTMLTranslator.escape(article.getDate())).append("</p>\n");
         b.append(INDENT.repeat(1)).append("</section>\n");
         b.append("</li>");
         
@@ -149,7 +148,7 @@ public class ArticlesPageGenerator {
         StringBuilder b = new StringBuilder();
         
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(escapeHTML("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
+        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(HTMLTranslator.escape("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
         b.append("</footer>");
         
         return b.toString();
