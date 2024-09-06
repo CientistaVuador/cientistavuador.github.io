@@ -30,7 +30,7 @@ Title: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Id: 0
 Date: 2024/08/27
 
-Generated on Fri Sep 06 02:28:49 BRT 2024
+Generated on Fri Sep 06 02:33:50 BRT 2024
 -->
 <html>
     <head>
@@ -275,8 +275,8 @@ Generated on Fri Sep 06 02:28:49 BRT 2024
                         <li><code>public static String[] getListFormatted(String text) {</code></li>
                         <li><code>    return Stream</code></li>
                         <li><code>            .of(text.split(Pattern.quote(&quot;,&quot;)))</code></li>
-                        <li><code>            .map((s) -&gt; s.lines().map(e -&gt; e.trim()).filter(e -&gt; !e.isEmpty()).collect(Collectors.joining(&quot; &quot;)))</code></li>
-                        <li><code>            .filter((s) -&gt; !s.isEmpty())</code></li>
+                        <li><code>            .map(s -&gt; getTitleFormatted(s))</code></li>
+                        <li><code>            .filter(s -&gt; !s.isEmpty())</code></li>
                         <li><code>            .toArray(String[]::new);</code></li>
                         <li><code>}</code></li>
                     </ol>
