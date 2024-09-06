@@ -179,3 +179,51 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
 [;<;>]
 
 [image] ../resources/testimage.jpg [;<;>]
+
+[code]
+
+    public static String getTitleFormatted(String text) {
+        return text
+                .lines()
+                .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
+                .collect(Collectors.joining(" "));
+    }
+
+    public static String getParagraphFormatted(String text) {
+        return text
+                .lines()
+                .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
+                .collect(Collectors.joining("\n"));
+    }
+
+    public static String getCodeFormatted(String text) {
+        return text
+                .lines()
+                .filter(new Predicate<String>() {
+                    boolean startFound = false;
+
+                    @Override
+                    public boolean test(String t) {
+                        if (t.isBlank() && !this.startFound) {
+                            return false;
+                        }
+                        this.startFound = true;
+                        return true;
+                    }
+                })
+                .collect(Collectors.joining("\n"))
+                .stripTrailing()
+                .stripIndent();
+    }
+
+    public static String[] getListFormatted(String text) {
+        return Stream
+                .of(text.split(Pattern.quote(",")))
+                .map(s -> getTitleFormatted(s))
+                .filter(s -> !s.isEmpty())
+                .toArray(String[]::new);
+    }
+
+[;<;>]

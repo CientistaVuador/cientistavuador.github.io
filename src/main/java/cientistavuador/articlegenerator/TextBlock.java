@@ -215,16 +215,16 @@ public class TextBlock {
     public static String getTitleFormatted(String text) {
         return text
                 .lines()
-                .filter((s) -> !s.isBlank())
                 .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
                 .collect(Collectors.joining(" "));
     }
 
     public static String getParagraphFormatted(String text) {
         return text
                 .lines()
-                .filter((s) -> !s.isBlank())
                 .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
                 .collect(Collectors.joining("\n"));
     }
 
@@ -251,9 +251,8 @@ public class TextBlock {
     public static String[] getListFormatted(String text) {
         return Stream
                 .of(text.split(Pattern.quote(",")))
-                .map((s) -> s.lines().map(e -> e.trim()).collect(Collectors.joining(" ")))
-                .map((s) -> s.trim())
-                .filter((s) -> !s.isEmpty())
+                .map(s -> getTitleFormatted(s))
+                .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);
     }
 
