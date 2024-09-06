@@ -84,6 +84,7 @@ public class ArticlesPage {
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
         b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(keywords).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
+        b.append(INDENT).append("<meta name=\"description\" content=\"Articles\"/>\n");
         b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append(INDENT).append("\n");
