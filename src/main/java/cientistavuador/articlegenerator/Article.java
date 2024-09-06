@@ -138,26 +138,26 @@ public class Article {
             throw new RuntimeException("First block must be the id.");
         }
 
-        int id = Integer.parseInt(idBlock.getArgumentNotNull());
+        int id = Integer.parseInt(idBlock.getTitleFormatted());
 
         if (!dateBlock.getName().equals("date")) {
             throw new RuntimeException("Second block must be the date.");
         }
 
-        String date = dateBlock.getArgumentNotNull();
+        String date = dateBlock.getTitleFormatted();
 
         if (!titleBlock.getName().equals("title")) {
             throw new RuntimeException("Third block must be the title.");
         }
 
-        String description = descriptionBlock.getArgumentNotNull();
+        String description = descriptionBlock.getTitleFormatted();
 
         if (!descriptionBlock.getName().equals("description")) {
             throw new RuntimeException("Fourth block must be the description.");
         }
-
-        String title = titleBlock.getArgumentNotNull();
-
+        
+        String title = titleBlock.getTitleFormatted();
+        
         Article article = new Article(id, date, title, description);
 
         List<TextBlock> sub = blocks.subList(4, blocks.size());
@@ -168,7 +168,7 @@ public class Article {
         for (TextBlock block : sub) {
             switch (block.getName()) {
                 case "section" -> {
-                    parentSection = new Section(article, null, block.getArgumentNotNull());
+                    parentSection = new Section(article, null, block.getTitleFormatted());
                     article.getSections().add(parentSection);
                     currentSection = parentSection;
                 }
@@ -176,11 +176,11 @@ public class Article {
                     if (parentSection == null) {
                         throw new RuntimeException("No parent section for subsection at line " + block.getLine());
                     }
-                    Section child = new Section(article, parentSection, block.getArgumentNotNull());
+                    Section child = new Section(article, parentSection, block.getTitleFormatted());
                     parentSection.getChildren().add(child);
                     currentSection = child;
                 }
-                case "text", "image", "code", "fine", "warning", "severe" -> {
+                case "text", "image", "code", "fine", "warning", "severe", "olist", "ulist" -> {
                     if (currentSection == null) {
                         throw new RuntimeException("No parent section for block at line " + block.getLine());
                     }
@@ -198,8 +198,12 @@ public class Article {
                             type = ResourceType.WARNING;
                         case "severe" ->
                             type = ResourceType.SEVERE;
+                        case "olist" ->
+                            type = ResourceType.ORDERED_LIST;
+                        case "ulist" ->
+                            type = ResourceType.UNORDERED_LIST;
                     }
-                    currentSection.getResources().add(new Resource(type, block.getArgumentNotNull()));
+                    currentSection.getResources().add(new Resource(type, block.getRawText()));
                 }
                 default -> {
                     throw new RuntimeException("Unknown text block " + block.getName() + " at line " + block.getLine());
@@ -256,7 +260,7 @@ public class Article {
     }
 
     public static enum ResourceType {
-        TEXT, IMAGE, CODE, FINE, WARNING, SEVERE;
+        TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST;
     }
 
     public static class Resource {
@@ -286,14 +290,14 @@ public class Article {
                 String[] split = getResource().split("/");
                 altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
             }
-            return "<img class=\"image\" src=\"" + getResource() + "\" alt=\"" + altPlaceholder + "\"/>";
+            return "<img class=\"image\" src=\"" + TextBlock.getTitleFormatted(getResource()) + "\" alt=\"" + altPlaceholder + "\"/>";
         }
 
         private String toCodeHTML() {
             StringBuilder b = new StringBuilder();
 
             b.append("<ol class=\"code\">\n");
-            Stream<String> lines = getResource().lines();
+            Stream<String> lines = TextBlock.getCodeFormatted(getResource()).lines();
             for (String line : lines.toList()) {
                 b.append(INDENT).append(INDENT).append("<li><code>").append(escapeHTML(line)).append("</code></li>\n");
             }
@@ -301,7 +305,30 @@ public class Article {
 
             return b.toString();
         }
-
+        
+        private String toListHTML(boolean ordered) {
+            StringBuilder b = new StringBuilder();
+            
+            if (ordered) {
+                b.append("<ol class=\"list\">\n");
+            } else {
+                b.append("<ul class=\"list\">\n");
+            }
+            
+            String[] formatted = TextBlock.getListFormatted(getResource());
+            for (int i = 0; i < formatted.length; i++) {
+                b.append(INDENT).append("<li><p>").append(escapeHTML(formatted[i])).append("</p></li>\n");
+            }
+            
+            if (ordered) {
+                b.append("</ol>");
+            } else {
+                b.append("</ul>");
+            }
+            
+            return b.toString();
+        }
+        
         public String toHTML() {
             if (this.type.equals(ResourceType.IMAGE)) {
                 return toImageHTML();
@@ -309,6 +336,14 @@ public class Article {
 
             if (this.type.equals(ResourceType.CODE)) {
                 return toCodeHTML();
+            }
+            
+            if (this.type.equals(ResourceType.ORDERED_LIST)) {
+                return toListHTML(true);
+            }
+            
+            if (this.type.equals(ResourceType.UNORDERED_LIST)) {
+                return toListHTML(false);
             }
 
             String clazz = "text";
@@ -327,7 +362,7 @@ public class Article {
             StringBuilder b = new StringBuilder();
 
             b.append("<p class=\"").append(clazz).append("\">\n");
-            b.append(escapeHTML(getResource()).indent(4));
+            b.append(escapeHTML(TextBlock.getParagraphFormatted(getResource())).indent(4));
             b.append("</p>");
 
             return b.toString();

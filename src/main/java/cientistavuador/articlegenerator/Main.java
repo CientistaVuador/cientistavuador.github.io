@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -57,18 +56,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        LanguagePreProcessor.PreProcessorOutput[] out = LanguagePreProcessor.preProcess(
-                """
-                $languages en pt
-                
-                olá
-                """
-        );
-        for (LanguagePreProcessor.PreProcessorOutput e:out) {
-            System.out.println(e.getLanguage());
-            System.out.println(e.getOutput());
-        }
-        
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         Files.createDirectories(articlesFolder);

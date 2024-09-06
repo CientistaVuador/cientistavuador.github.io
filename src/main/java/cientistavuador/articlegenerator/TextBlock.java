@@ -26,15 +26,12 @@
  */
 package cientistavuador.articlegenerator;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -42,147 +39,287 @@ import java.util.Objects;
  */
 public class TextBlock {
 
+    private static String formatBlockNameOrAttribute(String blockName) {
+        return blockName
+                .lines()
+                .map(s -> s.trim())
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(" "));
+    }
+
+    private static String formatAndValidateBlockName(String blockName, int line) {
+        blockName = formatBlockNameOrAttribute(blockName).toLowerCase();
+        for (int j = 0; j < blockName.length(); j++) {
+            if (Character.isWhitespace(blockName.codePointAt(j))) {
+                throw new RuntimeException("Block name contains white spaces at line " + line);
+            }
+        }
+        if (blockName.isEmpty()) {
+            throw new RuntimeException("Block name is empty at line " + line);
+        }
+
+        return blockName;
+    }
+
     public static List<TextBlock> parse(String text) {
         List<TextBlock> blocks = new ArrayList<>();
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(text.getBytes()), StandardCharsets.UTF_8));
+        StringBuilder b = new StringBuilder();
 
-            int currentLine = 0;
-            int currentBlockLine = -1;
-            String currentBlockName = null;
-            StringBuilder blockBuilder = null;
+        int line = 1;
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                currentLine++;
+        boolean blockOpen = false;
+        boolean attributeOpen = false;
 
-                String lineTrim = line.trim();
-                if (lineTrim.startsWith("#")) {
-                    String[] split = lineTrim.split(" ", 2);
-                    String name = split[0].trim().substring(1).toLowerCase();
-                    String argument = null;
-                    if (split.length != 1) {
-                        argument = split[1].trim();
-                        if (argument.isEmpty()) {
-                            argument = null;
-                        }
-                    }
+        int sequenceCounter = 0;
+        boolean rawTextMode = false;
 
-                    if (name.isEmpty()) {
-                        throw new RuntimeException("Empty block name at line " + currentLine);
-                    }
+        String blockName = null;
+        String blockAttribute = null;
 
-                    if (currentBlockName != null && !name.equals("end")) {
-                        throw new RuntimeException("Unclosed block at line " + currentLine);
-                    }
+        for (int i = 0; i < text.length(); i++) {
+            int unicode = text.codePointAt(i);
+            if (unicode == '\n') {
+                line++;
+            }
 
-                    if (name.equals("begin")) {
-                        if (argument == null) {
-                            throw new RuntimeException("Block without name at line " + currentLine);
-                        }
-                        if (argument.contains(" ") || argument.contains("\t")) {
-                            throw new RuntimeException("Spaces are not allowed in block names at line " + currentLine);
-                        }
-                        currentBlockLine = currentLine;
-                        currentBlockName = argument.toLowerCase();
-                        blockBuilder = new StringBuilder();
-                    } else if (name.equals("end")) {
-                        if (currentBlockName == null) {
-                            throw new RuntimeException("Text block not open at line " + currentLine);
-                        }
-                        if (argument != null) {
-                            throw new RuntimeException("Text block end must not have arguments at line " + currentLine);
-                        }
-                        if (blockBuilder == null) {
-                            throw new NullPointerException();
-                        }
-                        String resultArgument;
-                        if (blockBuilder.isEmpty()) {
-                            resultArgument = "";
-                        } else if (blockBuilder.length() == 1) {
-                            resultArgument = blockBuilder.toString();
+            if (rawTextMode) {
+                switch (unicode) {
+                    case '[' -> {
+                        if (sequenceCounter == 0) {
+                            sequenceCounter++;
                         } else {
-                            resultArgument = blockBuilder.substring(0, blockBuilder.length() - 1);
+                            sequenceCounter = 0;
                         }
-                        blocks.add(new TextBlock(currentBlockLine, currentBlockName, resultArgument, true));
-                        currentBlockLine = -1;
-                        currentBlockName = null;
-                        blockBuilder = null;
-                    } else {
-                        blocks.add(new TextBlock(currentLine, name, argument, false));
                     }
+                    case ';' -> {
+                        if (sequenceCounter == 1 || sequenceCounter == 3) {
+                            sequenceCounter++;
+                        } else {
+                            sequenceCounter = 0;
+                        }
+                    }
+                    case '<' -> {
+                        if (sequenceCounter == 2) {
+                            sequenceCounter++;
+                        } else {
+                            sequenceCounter = 0;
+                        }
+                    }
+                    case '>' -> {
+                        if (sequenceCounter == 4) {
+                            sequenceCounter++;
+                        } else {
+                            sequenceCounter = 0;
+                        }
+                    }
+                    case ']' -> {
+                        if (sequenceCounter == 5) {
+                            sequenceCounter++;
+                        } else {
+                            sequenceCounter = 0;
+                        }
+                    }
+                    default -> {
+                        sequenceCounter = 0;
+                    }
+                }
+                b.appendCodePoint(unicode);
+                if (sequenceCounter == 6) {
+                    b.setLength(b.length() - 6);
+
+                    if (blockAttribute == null) {
+                        blockAttribute = "";
+                    }
+                    blocks.add(new TextBlock(blockName, blockAttribute, b.toString(), line));
+
+                    b.setLength(0);
+                    sequenceCounter = 0;
+                    rawTextMode = false;
+
+                    blockName = null;
+                    blockAttribute = null;
+                }
+                continue;
+            }
+
+            switch (unicode) {
+                case ';' -> {
+                    throw new RuntimeException("Invalid ; at line " + line);
+                }
+                case '\\' -> {
+                    throw new RuntimeException("Invalid \\ at line " + line);
+                }
+                case '[' -> {
+                    if (blockOpen) {
+                        throw new RuntimeException("Block already open at line " + line);
+                    }
+                    blockOpen = true;
                     continue;
                 }
-                if (blockBuilder != null) {
-                    blockBuilder.append(line.replace("\\#", "#")).append("\n");
+                case ']' -> {
+                    if (!blockOpen) {
+                        throw new RuntimeException("Block not open at line " + line);
+                    }
+                    if (attributeOpen) {
+                        throw new RuntimeException("Attribute not closed at line " + line);
+                    }
+                    blockOpen = false;
+                    rawTextMode = true;
+                    if (blockName == null) {
+                        blockName = formatAndValidateBlockName(b.toString(), line);
+                    }
+                    b.setLength(0);
+                    continue;
+                }
+                case '<' -> {
+                    if (attributeOpen) {
+                        throw new RuntimeException("Attribute already open at line " + line);
+                    }
+                    if (blockAttribute != null) {
+                        throw new RuntimeException("Attribute already defined at line " + line);
+                    }
+                    attributeOpen = true;
+                    blockName = formatAndValidateBlockName(b.toString(), line);
+                    b.setLength(0);
+                    continue;
+                }
+                case '>' -> {
+                    if (!attributeOpen) {
+                        throw new RuntimeException("Attribute not open at line " + line);
+                    }
+                    attributeOpen = false;
+                    blockAttribute = formatBlockNameOrAttribute(b.toString());
+                    b.setLength(0);
+                    continue;
                 }
             }
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+
+            if (blockOpen) {
+                b.appendCodePoint(unicode);
+            } else if (!Character.isWhitespace(unicode)) {
+                throw new RuntimeException("Invalid character at line " + line);
+            }
+        }
+        if (blockOpen) {
+            if (attributeOpen) {
+                throw new RuntimeException("Unclosed attribute at line " + line);
+            } else {
+                throw new RuntimeException("Unclosed block at line " + line);
+            }
         }
 
         return blocks;
     }
 
-    private final int line;
-    private final String name;
-    private final String argument;
-    private final boolean multiLine;
-    private final String[] arguments;
-
-    public TextBlock(int line, String name, String argument, boolean multiLine) {
-        Objects.requireNonNull(name, "Name is null.");
-
-        this.line = line;
-        this.name = name;
-        this.argument = argument;
-        this.multiLine = multiLine;
-
-        List<String> formattedArgs = new ArrayList<>();
-        if (argument != null) {
-            String[] args = argument.split(" ");
-            for (String arg : args) {
-                arg = arg.trim();
-                if (arg.isBlank()) {
-                    continue;
-                }
-                formattedArgs.add(arg);
-            }
-        }
-        this.arguments = formattedArgs.toArray(String[]::new);
+    public static String getTitleFormatted(String text) {
+        return text
+                .lines()
+                .filter((s) -> !s.isBlank())
+                .map((s) -> s.trim())
+                .collect(Collectors.joining(" "));
     }
-    
-    public int getLine() {
-        return line;
+
+    public static String getParagraphFormatted(String text) {
+        return text
+                .lines()
+                .filter((s) -> !s.isBlank())
+                .map((s) -> s.trim())
+                .collect(Collectors.joining("\n"));
+    }
+
+    public static String getCodeFormatted(String text) {
+        return text
+                .lines()
+                .filter(new Predicate<String>() {
+                    boolean startFound = false;
+
+                    @Override
+                    public boolean test(String t) {
+                        if (t.isBlank() && !this.startFound) {
+                            return false;
+                        }
+                        this.startFound = true;
+                        return true;
+                    }
+                })
+                .collect(Collectors.joining("\n"))
+                .stripTrailing()
+                .stripIndent();
+    }
+
+    public static String[] getListFormatted(String text) {
+        return Stream
+                .of(text.split(Pattern.quote(",")))
+                .map((s) -> s.lines().map(e -> e.trim()).collect(Collectors.joining(" ")))
+                .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
+                .toArray(String[]::new);
+    }
+
+    private final String name;
+    private final String attribute;
+    private final String rawText;
+
+    private String titleFormatted = null;
+    private String paragraphFormatted = null;
+    private String codeFormatted = null;
+    private String[] listFormatted = null;
+    private final int line;
+
+    private TextBlock(String name, String attribute, String rawText, int line) {
+        this.name = name;
+        this.attribute = attribute;
+        this.rawText = rawText;
+        this.line = line;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getArgument() {
-        return argument;
+    public String getAttribute() {
+        return attribute;
     }
-    
-    public String getArgumentNotNull() {
-        String arg = getArgument();
-        if (arg == null) {
-            throw new NullPointerException("Argument is null at line "+getLine());
+
+    public boolean hasAttribute() {
+        return !getAttribute().isEmpty();
+    }
+
+    public String getRawText() {
+        return rawText;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public String getTitleFormatted() {
+        if (this.titleFormatted == null) {
+            this.titleFormatted = getTitleFormatted(this.rawText);
         }
-        return arg;
+        return this.titleFormatted;
     }
 
-    public boolean isMultiLine() {
-        return multiLine;
+    public String getParagraphFormatted() {
+        if (this.paragraphFormatted == null) {
+            this.paragraphFormatted = getParagraphFormatted(this.rawText);
+        }
+        return this.paragraphFormatted;
     }
 
-    public int getNumberOfArguments() {
-        return this.arguments.length;
+    public String getCodeFormatted() {
+        if (this.codeFormatted == null) {
+            this.codeFormatted = getCodeFormatted(this.rawText);
+        }
+        return this.codeFormatted;
     }
 
-    public String getArgument(int index) {
-        return this.arguments[index];
+    public String[] getListFormatted() {
+        if (this.listFormatted == null) {
+            this.listFormatted = getListFormatted(this.rawText);
+        }
+        return this.listFormatted.clone();
     }
 
 }

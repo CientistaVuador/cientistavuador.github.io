@@ -1,37 +1,40 @@
-#ID 0
-#DATE 2024/08/27
-#TITLE Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-#DESCRIPTION Phasellus sit amet justo eu elit dictum tristique. Curabitur diam odio, vehicula venenatis tincidunt non.
+[id] 0 [;<;>]
+[date] 2024/08/27 [;<;>]
+[title] Lorem ipsum dolor sit amet, consectetur adipiscing elit. [;<;>]
+[description] 
+Phasellus sit amet justo eu elit dictum tristique.
+Curabitur diam odio, vehicula venenatis tincidunt non.
+[;<;>]
 
-#SECTION Commodo dolor. Suspendisse v
+[section] Commodo dolor. Suspendisse v [;<;>]
 
-#SUBSECTION Sed viverra enim vitae consectetu
+[subsection] Sed viverra enim vitae consectetu [;<;>]
 
-#BEGIN TEXT
+[text]
 Proin convallis condimentum commodo. Phasellus eu mauris vitae ipsum sollicitudin
 iaculis id sed diam. Integer non nulla rutrum leo ultrices congue sit amet eleifend elit.
 Maecenas efficitur porttitor risus sit amet iaculis. Phasellus sit amet justo eu elit dictum
 tristique. Curabitur diam odio, vehicula venenatis tincidunt non, ullamcorper id dolor. 
 Pellentesque sodales aliquam nisi, suscipit mattis nisl suscipit sed. Donec non ligula nisl.
 Suspendisse id arcu et sapien cursus mattis vel ut dolor.
-#END
+[;<;>]
 
-#SUBSECTION Fringilla at semper vitae, viverra sed justo.
+[subsection] Fringilla at semper vitae, viverra sed justo. [;<;>]
 
-#BEGIN TEXT
+[text]
  Maecenas sit amet massa sit amet dui hendrerit varius. Sed viverra enim
  vitae consectetur finibus. Morbi condimentum hendrerit sapien vitae volutpat.
  Pellentesque iaculis tempus metus id ornare. Donec vehicula semper nisi vel ultricies.
  Aliquam ac sodales libero, a viverra sem. Integer vestibulum elit a arcu molestie,
  vitae fermentum justo mattis. Etiam gravida, nisi at commodo semper, turpis diam luctus odio,
  at ultricies tortor arcu vel augue.
-#END
+[;<;>]
 
-#SECTION Phasellus rhoncus sed nunc non
+[section] Phasellus rhoncus sed nunc non [;<;>]
 
-#SUBSECTION Etiam gravida, nisi at commodo semper,
+[subsection] Etiam gravida, nisi at commodo semper, [;<;>]
 
-#BEGIN TEXT
+[text]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
 condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
 torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
@@ -42,9 +45,9 @@ accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, lu
 nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
 ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit amet tortor.
 Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
-#END
+[;<;>]
 
-#BEGIN TEXT
+[text]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse erat quam,
 condimentum ultrices congue sed, ultricies eu mi. Class aptent taciti sociosqu ad litora
 torquent per conubia nostra, per inceptos himenaeos. Phasellus tristique auctor leo,
@@ -55,45 +58,63 @@ accumsan lobortis turpis tincidunt. Mauris augue erat, fermentum non ante in, lu
 nisl. Phasellus rhoncus sed nunc non varius. Quisque finibus lectus eget orci convallis,
 ut pellentesque nibh suscipit. Ut a dolor ut ipsum condimentum luctus ac sit amet tortor.
 Curabitur condimentum consectetur dui, et fringilla mauris aliquam id.
-#END
+[;<;>]
 
-#SUBSECTION Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit.
+[subsection] Quisque finibus lectus eget orci convallis, ut pellentesque nibh suscipit. [;<;>]
 
-#BEGIN TEXT
+[text]
 Mauris elit nisl, tincidunt in enim vel, varius commodo dolor. Suspendisse vitae tempor enim
 Quisque sodales massa eget suscipit interdum. Aliquam erat volutpat. Donec in augue tincidunt
 porta elit non, ornare tellus. Etiam rutrum, lectus sit amet gravida aliquam, nibh ante lacinia
 purus, eget porta nunc justo eget lacus. Quisque in dui eleifend, finibus nibh ac, tincidunt
 tellus. Phasellus non vehicula diam, a tristique eros. Vestibulum metus arcu, elementum at
 ornare eu, congue eget quam. Suspendisse potenti. Donec convallis sem nec leo ultrices vulputate.
-#END
+[;<;>]
 
-#BEGIN FINE
+[text] Ordered List: [;<;>]
+
+[olist]
+    ,sed nunc feugiat laoreet.
+    ,ornare eu, congue eget quam. Suspendisse potenti.
+    ,Quisque sodales massa eget suscipit interdum.
+    ,sed accumsan nunc porta et. Donec posuere nunc.
+[;<;>]
+
+[text] Unordered List: [;<;>]
+
+[ulist]
+    ,lorem sit amet
+    ,maximus dapibus neque dictum sit amet
+    ,Donec vel feugiat
+    ,nunc feugiat laoreet
+[;<;>]
+
+[fine]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Nunc sollicitudin feugiat tortor, maximus dapibus neque dictum sit amet.
 Praesent in urna consequat, auctor lorem sit amet, efficitur augue.
 Nunc fringilla tincidunt ultrices. Nunc luctus lorem id pulvinar volutpat.
 Etiam semper tellus massa,
 sed accumsan nunc porta et. Donec posuere nunc.
-#END
+[;<;>]
 
-#BEGIN WARNING
+[warning]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam faucibus ligula
 sed nunc feugiat laoreet. Donec vel feugiat lacus. Suspendisse ultricies dui
 non augue tempor, in pellentesque ante tristique. Sed sed cursus quam. Quisque
 volutpat molestie ex.
 Nunc interdum mi non vulputate pulvinar. Pellentesque finibus in felis sit amet porta.
-#END
+[;<;>]
 
-#BEGIN SEVERE
+[severe]
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Proin tellus libero, hendrerit vitae urna in, dictum accumsan massa.
 Orci varius natoque penatibus et magnis dis parturient montes,
 nascetur ridiculus mus. Ut nibh turpis, lobortis non vestibulum blandit,
 cursus at sem. Proin lobortis nisl sit amet mi bibendum lacinia. Nunc scelerisque.
-#END
+[;<;>]
 
-#BEGIN CODE
+[code]
 private static void encodeTo(float r, float g, float b, int index, byte[] data) {
     int mR = 255;
     int mG = 255;
@@ -137,6 +158,6 @@ private static void encodeTo(float r, float g, float b, int index, byte[] data) 
     data[2 + index] = (byte) mB;
     data[3 + index] = (byte) exp;
 }
-#END
+[;<;>]
 
-#IMAGE ../resources/testimage.jpg
+[image] ../resources/testimage.jpg [;<;>]
