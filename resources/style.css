@@ -90,6 +90,9 @@ For more information, please refer to <https://unlicense.org>
 }
 .text {
     text-indent: 2em;
+    margin: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 .fine, .warning, .severe {
     text-indent: 2em;
@@ -135,12 +138,12 @@ For more information, please refer to <https://unlicense.org>
     line-height: 1.35em;
     padding-top: 2px;
     padding-bottom: 2px;
-    margin: 30px;
-    margin-bottom: 5px;
-    margin-top: 5px;
+    margin: 0px;
+    margin-left: 35px;
+    margin-right: 35px;
 }
 .list p {
-    margin-left: 10px;
+    margin: 12px;
 }
 .code code {
     white-space: pre;
