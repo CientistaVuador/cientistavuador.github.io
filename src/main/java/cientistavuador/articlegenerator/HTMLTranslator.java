@@ -64,6 +64,10 @@ public class HTMLTranslator {
     }
 
     public static String escapeAndTranslate(String text) {
+        return escapeAndTranslate(text, false);
+    }
+
+    public static String escapeAndTranslate(String text, boolean ignoreFormatting) {
         text = escape(text);
 
         StringBuilder b = new StringBuilder();
@@ -99,7 +103,7 @@ public class HTMLTranslator {
                     nextUnicode = text.codePointAt(i + 1);
                 }
                 switch (nextUnicode) {
-                    case '/', '*', '`', '~', '_', '[', ':', ']' -> {
+                    case '/', '*', '`', '~', '_', '[', ':', ']', '\\' -> {
                         escape = true;
                         continue;
                     }
@@ -111,64 +115,76 @@ public class HTMLTranslator {
                     case '/' -> {
                         b.setLength(b.length() - 2);
                         italicOpen = !italicOpen;
-                        if (italicOpen) {
-                            b.append("<i>");
-                        } else {
-                            b.append("</i>");
+                        if (!ignoreFormatting) {
+                            if (italicOpen) {
+                                b.append("<em>");
+                            } else {
+                                b.append("</em>");
+                            }
                         }
                         continue;
                     }
                     case '*' -> {
                         b.setLength(b.length() - 2);
                         boldOpen = !boldOpen;
-                        if (boldOpen) {
-                            b.append("<strong>");
-                        } else {
-                            b.append("</strong>");
+                        if (!ignoreFormatting) {
+                            if (boldOpen) {
+                                b.append("<strong>");
+                            } else {
+                                b.append("</strong>");
+                            }
                         }
                         continue;
                     }
                     case '`' -> {
                         b.setLength(b.length() - 2);
                         codeOpen = !codeOpen;
-                        if (codeOpen) {
-                            b.append("<code>");
-                        } else {
-                            b.append("</code>");
+                        if (!ignoreFormatting) {
+                            if (codeOpen) {
+                                b.append("<code>");
+                            } else {
+                                b.append("</code>");
+                            }
                         }
                         continue;
                     }
                     case '~' -> {
                         b.setLength(b.length() - 2);
                         crossedOpen = !crossedOpen;
-                        if (crossedOpen) {
-                            b.append("<del>");
-                        } else {
-                            b.append("</del>");
+                        if (!ignoreFormatting) {
+                            if (crossedOpen) {
+                                b.append("<del>");
+                            } else {
+                                b.append("</del>");
+                            }
                         }
                         continue;
                     }
                     case '_' -> {
                         b.setLength(b.length() - 2);
                         underlineOpen = !underlineOpen;
-                        if (underlineOpen) {
-                            b.append("<u>");
-                        } else {
-                            b.append("</u>");
+                        if (!ignoreFormatting) {
+                            if (underlineOpen) {
+                                b.append("<u>");
+                            } else {
+                                b.append("</u>");
+                            }
                         }
                         continue;
                     }
                     case '[', ']', ':' -> {
                         b.setLength(b.length() - 2);
-                        switch (unicode) {
-                            case '[' -> {
-                                b.append("<a target=\"_blank\" href=\"");
-                            }
-                            case ':' -> {
-                                b.append("\">");
-                            }
-                            case ']' -> {
-                                b.append("</a>");
+                        if (!ignoreFormatting) {
+                            switch (unicode) {
+                                case '[' -> {
+                                    b.append("<a target=\"_blank\" href=\"");
+                                }
+                                case ':' -> {
+                                    b.append("\">");
+                                }
+                                case ']' -> {
+                                    b.append("</a>");
+                                }
                             }
                         }
                         continue;

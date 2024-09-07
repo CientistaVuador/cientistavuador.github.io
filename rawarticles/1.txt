@@ -1,0 +1,206 @@
+[id] 1 [;<;>]
+[languages]
+    en-US,
+    pt-BR
+[;<;>]
+
+[license]
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+[;<;>]
+
+[title] My Markup Language [;<;>]
+[title<pt-BR>] Minha Linguagem de Marcação [;<;>]
+
+[description] 
+This is my personal reference to my own markup language used to make those articles,
+it wasn't made to be used by anyone except me, but if you are curious about it
+here it is.
+[;<;>]
+[description<pt-BR>] 
+Essa é a minha referência pessoal para a minha própria linguagem de marcação usada
+para fazer esses artigos, não foi feita para ser usada por ninguém além de mim, mas
+se você está curioso sobre como funciona, então aqui está.
+[;<;>]
+
+[footer-return] <<< Return to Articles [;<;>]
+[footer-notice] The content on this website is released under the [[[https://unlicense.org/:::Unlicense]]] unless stated otherwise [;<;>]
+
+[footer-return<pt-BR>] <<< Retornar para Artigos [;<;>]
+[footer-notice<pt-BR>] O Conteúdo deste site é licenciado sobre a [[[https://unlicense.org/:::Unlicense]]] salvo indicação contrária [;<;>]
+
+[date] 2024/09/07 13:34 [;<;>]
+
+[section] Raw Text Formatting [;<;>]
+[text] The language uses 5 Raw Text Formatting styles. [;<;>]
+
+[subsection] "Title" Formatting [;<;>]
+[text] All lines are trimmed, empty lines are removed, leftover lines are joined with a space [;<;>]
+
+[subsection] "Integer" Formatting [;<;>]
+[text] Same as "Title" Formatting but the result is parsed to a integer. [;<;>]
+
+[subsection] "Paragraph" Formatting [;<;>]
+[text] All lines are trimmed, empty lines are removed, leftover lines are joined with a line separator [;<;>]
+
+[subsection] "Code" Formatting [;<;>]
+[text] Blank lines are removed until a non blank line is found,
+leftover lines are joined with a line separator,
+the resulting string is then stripped from trailing white spaces and indentation. [;<;>]
+
+[subsection] "List" Formatting [;<;>]
+[text] Text is separated by a "," (Comma) (a comma can be escaped by using two of them ",,")
+then all separated text is formatted using "Title" Formatting and any empty separated
+text is removed. [;<;>]
+
+[section] Text Blocks [;<;>]
+[text] A Text Block starts with: [;<;>]
+[ulist] ```[blockname<attribute>]``` [;<;>]
+[text] And ***only*** ends with the ***exact*** sequence: [;<;>]
+[ulist] ```[;<;>];``` [;<;>]
+[warning] There are no escape characters, ```"[]<>;"``` is not allowed. [;<;>]
+[fine] The ending sequence can be escaped by placing a ";" after: ```[;<;>];;``` [;<;>]
+[severe] No text except white spaces are allowed outside a block. [;<;>]
+[severe] A Block cannot contain a block. [;<;>]
+
+[subsection] "blockname" [;<;>]
+[text] "blockname" is formatted using "Title" formatting,
+the resulting block name is then converted
+to lower case. [;<;>]
+[severe] Any white space inside the "blockname" is not allowed [;<;>]
+
+[subsection] "attribute" [;<;>]
+[text] "attribute" is fomatted as "blockname",
+but white spaces inside the attribute
+are allowed and the result
+is not converted to lower case.[;<;>]
+
+[section] Article [;<;>]
+[text] A Article is composed out of meta blocks and body
+blocks that is converted to HTML,
+attributes are used as the language of the block,
+a block without a language should
+always be inserted if it is a body block
+or used as a fallback if it is a meta block. [;<;>]
+[severe] A article is only valid if it defines a "id" and "languages" block, the "languages" block must not be empty. [;<;>]
+[warning] A article should always have a "id" and a "languages" block as the first and second block. [;<;>]
+[warning] "id" and "languages" can not have a defined language. [;<;>]
+
+[section] Meta Blocks [;<;>]
+[text] Those are blocks that only appear at the start of the article. [;<;>]
+[severe] They are not allowed to be declared after body blocks have started and can only be redeclared if the language is different. [;<;>]
+
+[subsection] id [;<;>] [text] Defines the id of the article, uses "Integer" formatting. [;<;>]
+[subsection] languages [;<;>] [text] Defines the languages of the article, uses "List" formatting. [;<;>]
+[subsection] license [;<;>] [text] Defines the license of the article, uses "Code" formatting. [;<;>]
+[subsection] title [;<;>] [text] Defines the title of the article, uses "Title" formatting. [;<;>]
+[subsection] description [;<;>] [text] Defines the description of the article, uses "Title" formatting. [;<;>]
+[subsection] date [;<;>] [text] Defines the date of the article, uses "Title" formatting [;<;>]
+[subsection] footer-return [;<;>] [text] Defines the return to main articles link text, uses "Title" formatting [;<;>]
+[subsection] footer-notice [;<;>] [text] Defines the copyright notice at the of the article, uses "Title" formatting [;<;>]
+
+[section] Body Blocks [;<;>]
+[severe] All body blocks must have a preceding "section" or "subsection" block except "section" and "subsection". [;<;>]
+[subsection] section [;<;>] [text] Defines a section, uses "Title" formatting. [;<;>]
+[subsection] subsection [;<;>] [text] Defines a subsection, uses "Title" formatting, can only be declared if a "section" was already declared. [;<;>]
+[subsection] text [;<;>] [text] Defines a paragraph, uses "Paragraph" formatting. [;<;>]
+[subsection] fine [;<;>] [text] Defines a "fine" paragraph, uses "Paragraph" formatting. [;<;>]
+[subsection] warning [;<;>] [text] Defines a "warning" paragraph, uses "Paragraph" formatting. [;<;>]
+[subsection] severe [;<;>] [text] Defines a "severe" paragraph, uses "Paragraph" formatting. [;<;>]
+[subsection] code [;<;>] [text] Defines a code block, uses "Code" formatting. [;<;>]
+[subsection] image [;<;>] [text] Defines a image, uses "Title" formatting. [;<;>]
+[subsection] olist [;<;>] [text] Defines a ordered list, uses "List" formatting. [;<;>]
+[subsection] ulist [;<;>] [text] Defines a unordered list, uses "List" formatting. [;<;>]
+[subsection] html [;<;>] [text] Defines raw html without any processing, uses "Code" formatting. [;<;>]
+
+[section] Font Formatting [;<;>]
+[text] Text can be further processed by using font formatting with it. [;<;>]
+[fine] Font formatting can be escaped by using a ```\\``` [;<;>]
+[ulist]
+    ,```/\//italic/\//``` -> ///italic///
+    ,```*\**bold*\**``` -> ***bold***
+    ,```\`\``code`\``\``` -> ```code```
+    ,```~\~~crossed~\~~``` -> ~~~crossed~~~
+    ,```_\__underline_\__``` -> ___underline___
+    ,```[\[[../resources/bird.jpg:\::Bird]\]]``` -> [[[../resources/bird.jpg:::Bird]]]
+[;<;>]
+
+[section] Final Examples [;<;>]
+[subsection] Code Block [;<;>]
+[code]
+    public static String getTitleFormatted(String text) {
+        return text
+                .lines()
+                .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
+                .collect(Collectors.joining(" "));
+    }
+
+    public static String getParagraphFormatted(String text) {
+        return text
+                .lines()
+                .map((s) -> s.trim())
+                .filter((s) -> !s.isEmpty())
+                .collect(Collectors.joining("\n"));
+    }
+
+    public static String getCodeFormatted(String text) {
+        return text
+                .lines()
+                .filter(new Predicate<String>() {
+                    boolean startFound = false;
+
+                    @Override
+                    public boolean test(String t) {
+                        if (t.isBlank() && !this.startFound) {
+                            return false;
+                        }
+                        this.startFound = true;
+                        return true;
+                    }
+                })
+                .collect(Collectors.joining("\n"))
+                .stripTrailing()
+                .stripIndent();
+    }
+[;<;>]
+[subsection] Image [;<;>]
+[image] ../resources/bird.jpg [;<;>]
+[subsection] Raw HTML [;<;>]
+[html]
+<p>This is raw HTML!</p>
+<button id="buttonClick" type="button">Click Me!</button>
+<p>Clicks: <span id="buttonClicks">0</span></p>
+<script>
+    // <![CDATA[
+    function onButtonClick() {
+        document.getElementById("buttonClicks").textContent = Number(document.getElementById("buttonClicks").textContent) + 1;
+    }
+    document.getElementById("buttonClick").onclick = onButtonClick;
+    // ]]>
+</script>
+[;<;>]
+[subsection] Ordered List: [;<;>] [olist] This, is, a, ordered, list! [;<;>]
+[subsection] Unordered List: [;<;>] [ulist] This, is, a, unordered, list! [;<;>]

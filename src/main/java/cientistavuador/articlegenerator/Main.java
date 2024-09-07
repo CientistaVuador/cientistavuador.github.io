@@ -27,6 +27,7 @@
 package cientistavuador.articlegenerator;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,9 +60,9 @@ public class Main {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         Files.createDirectories(articlesFolder);
-        
+
         List<Article> articles = new ArrayList<>();
-        
+
         Path rawArticlesFolder = Path.of("rawarticles");
         Set<Integer> ids = new HashSet<>();
         for (Path articleFile : Files.list(rawArticlesFolder).toList()) {
@@ -72,28 +73,27 @@ public class Main {
                 continue;
             }
             try {
-                Article[] localizedArticles = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
-                
-                Article c = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
+                Article c = new Article(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
                 articles.add(c);
-                System.out.println("Loaded " + c.getTitle() + ", ID: " + c.getId() + " from " + articleFile.getFileName());
-                
+                System.out.println("Loaded Article " + c.getId() + " from " + articleFile.getFileName());
+
                 if (ids.contains(c.getId())) {
-                    throw new IllegalArgumentException(articleFile.toString()+" has duplicate id!");
+                    throw new IllegalArgumentException(articleFile.toString() + " has duplicate id!");
                 }
                 ids.add(c.getId());
             } catch (Throwable t) {
-                System.out.println("Failed to compile: "+articleFile.getFileName());
+                System.out.println("Failed to compile: " + articleFile.getFileName());
                 throw t;
             }
         }
-        
-        for (Article c:articles) {
-            Files.writeString(articlesFolder.resolve(c.getId()+".html"), c.toHTML());
-            System.out.println("Written "+c.getTitle()+", ID: "+c.getId());
+
+        for (Article c : articles) {
+            for (int i = 0; i < c.getNumberOfLanguages(); i++) {
+                String language = c.getLanguage(i);
+                Files.writeString(articlesFolder.resolve(URLEncoder.encode(c.getId() + "_" + language, StandardCharsets.UTF_8) + ".html"), c.toHTML(i));
+                System.out.println("Written " + c.getTitle(i) + ", ID: " + c.getId()+", Language: "+language);
+            }
         }
-        Files.writeString(articlesFolder.resolve("articles.html"), ArticlesPage.generatePage(articles));
-        System.out.println("Written articles.html");
     }
 
 }

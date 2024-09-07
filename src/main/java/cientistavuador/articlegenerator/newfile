@@ -1,3 +1,4 @@
+
 /*
  * This is free and unencumbered software released into the public domain.
  *
@@ -27,7 +28,6 @@
 package cientistavuador.articlegenerator;
 
 import static cientistavuador.articlegenerator.Article.INDENT;
-import static cientistavuador.articlegenerator.Article.LICENSE;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;

@@ -26,24 +26,17 @@
  */
 package cientistavuador.articlegenerator;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import static cientistavuador.articlegenerator.Article.INDENT;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -53,471 +46,356 @@ import java.util.stream.Stream;
  */
 public class Article {
 
-    private static String clear(String s) {
-        StringBuilder b = new StringBuilder();
-
-        for (int i = 0; i < s.length(); i++) {
-            int unicode = s.codePointAt(i);
-            if (unicode == ' ') {
-                b.append(' ');
-                continue;
-            }
-            if (!Character.isLetterOrDigit(unicode)) {
-                b.append(' ');
-                continue;
-            }
-            b.appendCodePoint(unicode);
-        }
-
-        return b.toString();
-    }
-
-    private static boolean isOnlyDigits(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (!Character.isDigit(s.codePointAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static String getKeywords(String text) {
-        List<String> words = new ArrayList<>();
-        String cleared = clear(text);
-        String[] split = cleared.split(" ");
-        for (String word : split) {
-            if (word.isBlank() || word.length() == 1) {
-                continue;
-            }
-            if (isOnlyDigits(word)) {
-                continue;
-            }
-            words.add(word.toLowerCase());
-        }
-
-        Map<String, Integer> wordCount = new HashMap<>();
-        for (String word : words) {
-            Integer current = wordCount.get(word);
-            if (current == null) {
-                current = 0;
-            }
-            current++;
-            wordCount.put(word, current);
-        }
-
-        Entry<String, Integer>[] set = wordCount.entrySet().toArray(Entry[]::new);
-        Comparator<Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
-        Arrays.sort(set, comparator.reversed());
-
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 64; i++) {
-            if (i >= set.length) {
-                break;
-            }
-            builder.append(set[i].getKey());
-            if (i != set.length - 1 && i != 63) {
-                builder.append(", ");
-            }
-        }
-
-        return builder.toString();
-    }
+    public static final String DEFAULT_TITLE = "No Title";
+    public static final String DEFAULT_DESCRIPTION = "No Description";
+    public static final String DEFAULT_DATE = "No Date";
+    public static final String DEFAULT_LICENSE = "All Rights Reserved";
+    public static final String DEFAULT_FOOTER_RETURN = "<<< Return to Articles";
+    public static final String DEFAULT_FOOTER_NOTICE = "All Rights Reserved";
     
-    public static Article fromTextBlocks(List<TextBlock> blocks) {
-        Objects.requireNonNull(blocks, "Blocks is null.");
-        
-        if (blocks.size() < 4) {
-            throw new RuntimeException("List must have at least 3 elements.");
-        }
-        
-        TextBlock idBlock = blocks.get(0);
-        TextBlock languagesBlock = blocks.get(1);
-        TextBlock dateBlock = blocks.get(0);
-        TextBlock titleBlock = blocks.get(1);
-        TextBlock descriptionBlock = blocks.get(2);
-        
-        if (!dateBlock.getName().equals("date")) {
-            throw new RuntimeException("First block must be the date.");
-        }
-
-        String date = dateBlock.getTitleFormatted();
-
-        if (!titleBlock.getName().equals("title")) {
-            throw new RuntimeException("Second block must be the title.");
-        }
-
-        String description = descriptionBlock.getTitleFormatted();
-
-        if (!descriptionBlock.getName().equals("description")) {
-            throw new RuntimeException("Third block must be the description.");
-        }
-
-        String title = titleBlock.getTitleFormatted();
-
-        Article article = new Article(id, languages, language, date, title, description);
-        
-        List<TextBlock> sub = blocks.subList(4, blocks.size());
-
-        Section parentSection = null;
-        Section currentSection = null;
-
-        for (TextBlock block : sub) {
-            switch (block.getName()) {
-                case "section" -> {
-                    parentSection = new Section(article, null, block.getTitleFormatted());
-                    article.getSections().add(parentSection);
-                    currentSection = parentSection;
-                }
-                case "subsection" -> {
-                    if (parentSection == null) {
-                        throw new RuntimeException("No parent section for subsection at line " + block.getLine());
-                    }
-                    Section child = new Section(article, parentSection, block.getTitleFormatted());
-                    parentSection.getChildren().add(child);
-                    currentSection = child;
-                }
-                case "text", "image", "code", "fine", "warning", "severe", "olist", "ulist", "html" -> {
-                    if (currentSection == null) {
-                        throw new RuntimeException("No parent section for block at line " + block.getLine());
-                    }
-                    ResourceType type = null;
-                    switch (block.getName()) {
-                        case "text" ->
-                            type = ResourceType.TEXT;
-                        case "image" ->
-                            type = ResourceType.IMAGE;
-                        case "code" ->
-                            type = ResourceType.CODE;
-                        case "fine" ->
-                            type = ResourceType.FINE;
-                        case "warning" ->
-                            type = ResourceType.WARNING;
-                        case "severe" ->
-                            type = ResourceType.SEVERE;
-                        case "olist" ->
-                            type = ResourceType.ORDERED_LIST;
-                        case "ulist" ->
-                            type = ResourceType.UNORDERED_LIST;
-                        case "html" ->
-                            type = ResourceType.HTML;
-                    }
-                    currentSection.getResources().add(new Resource(type, block.getRawText()));
-                }
-                default -> {
-                    throw new RuntimeException("Unknown text block " + block.getName() + " at line " + block.getLine());
-                }
-            }
-        }
-
-        return article;
-    }
-
-    public static final String LICENSE;
-
-    static {
-        try {
-            LICENSE = Files.readString(Paths.get("resources", "license.txt"), StandardCharsets.UTF_8).stripTrailing();
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
     public static final String INDENT = " ".repeat(4);
 
-    public static enum ResourceType {
-        TEXT, IMAGE, CODE, FINE, WARNING, SEVERE, ORDERED_LIST, UNORDERED_LIST, HTML;
-    }
-
-    public static class Resource {
-
-        private final ResourceType type;
-        private final String resource;
-
-        public Resource(ResourceType type, String resource) {
-            Objects.requireNonNull(type, "Type is null.");
-            Objects.requireNonNull(resource, "Resource is null.");
-
-            this.type = type;
-            this.resource = resource;
-        }
-
-        public ResourceType getType() {
-            return type;
-        }
-
-        public String getResource() {
-            return resource;
-        }
-
-        private String toImageHTML() {
-            String altPlaceholder;
-            {
-                String[] split = getResource().split("/");
-                altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
-            }
-            return "<img class=\"image\" src=\"" + TextBlock.getTitleFormatted(getResource()) + "\" alt=\"" + altPlaceholder + "\"/>";
-        }
-
-        private String toCodeHTML() {
-            StringBuilder b = new StringBuilder();
-
-            b.append("<ol class=\"code\">\n");
-            Stream<String> lines = TextBlock.getCodeFormatted(getResource()).lines();
-            for (String line : lines.toList()) {
-                b.append(INDENT).append("<li><code>").append(HTMLTranslator.escape(line)).append("</code></li>\n");
-            }
-            b.append("</ol>");
-
-            return b.toString();
-        }
-
-        private String toListHTML(boolean ordered) {
-            StringBuilder b = new StringBuilder();
-
-            if (ordered) {
-                b.append("<ol class=\"list\">\n");
-            } else {
-                b.append("<ul class=\"list\">\n");
-            }
-
-            String[] formatted = TextBlock.getListFormatted(getResource());
-            for (int i = 0; i < formatted.length; i++) {
-                b.append(INDENT).append("<li><p>").append(HTMLTranslator.escapeAndTranslate(formatted[i])).append("</p></li>\n");
-            }
-
-            if (ordered) {
-                b.append("</ol>");
-            } else {
-                b.append("</ul>");
-            }
-
-            return b.toString();
-        }
-
-        public String toHTML() {
-            switch (this.type) {
-                case IMAGE -> {
-                    return toImageHTML();
-                }
-                case CODE -> {
-                    return toCodeHTML();
-                }
-                case ORDERED_LIST -> {
-                    return toListHTML(true);
-                }
-                case UNORDERED_LIST -> {
-                    return toListHTML(false);
-                }
-                case HTML -> {
-                    return TextBlock.getCodeFormatted(getResource());
-                }
-            }
-
-            String clazz = "text";
-            switch (getType()) {
-                case FINE -> {
-                    clazz = "fine";
-                }
-                case WARNING -> {
-                    clazz = "warning";
-                }
-                case SEVERE -> {
-                    clazz = "severe";
-                }
-            }
-
-            StringBuilder b = new StringBuilder();
-
-            b.append("<p class=\"").append(clazz).append("\">\n");
-            b.append(HTMLTranslator.escapeAndTranslate(TextBlock.getParagraphFormatted(getResource())).indent(4));
-            b.append("</p>");
-
-            return b.toString();
-        }
-
-    }
-
-    public static class Section {
-
-        private final String id;
-        private final Article article;
-        private final Section parent;
-        private final String name;
-        private final List<Section> children = new ArrayList<>();
-        private final List<Resource> resources = new ArrayList<>();
-        private final AtomicInteger subSectionIds = new AtomicInteger(1);
-
-        public Section(Article article, Section parent, String name) {
-            Objects.requireNonNull(article, "Article is null.");
-            Objects.requireNonNull(name, "Name is null.");
-
-            if (parent != null) {
-                this.id = parent.getId() + "." + parent.requestSubSectionId();
-            } else {
-                this.id = Integer.toString(article.requestSectionId());
-            }
-            this.article = article;
-            this.parent = parent;
-            this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public Article getArticle() {
-            return article;
-        }
-
-        public Section getParent() {
-            return parent;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getFullName() {
-            return getId() + " " + getName();
-        }
-
-        public String getFullNameEncoded() {
-            return URLEncoder.encode(getFullName(), StandardCharsets.UTF_8);
-        }
-
-        public List<Section> getChildren() {
-            return children;
-        }
-
-        public List<Resource> getResources() {
-            return resources;
-        }
-
-        public int requestSubSectionId() {
-            return this.subSectionIds.getAndIncrement();
-        }
-
-        private String toHTML(int depth) {
-            StringBuilder b = new StringBuilder();
-
-            String tag = "h" + (2 + depth);
-
-            b.append("<section id=\"").append(getFullNameEncoded()).append("\">\n");
-            b.append(INDENT).append("<").append(tag).append(" class=\"").append(tag).append("\">").append(HTMLTranslator.escape(getFullName())).append("</").append(tag).append(">\n");
-            for (Resource r : getResources()) {
-                b.append(r.toHTML().indent(4));
-            }
-            for (Section s : getChildren()) {
-                b.append(s.toHTML(depth + 1).indent(4));
-            }
-            b.append("</section>");
-
-            return b.toString();
-        }
-
-        public String toHTML() {
-            return toHTML(0);
-        }
-    }
-
+    private final List<TextBlock> blocks;
     private final int id;
     private final String[] languages;
-    private final String date;
-    private final String title;
-    private final String description;
-    private final List<Section> sections = new ArrayList<>();
-    private final AtomicInteger sectionsIds = new AtomicInteger(1);
+    private final Map<String, Integer> languageMap = new HashMap<>();
+    private final Map<String, String> title = new HashMap<>();
+    private final Map<String, String> description = new HashMap<>();
+    private final Map<String, String> date = new HashMap<>();
+    private final Map<String, String> license = new HashMap<>();
+    private final Map<String, String> footerReturn = new HashMap<>();
+    private final Map<String, String> footerNotice = new HashMap<>();
+    private final int metaBlocksLength;
 
-    private String keywords = null;
+    private final Map<String, Node> nodeMap = new HashMap<>();
+    private final Map<String, String> keywordsMap = new HashMap<>();
+    private final Map<String, String> htmlMap = new HashMap<>();
 
-    public Article(int id, String[] languages, String date, String title, String description) {
-        Objects.requireNonNull(languages, "Languages is null.");
-        Objects.requireNonNull(date, "Date is null.");
-        Objects.requireNonNull(title, "Name is null.");
-        Objects.requireNonNull(description, "Description is null.");
-        if (languages.length == 0) {
-            throw new RuntimeException("Languages array is empty.");
+    public Article(List<TextBlock> blocks) {
+        Objects.requireNonNull(blocks, "Blocks is null.");
+        this.blocks = blocks;
+
+        if (blocks.size() < 2) {
+            throw new IllegalArgumentException("Blocks must contain at least 2 blocks (id and languages).");
         }
 
-        this.languages = languages;
-        this.id = id;
-        this.date = date;
-        this.title = title;
-        this.description = description;
+        TextBlock idBlock = blocks.get(0);
+        TextBlock languagesBlock = blocks.get(1);
+
+        if (!idBlock.getName().equals("id")) {
+            throw new IllegalArgumentException("First block must be the id.");
+        }
+
+        if (!languagesBlock.getName().equals("languages")) {
+            throw new IllegalArgumentException("Second block must be the languages.");
+        }
+
+        if (idBlock.hasAttribute()) {
+            throw new IllegalArgumentException("Id block must not have a language at line " + languagesBlock.getLine());
+        }
+
+        if (languagesBlock.hasAttribute()) {
+            throw new IllegalArgumentException("Languages block must not have a language at line " + languagesBlock.getLine());
+        }
+
+        this.id = idBlock.getIntegerFormatted();
+        this.languages = languagesBlock.getListFormatted();
+
+        if (this.languages.length == 0) {
+            throw new IllegalArgumentException("Languages block is empty at line " + languagesBlock.getLine());
+        }
+
+        for (int i = 0; i < this.languages.length; i++) {
+            this.languageMap.put(this.languages[i], i);
+        }
+
+        Set<String> languageSet = new HashSet<>();
+        for (String lang : this.languages) {
+            for (int i = 0; i < lang.length(); i++) {
+                int unicode = lang.codePointAt(i);
+                switch (unicode) {
+                    case '&', '>', '<', '"', '\'' ->
+                        throw new IllegalArgumentException("Languages contains invalid characteres at line " + languagesBlock.getLine());
+                }
+            }
+            if (languageSet.contains(lang)) {
+                throw new IllegalArgumentException("Duplicate language at languages block in line " + languagesBlock.getLine());
+            }
+            languageSet.add(lang);
+        }
+
+        for (TextBlock b : this.blocks) {
+            if (b.hasAttribute() && !languageSet.contains(b.getAttribute())) {
+                throw new IllegalArgumentException("Invalid language " + b.getAttribute() + " at line " + b.getLine());
+            }
+        }
+
+        int metaLength = 2;
+        metaLoop:
+        for (int i = metaLength; i < this.blocks.size(); i++) {
+            TextBlock b = this.blocks.get(i);
+            switch (b.getName()) {
+                case "id", "languages" -> {
+                    throw new IllegalArgumentException("Invalid duplicated " + b.getName() + " at line " + b.getLine());
+                }
+                case "title", "description", "date", "license", "footer-return", "footer-notice" -> {
+                    Map<String, String> map = null;
+                    switch (b.getName()) {
+                        case "title" ->
+                            map = this.title;
+                        case "description" ->
+                            map = this.description;
+                        case "date" ->
+                            map = this.date;
+                        case "license" ->
+                            map = this.license;
+                        case "footer-return" ->
+                            map = this.footerReturn;
+                        case "footer-notice" ->
+                            map = this.footerNotice;
+                    }
+                    Objects.requireNonNull(map, "Map is null?");
+                    if (map.containsKey(b.getAttribute())) {
+                        throw new IllegalArgumentException("Duplicated block " + b.getName() + " for language " + b.getAttribute() + " at line " + b.getLine());
+                    }
+                    if (b.getName().equals("license")) {
+                        map.put(b.getAttribute(), b.getCodeFormatted());
+                    } else {
+                        map.put(b.getAttribute(), b.getTitleFormatted());
+                    }
+                    metaLength++;
+                }
+                default -> {
+                    break metaLoop;
+                }
+            }
+        }
+        this.metaBlocksLength = metaLength;
+
+        for (int i = this.metaBlocksLength; i < this.blocks.size(); i++) {
+            TextBlock b = this.blocks.get(i);
+            switch (b.getName()) {
+                case "id", "languages", "title", "description", "date" -> {
+                    throw new IllegalArgumentException("Invalid meta block at line " + b.getLine());
+                }
+            }
+        }
+    }
+
+    public List<TextBlock> getBlocks() {
+        return blocks;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getDate() {
-        return date;
+    public int getNumberOfLanguages() {
+        return this.languages.length;
     }
 
-    public String getTitle() {
-        return title;
+    public String getLanguage(int index) {
+        return this.languages[index];
     }
 
-    public String getDescription() {
-        return description;
+    public int indexOfLanguage(String language) {
+        Integer i = this.languageMap.get(language);
+        if (i == null) {
+            return -1;
+        }
+        return i;
     }
 
-    public String getTitleEncoded() {
-        return URLEncoder.encode(getTitle(), StandardCharsets.UTF_8);
+    private String find(Map<String, String> map, String language, String nullFallback) {
+        String correct = map.get(language);
+        String fallback = map.get("");
+        if (correct != null) {
+            return correct;
+        }
+        if (fallback != null) {
+            return fallback;
+        }
+        return nullFallback;
     }
 
-    public List<Section> getSections() {
-        return sections;
+    private String getTitle(String language) {
+        return find(this.title, language, DEFAULT_TITLE);
     }
 
-    public int requestSectionId() {
-        return this.sectionsIds.getAndIncrement();
+    private String getDescription(String language) {
+        return find(this.description, language, DEFAULT_DESCRIPTION);
     }
 
-    private String fullText(Section section) {
+    private String getDate(String language) {
+        return find(this.date, language, DEFAULT_DATE);
+    }
+
+    private String getLicense(String language) {
+        return find(this.license, language, DEFAULT_LICENSE);
+    }
+
+    private String getFooterReturn(String language) {
+        return find(this.footerReturn, language, DEFAULT_FOOTER_RETURN);
+    }
+
+    private String getFooterNotice(String language) {
+        return find(this.footerNotice, language, DEFAULT_FOOTER_NOTICE);
+    }
+
+    public String getTitle(int languageIndex) {
+        return getTitle(this.languages[languageIndex]);
+    }
+
+    public String getDescription(int languageIndex) {
+        return getDescription(this.languages[languageIndex]);
+    }
+
+    public String getDate(int languageIndex) {
+        return getDate(this.languages[languageIndex]);
+    }
+
+    public String getLicense(int languageIndex) {
+        return getLicense(this.languages[languageIndex]);
+    }
+
+    public String getFooterReturn(int languageIndex) {
+        return getFooterReturn(this.languages[languageIndex]);
+    }
+
+    public String getFooterNotice(int languageIndex) {
+        return getFooterNotice(this.languages[languageIndex]);
+    }
+
+    public int getMetaBlocksLength() {
+        return metaBlocksLength;
+    }
+
+    private static class Node {
+
+        private String language;
+
+        private TextBlock block;
+        private final List<TextBlock> resources = new ArrayList<>();
+        private final List<Node> children = new ArrayList<>();
+        private String fullName;
+    }
+
+    private Node mapNode(String language) {
+        Node root = this.nodeMap.get(language);
+        if (root == null) {
+            root = new Node();
+            root.fullName = "(root)";
+            root.language = language;
+
+            int sectionIds = 0;
+            int subsectionIds = 0;
+
+            Node section = null;
+            Node subsection = null;
+
+            for (int i = this.metaBlocksLength; i < this.blocks.size(); i++) {
+                TextBlock b = this.blocks.get(i);
+
+                if (b.hasAttribute() && !b.getAttribute().equals(language)) {
+                    continue;
+                }
+
+                switch (b.getName()) {
+                    case "section" -> {
+                        sectionIds++;
+                        subsectionIds = 0;
+
+                        section = new Node();
+                        section.language = language;
+                        section.block = b;
+                        section.fullName = sectionIds + " " + b.getTitleFormatted();
+                        root.children.add(section);
+
+                        subsection = null;
+                        continue;
+                    }
+                    case "subsection" -> {
+                        if (section == null) {
+                            throw new IllegalArgumentException("Subsection without parent section at line " + b.getLine());
+                        }
+                        subsectionIds++;
+
+                        subsection = new Node();
+                        subsection.language = language;
+                        subsection.block = b;
+                        subsection.fullName = sectionIds + "." + subsectionIds + " " + b.getTitleFormatted();
+                        section.children.add(subsection);
+                        continue;
+                    }
+                    case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html" -> {
+                        Node toAdd = root;
+                        if (section != null) {
+                            toAdd = section;
+                        }
+                        if (subsection != null) {
+                            toAdd = subsection;
+                        }
+                        toAdd.resources.add(b);
+                    }
+                    default ->
+                        throw new IllegalArgumentException("Unknown block " + b.getName() + " at line " + b.getLine());
+                }
+            }
+
+            this.nodeMap.put(language, root);
+        }
+        return root;
+    }
+
+    private String mapNodeFullText(Node n) {
         StringBuilder b = new StringBuilder();
 
-        for (Resource r : section.getResources()) {
-            b.append(r.getResource()).append(' ');
+        if (n.block != null) {
+            b.append(n.block.getRawText()).append(" ");
         }
-
-        for (Section s : section.getChildren()) {
-            b.append(fullText(s)).append(' ');
+        for (TextBlock resource : n.resources) {
+            switch (resource.getName()) {
+                case "code", "image", "html" -> {
+                    continue;
+                }
+            }
+            b.append(resource.getRawText()).append(" ");
+        }
+        for (Node child : n.children) {
+            b.append(mapNodeFullText(child)).append(" ");
         }
 
         return b.toString();
     }
 
-    @SuppressWarnings("unchecked")
-    public String getKeywords() {
-        if (this.keywords != null) {
-            return this.keywords;
+    private String getKeywords(String language) {
+        String keywords = this.keywordsMap.get(language);
+        if (keywords == null) {
+            keywords = KeywordMapper.getKeywords(mapNodeFullText(mapNode(language)));
+            this.keywordsMap.put(language, keywords);
         }
-        StringBuilder builder = new StringBuilder();
-        for (Section section : getSections()) {
-            builder.append(fullText(section)).append(' ');
-        }
-        this.keywords = getKeywords(builder.toString());
-
-        return this.keywords;
+        return keywords;
     }
 
-    private String writeHead() {
+    public String getKeywords(int languageIndex) {
+        return getKeywords(this.languages[languageIndex]);
+    }
+
+    private String writeHead(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<head>\n");
-        b.append(INDENT).append("<title>").append(HTMLTranslator.escape(getTitle())).append("</title>\n");
+        b.append(INDENT).append("<title>").append(HTMLTranslator.escapeAndTranslate(getTitle(root.language), true)).append("</title>\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
-        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords()).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords(root.language)).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
-        b.append(INDENT).append("<meta name=\"description\" content=\"").append(HTMLTranslator.escape(getDescription())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"description\" content=\"").append(HTMLTranslator.escapeAndTranslate(getDescription(root.language), true)).append("\"/>\n");
         b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
-        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(HTMLTranslator.escape(getTitle())).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(HTMLTranslator.escape(getDescription())).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(HTMLTranslator.escapeAndTranslate(getTitle(root.language), true)).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(HTMLTranslator.escapeAndTranslate(getDescription(root.language), true)).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"og:type\" content=\"article\"/>\n");
         b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
@@ -526,33 +404,50 @@ public class Article {
         return b.toString();
     }
 
-    private String writeHeader() {
+    private String writeHeader(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<header class=\"header\">\n");
-        b.append(INDENT).append("<h1>").append(HTMLTranslator.escape(getTitle())).append("</h1>\n");
-        b.append(INDENT).append("<h2>").append(HTMLTranslator.escape(getDescription())).append("</h2>\n");
+        b.append(INDENT).append("<h1>").append(HTMLTranslator.escapeAndTranslate(getTitle(root.language))).append("</h1>\n");
+        b.append(INDENT).append("<h2>").append(HTMLTranslator.escapeAndTranslate(getDescription(root.language))).append("</h2>\n");
         b.append(INDENT).append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
-        b.append(INDENT).append("<h3>").append(getDate()).append("</h3>\n");
+        b.append(INDENT).append("<h3>").append(HTMLTranslator.escapeAndTranslate(getDate(root.language))).append("</h3>\n");
+        b.append(INDENT).append("<h4>");
+        for (int i = 0; i < this.languages.length; i++) {
+            b.append("<a href=\"").append(URLEncoder.encode(getId() + "_" + this.languages[i], StandardCharsets.UTF_8)).append(".html").append("\">");
+            b.append(this.languages[i].toUpperCase());
+            b.append("</a>");
+            if (i != (this.languages.length - 1)) {
+                b.append(" | ");
+            }
+        }
+        b.append("</h4>\n");
         b.append("</header>");
 
         return b.toString();
     }
 
-    private String writeSectionIndex(Section section, int depth) {
+    private String writeNodeIndex(Node node, int depth) {
         StringBuilder b = new StringBuilder();
+
+        if (depth == 0) {
+            for (Node e : node.children) {
+                b.append(writeNodeIndex(e, depth + 1));
+            }
+            return b.toString();
+        }
 
         b
                 .append("<li><a href=\"#")
-                .append(section.getFullNameEncoded())
+                .append(URLEncoder.encode(HTMLTranslator.escapeAndTranslate(node.fullName, true), StandardCharsets.UTF_8))
                 .append("\">")
-                .append(section.getFullName())
+                .append(HTMLTranslator.escapeAndTranslate(node.fullName))
                 .append("</a></li>\n");
-        if (!section.getChildren().isEmpty()) {
+        if (!node.children.isEmpty()) {
             b.append("<li>\n");
             b.append(INDENT).append("<ol>\n");
-            for (Section e : section.getChildren()) {
-                b.append(writeSectionIndex(e, depth + 1).indent(4 + 4 + (depth * 4)));
+            for (Node e : node.children) {
+                b.append(writeNodeIndex(e, depth + 1).indent(4 + (depth * 4)));
             }
             b.append(INDENT).append("</ol>\n");
             b.append("</li>");
@@ -561,36 +456,114 @@ public class Article {
         return b.toString();
     }
 
-    private String writeIndices() {
+    private String writeIndices(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<ol class=\"indices\">\n");
-        for (Section s : getSections()) {
-            b.append(writeSectionIndex(s, 0).indent(4));
-        }
+        b.append(writeNodeIndex(root, 0).indent(4));
         b.append("</ol>");
 
         return b.toString();
     }
 
-    private String writeArticle() {
+    private String writeResource(TextBlock block) {
+        StringBuilder b = new StringBuilder();
+
+        switch (block.getName()) {
+            case "text", "fine", "warning", "severe" -> {
+                b.append("<p class=\"").append(block.getName()).append("\">\n");
+                b.append(HTMLTranslator.escapeAndTranslate(block.getParagraphFormatted()).indent(4));
+                b.append("</p>");
+            }
+            case "code" -> {
+                b.append("<ol class=\"code\">\n");
+                Stream<String> lines = TextBlock.getCodeFormatted(block.getCodeFormatted()).lines();
+                for (String line : lines.toList()) {
+                    b.append(INDENT).append("<li><code>").append(HTMLTranslator.escape(line)).append("</code></li>\n");
+                }
+                b.append("</ol>");
+            }
+            case "image" -> {
+                String altPlaceholder;
+                {
+                    String[] split = block.getTitleFormatted().split("/");
+                    altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
+                }
+                b.append("<img class=\"image\" src=\"").append(HTMLTranslator.escape(block.getTitleFormatted())).append("\" alt=\"").append(altPlaceholder).append("\"/>");
+            }
+            case "olist", "ulist" -> {
+                boolean ordered = block.getName().equals("olist");
+
+                if (ordered) {
+                    b.append("<ol class=\"list\">\n");
+                } else {
+                    b.append("<ul class=\"list\">\n");
+                }
+
+                String[] formatted = block.getListFormatted();
+                for (int i = 0; i < formatted.length; i++) {
+                    b.append(INDENT).append("<li><p>").append(HTMLTranslator.escapeAndTranslate(formatted[i])).append("</p></li>\n");
+                }
+
+                if (ordered) {
+                    b.append("</ol>");
+                } else {
+                    b.append("</ul>");
+                }
+            }
+            case "html" -> {
+                b.append(block.getCodeFormatted());
+            }
+            default ->
+                throw new IllegalArgumentException("Unknown resource " + block.getName() + " at line " + block.getLine());
+        }
+
+        return b.toString();
+    }
+
+    private String writeNode(Node node, int depth) {
+        StringBuilder b = new StringBuilder();
+
+        int rootMultiplier = 1;
+        if (node.block == null) {
+            rootMultiplier = 0;
+        }
+
+        String tag = "h" + (depth + 1);
+
+        if (rootMultiplier != 0) {
+            b.append("<section id=\"").append(URLEncoder.encode(HTMLTranslator.escapeAndTranslate(node.fullName, true), StandardCharsets.UTF_8)).append("\">\n");
+            b.append(INDENT).append("<").append(tag).append(">").append(HTMLTranslator.escapeAndTranslate(node.fullName)).append("</").append(tag).append(">\n");
+        }
+        for (TextBlock resource : node.resources) {
+            b.append(writeResource(resource).indent(4 * rootMultiplier));
+        }
+        for (Node c : node.children) {
+            b.append(writeNode(c, depth + 1).indent(4 * rootMultiplier));
+        }
+        if (rootMultiplier != 0) {
+            b.append("</section>");
+        }
+
+        return b.toString();
+    }
+
+    private String writeArticle(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<main class=\"article\">\n");
-        b.append(writeIndices().indent(4));
-        for (Section s : getSections()) {
-            b.append(s.toHTML().indent(4));
-        }
+        b.append(writeIndices(root).indent(4));
+        b.append(writeNode(root, 0).indent(4));
         b.append("</main>");
 
         return b.toString();
     }
 
-    private String writeFooter() {
+    private String writeFooter(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<p>").append("<a href=\"articles.html\">").append(HTMLTranslator.escape("<<< Return to Articles")).append("</a>").append("</p>\n");
+        b.append(INDENT).append("<p>").append("<a href=\"").append(URLEncoder.encode("articles_" + root.language, StandardCharsets.UTF_8)).append(".html").append("\">").append(HTMLTranslator.escapeAndTranslate(getFooterReturn(root.language))).append("</a>").append("</p>\n");
         b.append(
                 """
                 <script src="https://utteranc.es/client.js"
@@ -601,45 +574,57 @@ public class Article {
                         crossorigin="anonymous"
                         async="async">
                 </script>
-                """.replace("{ARTICLE-ID-HERE}", "Article "+Integer.toString(getId())).indent(4));
-        b.append(INDENT).append("<p>").append("Content on this website is released under the ").append("<a href=\"").append(HTMLTranslator.escape("https://creativecommons.org/publicdomain/zero/1.0/")).append("\">").append("CC0 License").append("</a>").append(" unless stated otherwise.").append("</p>\n");
+                """.replace("{ARTICLE-ID-HERE}", "Article " + Integer.toString(getId())).indent(4));
+        b.append(INDENT).append("<p>").append(HTMLTranslator.escapeAndTranslate(getFooterNotice(root.language))).append("</p>\n");
         b.append("</footer>");
-        
+
         return b.toString();
     }
 
-    private String writeBody() {
+    private String writeBody(Node root) {
         StringBuilder b = new StringBuilder();
 
         b.append("<body class=\"body\">\n");
-        b.append(writeHeader().indent(4));
-        b.append(writeArticle().indent(4));
-        b.append(writeFooter().indent(4));
+        b.append(writeHeader(root).indent(4));
+        b.append(writeArticle(root).indent(4));
+        b.append(writeFooter(root).indent(4));
         b.append("</body>");
 
         return b.toString();
     }
 
-    public String toHTML() {
-        StringBuilder b = new StringBuilder();
+    private String toHTML(String language) {
+        String html = this.htmlMap.get(language);
+        if (html == null) {
+            Node root = mapNode(language);
 
-        b.append("<!DOCTYPE html>\n");
-        b.append("<!--\n");
-        b.append("\n");
-        b.append(LICENSE);
-        b.append("\n\n");
-        b.append("Title: ").append(HTMLTranslator.escape(getTitle())).append("\n");
-        b.append("Id: ").append(getId()).append("\n");
-        b.append("Date: ").append(getDate()).append("\n");
-        b.append("\n");
-        b.append("Generated on ").append(new Date().toString()).append("\n");
-        b.append("-->\n");
-        b.append("<html>\n");
-        b.append(writeHead().indent(4));
-        b.append(writeBody().indent(4));
-        b.append("</html>");
+            StringBuilder b = new StringBuilder();
 
-        return b.toString();
+            b.append("<!DOCTYPE html>\n");
+            b.append("<!--\n");
+            b.append("\n");
+            b.append(getLicense(root.language));
+            b.append("\n\n");
+            b.append(root.language).append("\n");
+            b.append(INDENT).append(HTMLTranslator.escapeAndTranslate(getTitle(root.language), true)).append("\n");
+            b.append(INDENT).append(HTMLTranslator.escapeAndTranslate(getDescription(root.language), true)).append("\n");
+            b.append(INDENT).append(getId()).append("\n");
+            b.append(INDENT).append(HTMLTranslator.escapeAndTranslate(getDate(root.language), true)).append("\n");
+            b.append("\n");
+            b.append(new Date().toString()).append("\n");
+            b.append("-->\n");
+            b.append("<html lang=\"").append(root.language).append("\">\n");
+            b.append(writeHead(root).indent(4));
+            b.append(writeBody(root).indent(4));
+            b.append("</html>");
+
+            html = b.toString();
+            this.htmlMap.put(language, html);
+        }
+        return html;
     }
 
+    public String toHTML(int languageIndex) {
+        return toHTML(this.languages[languageIndex]);
+    }
 }
