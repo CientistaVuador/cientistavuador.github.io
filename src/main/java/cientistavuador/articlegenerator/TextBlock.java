@@ -29,7 +29,6 @@ package cientistavuador.articlegenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,11 +50,11 @@ public class TextBlock {
         blockName = formatBlockNameOrAttribute(blockName).toLowerCase();
         for (int j = 0; j < blockName.length(); j++) {
             if (Character.isWhitespace(blockName.codePointAt(j))) {
-                throw new RuntimeException("Block name contains white spaces at line " + line);
+                throw new IllegalArgumentException("Block name contains white spaces at line " + line);
             }
         }
         if (blockName.isEmpty()) {
-            throw new RuntimeException("Block name is empty at line " + line);
+            throw new IllegalArgumentException("Block name is empty at line " + line);
         }
 
         return blockName;
@@ -135,7 +134,7 @@ public class TextBlock {
                         i++;
                         continue;
                     }
-                    
+
                     b.setLength(b.length() - 6);
 
                     if (blockAttribute == null) {
@@ -155,24 +154,24 @@ public class TextBlock {
 
             switch (unicode) {
                 case ';' -> {
-                    throw new RuntimeException("Invalid ; at line " + line);
+                    throw new IllegalArgumentException("Invalid ; at line " + line);
                 }
                 case '\\' -> {
-                    throw new RuntimeException("Invalid \\ at line " + line);
+                    throw new IllegalArgumentException("Invalid \\ at line " + line);
                 }
                 case '[' -> {
                     if (blockOpen) {
-                        throw new RuntimeException("Block already open at line " + line);
+                        throw new IllegalArgumentException("Block already open at line " + line);
                     }
                     blockOpen = true;
                     continue;
                 }
                 case ']' -> {
                     if (!blockOpen) {
-                        throw new RuntimeException("Block not open at line " + line);
+                        throw new IllegalArgumentException("Block not open at line " + line);
                     }
                     if (attributeOpen) {
-                        throw new RuntimeException("Attribute not closed at line " + line);
+                        throw new IllegalArgumentException("Attribute not closed at line " + line);
                     }
                     blockOpen = false;
                     rawTextMode = true;
@@ -184,10 +183,10 @@ public class TextBlock {
                 }
                 case '<' -> {
                     if (attributeOpen) {
-                        throw new RuntimeException("Attribute already open at line " + line);
+                        throw new IllegalArgumentException("Attribute already open at line " + line);
                     }
                     if (blockAttribute != null) {
-                        throw new RuntimeException("Attribute already defined at line " + line);
+                        throw new IllegalArgumentException("Attribute already defined at line " + line);
                     }
                     attributeOpen = true;
                     blockName = formatAndValidateBlockName(b.toString(), line);
@@ -196,7 +195,7 @@ public class TextBlock {
                 }
                 case '>' -> {
                     if (!attributeOpen) {
-                        throw new RuntimeException("Attribute not open at line " + line);
+                        throw new IllegalArgumentException("Attribute not open at line " + line);
                     }
                     attributeOpen = false;
                     blockAttribute = formatBlockNameOrAttribute(b.toString());
@@ -208,14 +207,14 @@ public class TextBlock {
             if (blockOpen) {
                 b.appendCodePoint(unicode);
             } else if (!Character.isWhitespace(unicode)) {
-                throw new RuntimeException("Invalid character at line " + line);
+                throw new IllegalArgumentException("Invalid character at line " + line);
             }
         }
         if (blockOpen) {
             if (attributeOpen) {
-                throw new RuntimeException("Unclosed attribute at line " + line);
+                throw new IllegalArgumentException("Unclosed attribute at line " + line);
             } else {
-                throw new RuntimeException("Unclosed block at line " + line);
+                throw new IllegalArgumentException("Unclosed block at line " + line);
             }
         }
 
@@ -260,11 +259,11 @@ public class TextBlock {
 
     public static String[] splitByComma(String text) {
         List<String> list = new ArrayList<>();
-        
+
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
-            
+
             if (unicode == ',') {
                 int nextUnicode = 0;
                 if (i < (text.length() - 1)) {
@@ -279,14 +278,14 @@ public class TextBlock {
                 b.setLength(0);
                 continue;
             }
-            
+
             b.appendCodePoint(unicode);
         }
         list.add(b.toString());
-        
+
         return list.toArray(String[]::new);
     }
-    
+
     public static String[] getListFormatted(String text) {
         return Stream
                 .of(splitByComma(text))
@@ -300,6 +299,7 @@ public class TextBlock {
     private final String rawText;
 
     private String titleFormatted = null;
+    private Integer integerFormatted = null;
     private String paragraphFormatted = null;
     private String codeFormatted = null;
     private String[] listFormatted = null;
@@ -337,6 +337,17 @@ public class TextBlock {
             this.titleFormatted = getTitleFormatted(this.rawText);
         }
         return this.titleFormatted;
+    }
+
+    public int getIntegerFormatted() {
+        if (this.integerFormatted == null) {
+            try {
+                this.integerFormatted = Integer.valueOf(getTitleFormatted());
+            } catch (NumberFormatException ex) {
+                throw new NumberFormatException("Invalid Integer Number at line " + getLine());
+            }
+        }
+        return this.integerFormatted;
     }
 
     public String getParagraphFormatted() {

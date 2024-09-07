@@ -72,6 +72,8 @@ public class Main {
                 continue;
             }
             try {
+                Article[] localizedArticles = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
+                
                 Article c = Article.fromTextBlocks(TextBlock.parse(Files.readString(articleFile, StandardCharsets.UTF_8)));
                 articles.add(c);
                 System.out.println("Loaded " + c.getTitle() + ", ID: " + c.getId() + " from " + articleFile.getFileName());

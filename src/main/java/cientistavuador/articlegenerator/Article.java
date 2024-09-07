@@ -37,10 +37,12 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -121,45 +123,40 @@ public class Article {
 
         return builder.toString();
     }
-
+    
     public static Article fromTextBlocks(List<TextBlock> blocks) {
         Objects.requireNonNull(blocks, "Blocks is null.");
-
+        
         if (blocks.size() < 4) {
-            throw new RuntimeException("List must have at least 4 elements.");
+            throw new RuntimeException("List must have at least 3 elements.");
         }
-
+        
         TextBlock idBlock = blocks.get(0);
-        TextBlock dateBlock = blocks.get(1);
-        TextBlock titleBlock = blocks.get(2);
-        TextBlock descriptionBlock = blocks.get(3);
-
-        if (!idBlock.getName().equals("id")) {
-            throw new RuntimeException("First block must be the id.");
-        }
-
-        int id = Integer.parseInt(idBlock.getTitleFormatted());
-
+        TextBlock languagesBlock = blocks.get(1);
+        TextBlock dateBlock = blocks.get(0);
+        TextBlock titleBlock = blocks.get(1);
+        TextBlock descriptionBlock = blocks.get(2);
+        
         if (!dateBlock.getName().equals("date")) {
-            throw new RuntimeException("Second block must be the date.");
+            throw new RuntimeException("First block must be the date.");
         }
 
         String date = dateBlock.getTitleFormatted();
 
         if (!titleBlock.getName().equals("title")) {
-            throw new RuntimeException("Third block must be the title.");
+            throw new RuntimeException("Second block must be the title.");
         }
 
         String description = descriptionBlock.getTitleFormatted();
 
         if (!descriptionBlock.getName().equals("description")) {
-            throw new RuntimeException("Fourth block must be the description.");
+            throw new RuntimeException("Third block must be the description.");
         }
 
         String title = titleBlock.getTitleFormatted();
 
-        Article article = new Article(id, date, title, description);
-
+        Article article = new Article(id, languages, language, date, title, description);
+        
         List<TextBlock> sub = blocks.subList(4, blocks.size());
 
         Section parentSection = null;
@@ -425,6 +422,7 @@ public class Article {
     }
 
     private final int id;
+    private final String[] languages;
     private final String date;
     private final String title;
     private final String description;
@@ -433,11 +431,16 @@ public class Article {
 
     private String keywords = null;
 
-    public Article(int id, String date, String title, String description) {
+    public Article(int id, String[] languages, String date, String title, String description) {
+        Objects.requireNonNull(languages, "Languages is null.");
         Objects.requireNonNull(date, "Date is null.");
         Objects.requireNonNull(title, "Name is null.");
         Objects.requireNonNull(description, "Description is null.");
+        if (languages.length == 0) {
+            throw new RuntimeException("Languages array is empty.");
+        }
 
+        this.languages = languages;
         this.id = id;
         this.date = date;
         this.title = title;

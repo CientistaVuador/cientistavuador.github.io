@@ -1,10 +1,18 @@
 [id] 0 [;<;>]
+[languages]
+    en-US,
+    pt-BR
+[;<;>]
+
 [date] 2024/08/27 [;<;>]
 [title] Lorem ipsum dolor sit amet, consectetur adipiscing elit. [;<;>]
-[description] 
+[description]
 Phasellus sit amet justo eu elit dictum tristique.
 Curabitur diam odio, vehicula venenatis tincidunt non.
 [;<;>]
+[license] license [;<;>]
+[footer-return] return [;<;>]
+[footer-notice] footer [;<;>]
 
 [section] Commodo dolor. Suspendisse v [;<;>]
 
