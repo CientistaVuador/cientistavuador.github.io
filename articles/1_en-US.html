@@ -16,7 +16,7 @@ successors. We intend this dedication to be an overt act of
 relinquishment in perpetuity of all present and future rights to this
 software under copyright law.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
 EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
@@ -24,7 +24,7 @@ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-For more information, please refer to <http://unlicense.org/>
+For more information, please refer to &lt;http://unlicense.org/&gt;
 
 en-US
     My Markup Language
@@ -32,13 +32,13 @@ en-US
     1
     2024/09/07 13:34
 
-Sat Sep 07 16:18:01 BRT 2024
+Sun Sep 08 02:46:28 BRT 2024
 -->
 <html lang="en-US">
     <head>
         <title>My Markup Language</title>
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="formatting, the, defines, is, uses, block, are, title, article, text, and, of, list, paragraph, be, code, lines, blocks, can, languages, to, not, with, allowed, id, if, using, as, by, language, section, body, blockname, only, raw, it, subsection, have, attribute, removed, empty, white, bird, html, all, leftover, then, meta, ordered, joined, font, integer, unordered, image, escaped, converted, spaces, line, declared, separated, any, underline, without, case"/>
+        <meta name="keywords" content="the, formatting, is, defines, uses, block, are, of, title, text, this, article, list, and, paragraph, be, code, lines, by, can, blocks, if, languages, to, only, not, with, allowed, id, using, as, language, blockname, raw, it, attribute, removed, body, empty, white, bird, html, leftover, then, at, meta, have, ordered, joined, font, section, integer, all, unordered, image, bold, escaped, sequence, converted, spaces, line, link, declared, separated"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="description" content="This is my personal reference to my own markup language used to make those articles, it wasn&#39;t made to be used by anyone except me, but if you are curious about it here it is."/>
         <link rel="icon" type="image/x-icon" href="../resources/icon.png"/>
@@ -111,8 +111,8 @@ Sat Sep 07 16:18:01 BRT 2024
                         <li><a href="#7.1+Code+Block">7.1 Code Block</a></li>
                         <li><a href="#7.2+Image">7.2 Image</a></li>
                         <li><a href="#7.3+Raw+HTML">7.3 Raw HTML</a></li>
-                        <li><a href="#7.4+Ordered+List%3A">7.4 Ordered List:</a></li>
-                        <li><a href="#7.5+Unordered+List%3A">7.5 Unordered List:</a></li>
+                        <li><a href="#7.4+Ordered+List">7.4 Ordered List</a></li>
+                        <li><a href="#7.5+Unordered+List">7.5 Unordered List</a></li>
                     </ol>
                 </li>
             </ol>
@@ -282,9 +282,6 @@ Sat Sep 07 16:18:01 BRT 2024
             </section>
             <section id="5+Body+Blocks">
                 <h2>5 Body Blocks</h2>
-                <p class="severe">
-                    All body blocks must have a preceding &quot;section&quot; or &quot;subsection&quot; block except &quot;section&quot; and &quot;subsection&quot;.
-                </p>
                 <section id="5.1+section">
                     <h3>5.1 section</h3>
                     <p class="text">
@@ -357,17 +354,20 @@ Sat Sep 07 16:18:01 BRT 2024
                 <p class="text">
                     Text can be further processed by using font formatting with it.
                 </p>
-                <p class="fine">
-                    Font formatting can be escaped by using a <code>\</code>
-                </p>
                 <ul class="list">
-                    <li><p><code>///italic///</code> -&gt; <em>italic</em></p></li>
-                    <li><p><code>***bold***</code> -&gt; <strong>bold</strong></p></li>
-                    <li><p><code>```code```</code> -&gt; <code>code</code></p></li>
-                    <li><p><code>~~~crossed~~~</code> -&gt; <del>crossed</del></p></li>
-                    <li><p><code>___underline___</code> -&gt; <u>underline</u></p></li>
-                    <li><p><code>[[[../resources/bird.jpg:::Bird]]]</code> -&gt; <a target="_blank" href="../resources/bird.jpg">Bird</a></p></li>
+                    <li><p><code>///This is Italic!///</code> &gt;&gt;&gt; <em>This is Italic!</em></p></li>
+                    <li><p><code>***This is Bold!***</code> &gt;&gt;&gt; <strong>This is Bold!</strong></p></li>
+                    <li><p><code>```This is Code!```</code> &gt;&gt;&gt; <code>This is Code!</code></p></li>
+                    <li><p><code>~~~This is Crossed!~~~</code> &gt;&gt;&gt; <del>This is Crossed!</del></p></li>
+                    <li><p><code>___This is Underline!___</code> &gt;&gt;&gt; <u>This is Underline!</u></p></li>
+                    <li><p><code>[[[../resources/bird.jpg:::Link of A Bird!]]]</code> &gt;&gt;&gt; <a target="_blank" href="../resources/bird.jpg">Link of A Bird!</a></p></li>
                 </ul>
+                <p class="fine">
+                    Font formatting can be escaped by using a <code>&quot;\&quot;</code> at the start of the formatting: <code>&quot;\***Bold Text\***&quot;</code>
+                </p>
+                <p class="warning">
+                    Escapes are only processed if followed by a correct sequence of characters: <code>&quot;///&quot;, &quot;***&quot;, &quot;```&quot;, &quot;~~~&quot;, &quot;___&quot;, &quot;[[[&quot;, &quot;:::&quot;, &quot;]]]&quot;</code> or by another escape <code>&quot;\&quot;</code>.
+                </p>
             </section>
             <section id="7+Final+Examples">
                 <h2>7 Final Examples</h2>
@@ -381,39 +381,25 @@ Sat Sep 07 16:18:01 BRT 2024
                         <li><code>            .filter((s) -&gt; !s.isEmpty())</code></li>
                         <li><code>            .collect(Collectors.joining(&quot; &quot;));</code></li>
                         <li><code>}</code></li>
-                        <li><code></code></li>
-                        <li><code>public static String getParagraphFormatted(String text) {</code></li>
-                        <li><code>    return text</code></li>
-                        <li><code>            .lines()</code></li>
-                        <li><code>            .map((s) -&gt; s.trim())</code></li>
-                        <li><code>            .filter((s) -&gt; !s.isEmpty())</code></li>
-                        <li><code>            .collect(Collectors.joining(&quot;\n&quot;));</code></li>
-                        <li><code>}</code></li>
-                        <li><code></code></li>
-                        <li><code>public static String getCodeFormatted(String text) {</code></li>
-                        <li><code>    return text</code></li>
-                        <li><code>            .lines()</code></li>
-                        <li><code>            .filter(new Predicate&lt;String&gt;() {</code></li>
-                        <li><code>                boolean startFound = false;</code></li>
-                        <li><code></code></li>
-                        <li><code>                @Override</code></li>
-                        <li><code>                public boolean test(String t) {</code></li>
-                        <li><code>                    if (t.isBlank() &amp;&amp; !this.startFound) {</code></li>
-                        <li><code>                        return false;</code></li>
-                        <li><code>                    }</code></li>
-                        <li><code>                    this.startFound = true;</code></li>
-                        <li><code>                    return true;</code></li>
-                        <li><code>                }</code></li>
-                        <li><code>            })</code></li>
-                        <li><code>            .collect(Collectors.joining(&quot;\n&quot;))</code></li>
-                        <li><code>            .stripTrailing()</code></li>
-                        <li><code>            .stripIndent();</code></li>
-                        <li><code>}</code></li>
+                    </ol>
+                    <ol class="code">
+                        <li><code>[code]</code></li>
+                        <li><code>    public static String getTitleFormatted(String text) {</code></li>
+                        <li><code>        return text</code></li>
+                        <li><code>                .lines()</code></li>
+                        <li><code>                .map((s) -&gt; s.trim())</code></li>
+                        <li><code>                .filter((s) -&gt; !s.isEmpty())</code></li>
+                        <li><code>                .collect(Collectors.joining(&quot; &quot;));</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>[;&lt;;&gt;]</code></li>
                     </ol>
                 </section>
                 <section id="7.2+Image">
                     <h3>7.2 Image</h3>
                     <img class="image" src="../resources/bird.jpg" alt="bird"/>
+                    <ol class="code">
+                        <li><code>[image] ../resources/bird.jpg [;&lt;;&gt;]</code></li>
+                    </ol>
                 </section>
                 <section id="7.3+Raw+HTML">
                     <h3>7.3 Raw HTML</h3>
@@ -428,9 +414,24 @@ Sat Sep 07 16:18:01 BRT 2024
                         document.getElementById("buttonClick").onclick = onButtonClick;
                         // ]]>
                     </script>
+                    <ol class="code">
+                        <li><code>[html]</code></li>
+                        <li><code>&lt;p&gt;This is raw HTML!&lt;/p&gt;</code></li>
+                        <li><code>&lt;button id=&quot;buttonClick&quot; type=&quot;button&quot;&gt;Click Me!&lt;/button&gt;</code></li>
+                        <li><code>&lt;p&gt;Clicks: &lt;span id=&quot;buttonClicks&quot;&gt;0&lt;/span&gt;&lt;/p&gt;</code></li>
+                        <li><code>&lt;script&gt;</code></li>
+                        <li><code>    // &lt;![CDATA[</code></li>
+                        <li><code>    function onButtonClick() {</code></li>
+                        <li><code>        document.getElementById(&quot;buttonClicks&quot;).textContent = Number(document.getElementById(&quot;buttonClicks&quot;).textContent) + 1;</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>    document.getElementById(&quot;buttonClick&quot;).onclick = onButtonClick;</code></li>
+                        <li><code>    // ]]&gt;</code></li>
+                        <li><code>&lt;/script&gt;</code></li>
+                        <li><code>[;&lt;;&gt;]</code></li>
+                    </ol>
                 </section>
-                <section id="7.4+Ordered+List%3A">
-                    <h3>7.4 Ordered List:</h3>
+                <section id="7.4+Ordered+List">
+                    <h3>7.4 Ordered List</h3>
                     <ol class="list">
                         <li><p>This</p></li>
                         <li><p>is</p></li>
@@ -438,9 +439,12 @@ Sat Sep 07 16:18:01 BRT 2024
                         <li><p>ordered</p></li>
                         <li><p>list!</p></li>
                     </ol>
+                    <ol class="code">
+                        <li><code>[olist] This, is, a, ordered, list! [;&lt;;&gt;]</code></li>
+                    </ol>
                 </section>
-                <section id="7.5+Unordered+List%3A">
-                    <h3>7.5 Unordered List:</h3>
+                <section id="7.5+Unordered+List">
+                    <h3>7.5 Unordered List</h3>
                     <ul class="list">
                         <li><p>This</p></li>
                         <li><p>is</p></li>
@@ -448,6 +452,9 @@ Sat Sep 07 16:18:01 BRT 2024
                         <li><p>unordered</p></li>
                         <li><p>list!</p></li>
                     </ul>
+                    <ol class="code">
+                        <li><code>[ulist] This, is, a, unordered, list! [;&lt;;&gt;]</code></li>
+                    </ol>
                 </section>
             </section>
         </main>

@@ -122,7 +122,6 @@ or used as a fallback if it is a meta block. [;<;>]
 [subsection] footer-notice [;<;>] [text] Defines the copyright notice at the of the article, uses "Title" formatting [;<;>]
 
 [section] Body Blocks [;<;>]
-[severe] All body blocks must have a preceding "section" or "subsection" block except "section" and "subsection". [;<;>]
 [subsection] section [;<;>] [text] Defines a section, uses "Title" formatting. [;<;>]
 [subsection] subsection [;<;>] [text] Defines a subsection, uses "Title" formatting, can only be declared if a "section" was already declared. [;<;>]
 [subsection] text [;<;>] [text] Defines a paragraph, uses "Paragraph" formatting. [;<;>]
@@ -137,15 +136,16 @@ or used as a fallback if it is a meta block. [;<;>]
 
 [section] Font Formatting [;<;>]
 [text] Text can be further processed by using font formatting with it. [;<;>]
-[fine] Font formatting can be escaped by using a ```\\``` [;<;>]
 [ulist]
-    ,```/\//italic/\//``` -> ///italic///
-    ,```*\**bold*\**``` -> ***bold***
-    ,```\`\``code`\``\``` -> ```code```
-    ,```~\~~crossed~\~~``` -> ~~~crossed~~~
-    ,```_\__underline_\__``` -> ___underline___
-    ,```[\[[../resources/bird.jpg:\::Bird]\]]``` -> [[[../resources/bird.jpg:::Bird]]]
+    ,```\///This is Italic!\///``` >>> ///This is Italic!///
+    ,```\***This is Bold!\***``` >>> ***This is Bold!***
+    ,```\```This is Code!\`````` >>> ```This is Code!```
+    ,```\~~~This is Crossed!\~~~``` >>> ~~~This is Crossed!~~~
+    ,```\___This is Underline!\___``` >>> ___This is Underline!___
+    ,```\[[[../resources/bird.jpg\:::Link of A Bird!\]]]``` >>> [[[../resources/bird.jpg:::Link of A Bird!]]]
 [;<;>]
+[fine] Font formatting can be escaped by using a ```"\\"``` at the start of the formatting: ```"\\\***Bold Text\\\***"``` [;<;>]
+[warning] Escapes are only processed if followed by a correct sequence of characters: ```"\///", "\***", "\```", "\~~~", "\___", "\[[[", "\:::", "\]]]"``` or by another escape ```"\\"```. [;<;>]
 
 [section] Final Examples [;<;>]
 [subsection] Code Block [;<;>]
@@ -157,37 +157,23 @@ or used as a fallback if it is a meta block. [;<;>]
                 .filter((s) -> !s.isEmpty())
                 .collect(Collectors.joining(" "));
     }
-
-    public static String getParagraphFormatted(String text) {
+[;<;>]
+[code]
+[code]
+    public static String getTitleFormatted(String text) {
         return text
                 .lines()
                 .map((s) -> s.trim())
                 .filter((s) -> !s.isEmpty())
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(" "));
     }
-
-    public static String getCodeFormatted(String text) {
-        return text
-                .lines()
-                .filter(new Predicate<String>() {
-                    boolean startFound = false;
-
-                    @Override
-                    public boolean test(String t) {
-                        if (t.isBlank() && !this.startFound) {
-                            return false;
-                        }
-                        this.startFound = true;
-                        return true;
-                    }
-                })
-                .collect(Collectors.joining("\n"))
-                .stripTrailing()
-                .stripIndent();
-    }
+[;<;>];
 [;<;>]
+
 [subsection] Image [;<;>]
 [image] ../resources/bird.jpg [;<;>]
+[code] [image] ../resources/bird.jpg [;<;>]; [;<;>]
+
 [subsection] Raw HTML [;<;>]
 [html]
 <p>This is raw HTML!</p>
@@ -202,5 +188,23 @@ or used as a fallback if it is a meta block. [;<;>]
     // ]]>
 </script>
 [;<;>]
-[subsection] Ordered List: [;<;>] [olist] This, is, a, ordered, list! [;<;>]
-[subsection] Unordered List: [;<;>] [ulist] This, is, a, unordered, list! [;<;>]
+[code]
+[html]
+<p>This is raw HTML!</p>
+<button id="buttonClick" type="button">Click Me!</button>
+<p>Clicks: <span id="buttonClicks">0</span></p>
+<script>
+    // <![CDATA[
+    function onButtonClick() {
+        document.getElementById("buttonClicks").textContent = Number(document.getElementById("buttonClicks").textContent) + 1;
+    }
+    document.getElementById("buttonClick").onclick = onButtonClick;
+    // ]]>
+</script>
+[;<;>];
+[;<;>]
+
+[subsection] Ordered List [;<;>] [olist] This, is, a, ordered, list! [;<;>]
+[code] [olist] This, is, a, ordered, list! [;<;>]; [;<;>]
+[subsection] Unordered List [;<;>] [ulist] This, is, a, unordered, list! [;<;>]
+[code] [ulist] This, is, a, unordered, list! [;<;>]; [;<;>]

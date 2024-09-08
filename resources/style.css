@@ -51,20 +51,29 @@ For more information, please refer to <https://unlicense.org>
     justify-content: center;
     margin: 0 auto;
 }
-.article p, .articles p {
-    text-align: justify;
-    text-justify: inter-word;
-}
 .article h2 {
-    line-height: 1.65em;
-    margin-top: 40px;
-    margin-bottom: 40px;
-}
-.article h3 {
-    text-indent: 0.5em;
     line-height: 1.65em;
     margin-top: 30px;
     margin-bottom: 30px;
+    margin-left: 4px;
+    padding-left: 10px;
+    border-style: inset;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    border-width: 4px;
+}
+.article h3 {
+    line-height: 1.65em;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    padding-left: 10px;
+    border-style: inset;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    border-width: 4px;
 }
 .indices {
     margin: 0;
@@ -90,13 +99,11 @@ For more information, please refer to <https://unlicense.org>
     list-style-type: none;
 }
 .text {
-    text-indent: 2em;
     margin: 0;
     margin-top: 15px;
     margin-bottom: 15px;
 }
 .fine, .warning, .severe {
-    text-indent: 2em;
     margin-left: 30px;
     margin-right: 30px;
     color: #000000;
@@ -144,7 +151,7 @@ For more information, please refer to <https://unlicense.org>
     margin-right: 35px;
 }
 .list p {
-    margin: 12px;
+    margin: 10px;
     text-align: left;
     text-justify: none;
 }
