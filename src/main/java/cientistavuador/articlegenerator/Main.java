@@ -86,7 +86,7 @@ public class Main {
                 throw t;
             }
         }
-
+        
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
                 String language = c.getLanguage(i);
@@ -94,6 +94,37 @@ public class Main {
                 System.out.println("Written " + c.getTitle(i) + ", ID: " + c.getId()+", Language: "+language);
             }
         }
+        
+        System.out.println("Generating main articles pages.");
+        
+        ArticlesPage mainArticlesPage = new ArticlesPage(articles);
+        for (int i = 0; i < mainArticlesPage.getNumberOfLanguages(); i++) {
+            String fileName = URLEncoder.encode("articles_"+mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8)+".html";
+            Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(i));
+            System.out.println("Written main articles page of language "+mainArticlesPage.getLanguage(i));
+        }
+        
+        String defaultLanguage = Localization.getInstance().localize("articles-default-lang", null, "en-US");
+        String title = Localization.getInstance().localize("articles", defaultLanguage, "Articles");
+        String description = title;
+        
+        System.out.println("Generating redirect pages.");
+        
+        Path indexFile = Path.of("index.html");
+        if (Files.exists(indexFile)) {
+            System.out.println("Deleted index.html");
+            Files.delete(indexFile);
+        }
+        
+        Files.writeString(
+                indexFile,
+                RedirectPage.createRedirectPage(
+                        "articles/articles_"+defaultLanguage+".html",
+                        defaultLanguage,
+                        title,
+                        description
+                )
+        );
     }
 
 }

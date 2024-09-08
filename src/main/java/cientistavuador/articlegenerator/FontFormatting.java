@@ -36,6 +36,10 @@ import java.util.Objects;
  */
 public class FontFormatting {
 
+    public static String escapeComment(String text) {
+        return text.replace("--", "- ");
+    }
+    
     public static String escape(String text) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {

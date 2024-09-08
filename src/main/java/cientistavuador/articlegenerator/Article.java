@@ -46,13 +46,6 @@ import java.util.stream.Stream;
  */
 public class Article {
 
-    public static final String DEFAULT_TITLE = "No Title";
-    public static final String DEFAULT_DESCRIPTION = "No Description";
-    public static final String DEFAULT_DATE = "No Date";
-    public static final String DEFAULT_LICENSE = "All Rights Reserved";
-    public static final String DEFAULT_FOOTER_RETURN = "<<< Return to Articles";
-    public static final String DEFAULT_FOOTER_NOTICE = "All Rights Reserved";
-    
     public static final String INDENT = " ".repeat(4);
 
     private final List<TextBlock> blocks;
@@ -180,6 +173,38 @@ public class Article {
                 }
             }
         }
+
+        Object[] maps = {
+            "title", this.title, "No Title",
+            "description", this.description, "No Description",
+            "date", this.date, "No Date",
+            "license", this.license, "All Rights Reserved",
+            "footer-return", this.footerReturn, "<<< Return to Articles",
+            "footer-notice", this.footerNotice, "All Rights Reserved"
+        };
+        for (int j = 0; j < maps.length; j += 3) {
+            String localizationKey = (String) maps[j + 0];
+            @SuppressWarnings("unchecked")
+            Map<String, String> map = (Map<String, String>) maps[j + 1];
+            String fallbackValue = (String) maps[j + 2];
+
+            for (int i = 0; i < this.languages.length; i++) {
+                String language = this.languages[i];
+                
+                if (!map.containsKey(language)) {
+                    String fallback = map.get("");
+                    if (fallback == null) {
+                        fallback = Localization.getInstance().localize(localizationKey, language, fallbackValue);
+                        if (localizationKey.equals("license")) {
+                            fallback = TextBlock.getCodeFormatted(fallback);
+                        } else {
+                            fallback = TextBlock.getTitleFormatted(fallback);
+                        }
+                    }
+                    map.put(language, fallback);
+                }
+            }
+        }
     }
 
     public List<TextBlock> getBlocks() {
@@ -205,41 +230,29 @@ public class Article {
         }
         return i;
     }
-
-    private String find(Map<String, String> map, String language, String nullFallback) {
-        String correct = map.get(language);
-        String fallback = map.get("");
-        if (correct != null) {
-            return correct;
-        }
-        if (fallback != null) {
-            return fallback;
-        }
-        return nullFallback;
-    }
-
+    
     private String getTitle(String language) {
-        return find(this.title, language, DEFAULT_TITLE);
+        return this.title.get(language);
     }
 
     private String getDescription(String language) {
-        return find(this.description, language, DEFAULT_DESCRIPTION);
+        return this.description.get(language);
     }
 
     private String getDate(String language) {
-        return find(this.date, language, DEFAULT_DATE);
+        return this.date.get(language);
     }
 
     private String getLicense(String language) {
-        return find(this.license, language, DEFAULT_LICENSE);
+        return this.license.get(language);
     }
 
     private String getFooterReturn(String language) {
-        return find(this.footerReturn, language, DEFAULT_FOOTER_RETURN);
+        return this.footerReturn.get(language);
     }
 
     private String getFooterNotice(String language) {
-        return find(this.footerNotice, language, DEFAULT_FOOTER_NOTICE);
+        return this.footerNotice.get(language);
     }
 
     public String getTitle(int languageIndex) {
@@ -364,7 +377,7 @@ public class Article {
         for (Node child : n.children) {
             b.append(mapNodeFullText(child)).append(" ");
         }
-
+        
         return b.toString();
     }
 
@@ -567,17 +580,21 @@ public class Article {
         b.append(
                 """
                 <script src="https://utteranc.es/client.js"
-                        repo="CientistaVuador/cientistavuador.github.io"
+                        repo="{REPO-HERE}"
                         issue-term="{ARTICLE-ID-HERE}"
-                        label="comments"
+                        label="{LABEL-HERE}"
                         theme="github-dark"
                         crossorigin="anonymous"
                         async="async">
                 </script>
-                """.replace("{ARTICLE-ID-HERE}", "Article " + Integer.toString(getId())).indent(4));
+                """
+                        .replace("{REPO-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-repo", root.language)))
+                        .replace("{ARTICLE-ID-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-issue-term-prefix", root.language) + " " + Integer.toString(getId())))
+                        .replace("{LABEL-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-label", root.language)))
+                        .indent(4));
         b.append(INDENT).append("<p>").append(FontFormatting.escapeAndFormat(getFooterNotice(root.language))).append("</p>\n");
         b.append("</footer>");
-
+        
         return b.toString();
     }
 
@@ -603,13 +620,13 @@ public class Article {
             b.append("<!DOCTYPE html>\n");
             b.append("<!--\n");
             b.append("\n");
-            b.append(FontFormatting.escape(getLicense(root.language)));
+            b.append(FontFormatting.escapeComment(getLicense(root.language)));
             b.append("\n\n");
             b.append(root.language).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeAndFormat(getTitle(root.language), true)).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeAndFormat(getDescription(root.language), true)).append("\n");
+            b.append(INDENT).append(FontFormatting.escapeComment(getTitle(root.language))).append("\n");
+            b.append(INDENT).append(FontFormatting.escapeComment(getDescription(root.language))).append("\n");
             b.append(INDENT).append(getId()).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeAndFormat(getDate(root.language), true)).append("\n");
+            b.append(INDENT).append(FontFormatting.escapeComment(getDate(root.language))).append("\n");
             b.append("\n");
             b.append(new Date().toString()).append("\n");
             b.append("-->\n");
@@ -617,7 +634,7 @@ public class Article {
             b.append(writeHead(root).indent(4));
             b.append(writeBody(root).indent(4));
             b.append("</html>");
-            
+
             html = b.toString();
             this.htmlMap.put(language, html);
         }

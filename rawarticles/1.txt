@@ -147,7 +147,7 @@ or used as a fallback if it is a meta block. [;<;>]
 [fine] Font formatting can be escaped by using a ```"\\"``` at the start of the formatting: ```"\\\***Bold Text\\\***"``` [;<;>]
 [warning] Escapes are only processed if followed by a correct sequence of characters: ```"\///", "\***", "\```", "\~~~", "\___", "\[[[", "\:::", "\]]]"``` or by another escape ```"\\"```. [;<;>]
 
-[section] Final Examples [;<;>]
+[section] Examples [;<;>]
 [subsection] Code Block [;<;>]
 [code]
     public static String getTitleFormatted(String text) {
