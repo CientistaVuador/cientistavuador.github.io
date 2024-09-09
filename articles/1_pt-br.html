@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<!--
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <http://unlicense.org/>
+
+pt-br
+    Minha Linguagem de Marcação
+    Essa é a minha referência pessoal para a minha própria linguagem de marcação usada para fazer esses artigos, não foi feita para ser usada por ninguém além de mim, mas se você está curioso sobre como funciona, então aqui está.
+    1
+    2024/09/07 13:34
+
+Mon Sep 09 02:25:44 BRT 2024
+-->
+<html lang="pt-br">
+    <head>
+        <title>Minha Linguagem de Marcação</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="the, formatting, is, defines, uses, block, are, of, title, text, this, article, list, and, paragraph, be, code, lines, by, can, blocks, if, languages, to, only, not, with, allowed, id, using, as, language, blockname, raw, it, attribute, removed, body, empty, white, bird, html, leftover, then, at, meta, have, ordered, joined, font, section, integer, all, unordered, image, bold, escaped, sequence, converted, spaces, line, link, declared, separated"/>
+        <meta name="description" content="Essa é a minha referência pessoal para a minha própria linguagem de marcação usada para fazer esses artigos, não foi feita para ser usada por ninguém além de mim, mas se você está curioso sobre como funciona, então aqui está."/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="../data/icon.png"/>
+        <link rel="stylesheet" href="../data/style.css" type="text/css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Minha Linguagem de Marcação"/>
+        <meta name="og:description" content="Essa é a minha referência pessoal para a minha própria linguagem de marcação usada para fazer esses artigos, não foi feita para ser usada por ninguém além de mim, mas se você está curioso sobre como funciona, então aqui está."/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="https://cientistavuador.github.io/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <body class="body">
+        <header class="header">
+            <h1>Minha Linguagem de Marcação</h1>
+            <h2>Essa é a minha referência pessoal para a minha própria linguagem de marcação usada para fazer esses artigos, não foi feita para ser usada por ninguém além de mim, mas se você está curioso sobre como funciona, então aqui está.</h2>
+            <h3>0001</h3>
+            <h3>2024/09/07 13:34</h3>
+            <h4><a href="1_en-us.html">EN-US</a> | <a href="1_pt-br.html">PT-BR</a></h4>
+        </header>
+        <main class="article">
+            <ol class="indices">
+                <li><a href="#1+Raw+Text+Formatting">1 Raw Text Formatting</a></li>
+                <li>
+                    <ol>
+                        <li><a href="#1.1+%26quot%3BTitle%26quot%3B+Formatting">1.1 &quot;Title&quot; Formatting</a></li>
+                        <li><a href="#1.2+%26quot%3BInteger%26quot%3B+Formatting">1.2 &quot;Integer&quot; Formatting</a></li>
+                        <li><a href="#1.3+%26quot%3BParagraph%26quot%3B+Formatting">1.3 &quot;Paragraph&quot; Formatting</a></li>
+                        <li><a href="#1.4+%26quot%3BCode%26quot%3B+Formatting">1.4 &quot;Code&quot; Formatting</a></li>
+                        <li><a href="#1.5+%26quot%3BList%26quot%3B+Formatting">1.5 &quot;List&quot; Formatting</a></li>
+                    </ol>
+                </li><li><a href="#2+Text+Blocks">2 Text Blocks</a></li>
+                <li>
+                    <ol>
+                        <li><a href="#2.1+%26quot%3Bblockname%26quot%3B">2.1 &quot;blockname&quot;</a></li>
+                        <li><a href="#2.2+%26quot%3Battribute%26quot%3B">2.2 &quot;attribute&quot;</a></li>
+                    </ol>
+                </li><li><a href="#3+Article">3 Article</a></li>
+                <li><a href="#4+Meta+Blocks">4 Meta Blocks</a></li>
+                <li>
+                    <ol>
+                        <li><a href="#4.1+id">4.1 id</a></li>
+                        <li><a href="#4.2+languages">4.2 languages</a></li>
+                        <li><a href="#4.3+license">4.3 license</a></li>
+                        <li><a href="#4.4+title">4.4 title</a></li>
+                        <li><a href="#4.5+description">4.5 description</a></li>
+                        <li><a href="#4.6+date">4.6 date</a></li>
+                        <li><a href="#4.7+footer-return">4.7 footer-return</a></li>
+                        <li><a href="#4.8+footer-notice">4.8 footer-notice</a></li>
+                    </ol>
+                </li><li><a href="#5+Body+Blocks">5 Body Blocks</a></li>
+                <li>
+                    <ol>
+                        <li><a href="#5.1+section">5.1 section</a></li>
+                        <li><a href="#5.2+subsection">5.2 subsection</a></li>
+                        <li><a href="#5.3+text">5.3 text</a></li>
+                        <li><a href="#5.4+fine">5.4 fine</a></li>
+                        <li><a href="#5.5+warning">5.5 warning</a></li>
+                        <li><a href="#5.6+severe">5.6 severe</a></li>
+                        <li><a href="#5.7+code">5.7 code</a></li>
+                        <li><a href="#5.8+image">5.8 image</a></li>
+                        <li><a href="#5.9+olist">5.9 olist</a></li>
+                        <li><a href="#5.10+ulist">5.10 ulist</a></li>
+                        <li><a href="#5.11+html">5.11 html</a></li>
+                    </ol>
+                </li><li><a href="#6+Font+Formatting">6 Font Formatting</a></li>
+                <li><a href="#7+Examples">7 Examples</a></li>
+                <li>
+                    <ol>
+                        <li><a href="#7.1+Code+Block">7.1 Code Block</a></li>
+                        <li><a href="#7.2+Image">7.2 Image</a></li>
+                        <li><a href="#7.3+Raw+HTML">7.3 Raw HTML</a></li>
+                        <li><a href="#7.4+Ordered+List">7.4 Ordered List</a></li>
+                        <li><a href="#7.5+Unordered+List">7.5 Unordered List</a></li>
+                    </ol>
+                </li>
+            </ol>
+            <section id="1+Raw+Text+Formatting">
+                <h2>1 Raw Text Formatting</h2>
+                <p class="text">
+                    The language uses 5 Raw Text Formatting styles.
+                </p>
+                <section id="1.1+%26quot%3BTitle%26quot%3B+Formatting">
+                    <h3>1.1 &quot;Title&quot; Formatting</h3>
+                    <p class="text">
+                        All lines are trimmed, empty lines are removed, leftover lines are joined with a space
+                    </p>
+                </section>
+                <section id="1.2+%26quot%3BInteger%26quot%3B+Formatting">
+                    <h3>1.2 &quot;Integer&quot; Formatting</h3>
+                    <p class="text">
+                        Same as &quot;Title&quot; Formatting but the result is parsed to a integer.
+                    </p>
+                </section>
+                <section id="1.3+%26quot%3BParagraph%26quot%3B+Formatting">
+                    <h3>1.3 &quot;Paragraph&quot; Formatting</h3>
+                    <p class="text">
+                        All lines are trimmed, empty lines are removed, leftover lines are joined with a line separator
+                    </p>
+                </section>
+                <section id="1.4+%26quot%3BCode%26quot%3B+Formatting">
+                    <h3>1.4 &quot;Code&quot; Formatting</h3>
+                    <p class="text">
+                        Blank lines are removed until a non blank line is found,
+                        leftover lines are joined with a line separator,
+                        the resulting string is then stripped from trailing white spaces and indentation.
+                    </p>
+                </section>
+                <section id="1.5+%26quot%3BList%26quot%3B+Formatting">
+                    <h3>1.5 &quot;List&quot; Formatting</h3>
+                    <p class="text">
+                        Text is separated by a &quot;,&quot; (Comma) (a comma can be escaped by using two of them &quot;,,&quot;)
+                        then all separated text is formatted using &quot;Title&quot; Formatting and any empty separated
+                        text is removed.
+                    </p>
+                </section>
+            </section>
+            <section id="2+Text+Blocks">
+                <h2>2 Text Blocks</h2>
+                <p class="text">
+                    A Text Block starts with:
+                </p>
+                <ul class="list">
+                    <li><p><code>[blockname&lt;attribute&gt;]</code></p></li>
+                </ul>
+                <p class="text">
+                    And <strong>only</strong> ends with the <strong>exact</strong> sequence:
+                </p>
+                <ul class="list">
+                    <li><p><code>[;&lt;;&gt;]</code></p></li>
+                </ul>
+                <p class="warning">
+                    There are no escape characters, <code>&quot;[]&lt;&gt;;&quot;</code> is not allowed.
+                </p>
+                <p class="fine">
+                    The ending sequence can be escaped by placing a &quot;;&quot; after: <code>[;&lt;;&gt;];</code>
+                </p>
+                <p class="severe">
+                    No text except white spaces are allowed outside a block.
+                </p>
+                <p class="severe">
+                    A Block cannot contain a block.
+                </p>
+                <section id="2.1+%26quot%3Bblockname%26quot%3B">
+                    <h3>2.1 &quot;blockname&quot;</h3>
+                    <p class="text">
+                        &quot;blockname&quot; is formatted using &quot;Title&quot; formatting,
+                        the resulting block name is then converted
+                        to lower case.
+                    </p>
+                    <p class="severe">
+                        Any white space inside the &quot;blockname&quot; is not allowed
+                    </p>
+                </section>
+                <section id="2.2+%26quot%3Battribute%26quot%3B">
+                    <h3>2.2 &quot;attribute&quot;</h3>
+                    <p class="text">
+                        &quot;attribute&quot; is fomatted as &quot;blockname&quot;,
+                        but white spaces inside the attribute
+                        are allowed and the result
+                        is not converted to lower case.
+                    </p>
+                </section>
+            </section>
+            <section id="3+Article">
+                <h2>3 Article</h2>
+                <p class="text">
+                    A Article is composed out of meta blocks and body
+                    blocks that is converted to HTML,
+                    attributes are used as the language of the block,
+                    a block without a language should
+                    always be inserted if it is a body block
+                    or used as a fallback if it is a meta block.
+                </p>
+                <p class="severe">
+                    A article is only valid if it defines a &quot;id&quot; and &quot;languages&quot; block, the &quot;languages&quot; block must not be empty.
+                </p>
+                <p class="warning">
+                    A article should always have a &quot;id&quot; and a &quot;languages&quot; block as the first and second block.
+                </p>
+                <p class="warning">
+                    &quot;id&quot; and &quot;languages&quot; can not have a defined language.
+                </p>
+            </section>
+            <section id="4+Meta+Blocks">
+                <h2>4 Meta Blocks</h2>
+                <p class="text">
+                    Those are blocks that only appear at the start of the article.
+                </p>
+                <p class="severe">
+                    They are not allowed to be declared after body blocks have started and can only be redeclared if the language is different.
+                </p>
+                <section id="4.1+id">
+                    <h3>4.1 id</h3>
+                    <p class="text">
+                        Defines the id of the article, uses &quot;Integer&quot; formatting.
+                    </p>
+                </section>
+                <section id="4.2+languages">
+                    <h3>4.2 languages</h3>
+                    <p class="text">
+                        Defines the languages of the article, uses &quot;List&quot; formatting.
+                    </p>
+                </section>
+                <section id="4.3+license">
+                    <h3>4.3 license</h3>
+                    <p class="text">
+                        Defines the license of the article, uses &quot;Code&quot; formatting.
+                    </p>
+                </section>
+                <section id="4.4+title">
+                    <h3>4.4 title</h3>
+                    <p class="text">
+                        Defines the title of the article, uses &quot;Title&quot; formatting.
+                    </p>
+                </section>
+                <section id="4.5+description">
+                    <h3>4.5 description</h3>
+                    <p class="text">
+                        Defines the description of the article, uses &quot;Title&quot; formatting.
+                    </p>
+                </section>
+                <section id="4.6+date">
+                    <h3>4.6 date</h3>
+                    <p class="text">
+                        Defines the date of the article, uses &quot;Title&quot; formatting
+                    </p>
+                </section>
+                <section id="4.7+footer-return">
+                    <h3>4.7 footer-return</h3>
+                    <p class="text">
+                        Defines the return to main articles link text, uses &quot;Title&quot; formatting
+                    </p>
+                </section>
+                <section id="4.8+footer-notice">
+                    <h3>4.8 footer-notice</h3>
+                    <p class="text">
+                        Defines the copyright notice at the of the article, uses &quot;Title&quot; formatting
+                    </p>
+                </section>
+            </section>
+            <section id="5+Body+Blocks">
+                <h2>5 Body Blocks</h2>
+                <section id="5.1+section">
+                    <h3>5.1 section</h3>
+                    <p class="text">
+                        Defines a section, uses &quot;Title&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.2+subsection">
+                    <h3>5.2 subsection</h3>
+                    <p class="text">
+                        Defines a subsection, uses &quot;Title&quot; formatting, can only be declared if a &quot;section&quot; was already declared.
+                    </p>
+                </section>
+                <section id="5.3+text">
+                    <h3>5.3 text</h3>
+                    <p class="text">
+                        Defines a paragraph, uses &quot;Paragraph&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.4+fine">
+                    <h3>5.4 fine</h3>
+                    <p class="text">
+                        Defines a &quot;fine&quot; paragraph, uses &quot;Paragraph&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.5+warning">
+                    <h3>5.5 warning</h3>
+                    <p class="text">
+                        Defines a &quot;warning&quot; paragraph, uses &quot;Paragraph&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.6+severe">
+                    <h3>5.6 severe</h3>
+                    <p class="text">
+                        Defines a &quot;severe&quot; paragraph, uses &quot;Paragraph&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.7+code">
+                    <h3>5.7 code</h3>
+                    <p class="text">
+                        Defines a code block, uses &quot;Code&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.8+image">
+                    <h3>5.8 image</h3>
+                    <p class="text">
+                        Defines a image, uses &quot;Title&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.9+olist">
+                    <h3>5.9 olist</h3>
+                    <p class="text">
+                        Defines a ordered list, uses &quot;List&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.10+ulist">
+                    <h3>5.10 ulist</h3>
+                    <p class="text">
+                        Defines a unordered list, uses &quot;List&quot; formatting.
+                    </p>
+                </section>
+                <section id="5.11+html">
+                    <h3>5.11 html</h3>
+                    <p class="text">
+                        Defines raw html without any processing, uses &quot;Code&quot; formatting.
+                    </p>
+                </section>
+            </section>
+            <section id="6+Font+Formatting">
+                <h2>6 Font Formatting</h2>
+                <p class="text">
+                    Text can be further processed by using font formatting with it.
+                </p>
+                <ul class="list">
+                    <li><p><code>///This is Italic!///</code> &gt;&gt;&gt; <em>This is Italic!</em></p></li>
+                    <li><p><code>***This is Bold!***</code> &gt;&gt;&gt; <strong>This is Bold!</strong></p></li>
+                    <li><p><code>```This is Code!```</code> &gt;&gt;&gt; <code>This is Code!</code></p></li>
+                    <li><p><code>~~~This is Crossed!~~~</code> &gt;&gt;&gt; <del>This is Crossed!</del></p></li>
+                    <li><p><code>___This is Underline!___</code> &gt;&gt;&gt; <u>This is Underline!</u></p></li>
+                    <li><p><code>[[[../resources/bird.jpg:::Link of A Bird!]]]</code> &gt;&gt;&gt; <a target="_blank" href="../resources/bird.jpg">Link of A Bird!</a></p></li>
+                </ul>
+                <p class="fine">
+                    Font formatting can be escaped by using a <code>&quot;\&quot;</code> at the start of the formatting: <code>&quot;\***Bold Text\***&quot;</code>
+                </p>
+                <p class="warning">
+                    Escapes are only processed if followed by a correct sequence of characters: <code>&quot;///&quot;, &quot;***&quot;, &quot;```&quot;, &quot;~~~&quot;, &quot;___&quot;, &quot;[[[&quot;, &quot;:::&quot;, &quot;]]]&quot;</code> or by another escape <code>&quot;\&quot;</code>.
+                </p>
+            </section>
+            <section id="7+Examples">
+                <h2>7 Examples</h2>
+                <section id="7.1+Code+Block">
+                    <h3>7.1 Code Block</h3>
+                    <ol class="code">
+                        <li><code>public static String getTitleFormatted(String text) {</code></li>
+                        <li><code>    return text</code></li>
+                        <li><code>            .lines()</code></li>
+                        <li><code>            .map((s) -&gt; s.trim())</code></li>
+                        <li><code>            .filter((s) -&gt; !s.isEmpty())</code></li>
+                        <li><code>            .collect(Collectors.joining(&quot; &quot;));</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                    <ol class="code">
+                        <li><code>[code]</code></li>
+                        <li><code>    public static String getTitleFormatted(String text) {</code></li>
+                        <li><code>        return text</code></li>
+                        <li><code>                .lines()</code></li>
+                        <li><code>                .map((s) -&gt; s.trim())</code></li>
+                        <li><code>                .filter((s) -&gt; !s.isEmpty())</code></li>
+                        <li><code>                .collect(Collectors.joining(&quot; &quot;));</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>[;&lt;;&gt;]</code></li>
+                    </ol>
+                </section>
+                <section id="7.2+Image">
+                    <h3>7.2 Image</h3>
+                    <img class="image" src="../resources/bird.jpg" alt="bird"/>
+                    <ol class="code">
+                        <li><code>[image] ../resources/bird.jpg [;&lt;;&gt;]</code></li>
+                    </ol>
+                </section>
+                <section id="7.3+Raw+HTML">
+                    <h3>7.3 Raw HTML</h3>
+                    <p>This is raw HTML!</p>
+                    <button id="buttonClick" type="button">Click Me!</button>
+                    <p>Clicks: <span id="buttonClicks">0</span></p>
+                    <script>
+                        // <![CDATA[
+                        function onButtonClick() {
+                            document.getElementById("buttonClicks").textContent = Number(document.getElementById("buttonClicks").textContent) + 1;
+                        }
+                        document.getElementById("buttonClick").onclick = onButtonClick;
+                        // ]]>
+                    </script>
+                    <ol class="code">
+                        <li><code>[html]</code></li>
+                        <li><code>&lt;p&gt;This is raw HTML!&lt;/p&gt;</code></li>
+                        <li><code>&lt;button id=&quot;buttonClick&quot; type=&quot;button&quot;&gt;Click Me!&lt;/button&gt;</code></li>
+                        <li><code>&lt;p&gt;Clicks: &lt;span id=&quot;buttonClicks&quot;&gt;0&lt;/span&gt;&lt;/p&gt;</code></li>
+                        <li><code>&lt;script&gt;</code></li>
+                        <li><code>    // &lt;![CDATA[</code></li>
+                        <li><code>    function onButtonClick() {</code></li>
+                        <li><code>        document.getElementById(&quot;buttonClicks&quot;).textContent = Number(document.getElementById(&quot;buttonClicks&quot;).textContent) + 1;</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>    document.getElementById(&quot;buttonClick&quot;).onclick = onButtonClick;</code></li>
+                        <li><code>    // ]]&gt;</code></li>
+                        <li><code>&lt;/script&gt;</code></li>
+                        <li><code>[;&lt;;&gt;]</code></li>
+                    </ol>
+                </section>
+                <section id="7.4+Ordered+List">
+                    <h3>7.4 Ordered List</h3>
+                    <ol class="list">
+                        <li><p>This</p></li>
+                        <li><p>is</p></li>
+                        <li><p>a</p></li>
+                        <li><p>ordered</p></li>
+                        <li><p>list!</p></li>
+                    </ol>
+                    <ol class="code">
+                        <li><code>[olist] This, is, a, ordered, list! [;&lt;;&gt;]</code></li>
+                    </ol>
+                </section>
+                <section id="7.5+Unordered+List">
+                    <h3>7.5 Unordered List</h3>
+                    <ul class="list">
+                        <li><p>This</p></li>
+                        <li><p>is</p></li>
+                        <li><p>a</p></li>
+                        <li><p>unordered</p></li>
+                        <li><p>list!</p></li>
+                    </ul>
+                    <ol class="code">
+                        <li><code>[ulist] This, is, a, unordered, list! [;&lt;;&gt;]</code></li>
+                    </ol>
+                </section>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 1"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>O Conteúdo deste site é licenciado sobre a <a target="_blank" href="https://unlicense.org/">Unlicense</a> salvo indicação contrária</p>
+        </footer>
+    </body>
+</html>
