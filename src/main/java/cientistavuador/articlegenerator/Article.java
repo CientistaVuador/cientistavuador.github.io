@@ -93,12 +93,13 @@ public class Article {
 
         this.id = idBlock.getIntegerFormatted();
         this.languages = languagesBlock.getListFormatted();
-
+        
         if (this.languages.length == 0) {
             throw new IllegalArgumentException("Languages block is empty at line " + languagesBlock.getLine());
         }
-
+        
         for (int i = 0; i < this.languages.length; i++) {
+            this.languages[i] = this.languages[i].toLowerCase();
             this.languageMap.put(this.languages[i], i);
         }
 
@@ -118,11 +119,11 @@ public class Article {
         }
 
         for (TextBlock b : this.blocks) {
-            if (b.hasAttribute() && !languageSet.contains(b.getAttribute())) {
-                throw new IllegalArgumentException("Invalid language " + b.getAttribute() + " at line " + b.getLine());
+            if (b.hasAttribute() && !languageSet.contains(b.getAttributeLowerCase())) {
+                throw new IllegalArgumentException("Invalid language " + b.getAttributeLowerCase()+ " at line " + b.getLine());
             }
         }
-
+        
         int metaLength = 2;
         metaLoop:
         for (int i = metaLength; i < this.blocks.size(); i++) {
@@ -148,13 +149,13 @@ public class Article {
                             map = this.footerNotice;
                     }
                     Objects.requireNonNull(map, "Map is null?");
-                    if (map.containsKey(b.getAttribute())) {
-                        throw new IllegalArgumentException("Duplicated block " + b.getName() + " for language " + b.getAttribute() + " at line " + b.getLine());
+                    if (map.containsKey(b.getAttributeLowerCase())) {
+                        throw new IllegalArgumentException("Duplicated block " + b.getName() + " for language " + b.getAttributeLowerCase()+ " at line " + b.getLine());
                     }
                     if (b.getName().equals("license")) {
-                        map.put(b.getAttribute(), b.getCodeFormatted());
+                        map.put(b.getAttributeLowerCase(), b.getCodeFormatted());
                     } else {
-                        map.put(b.getAttribute(), b.getTitleFormatted());
+                        map.put(b.getAttributeLowerCase(), b.getTitleFormatted());
                     }
                     metaLength++;
                 }
@@ -175,18 +176,17 @@ public class Article {
         }
 
         Object[] maps = {
-            "title", this.title, "No Title",
-            "description", this.description, "No Description",
-            "date", this.date, "No Date",
-            "license", this.license, "All Rights Reserved",
-            "footer-return", this.footerReturn, "<<< Return to Articles",
-            "footer-notice", this.footerNotice, "All Rights Reserved"
+            Localization.TITLE, this.title,
+            Localization.DESCRIPTION, this.description,
+            Localization.DATE, this.date,
+            Localization.LICENSE, this.license,
+            Localization.FOOTER_RETURN, this.footerReturn,
+            Localization.FOOTER_NOTICE, this.footerNotice,
         };
-        for (int j = 0; j < maps.length; j += 3) {
+        for (int j = 0; j < maps.length; j += 2) {
             String localizationKey = (String) maps[j + 0];
             @SuppressWarnings("unchecked")
             Map<String, String> map = (Map<String, String>) maps[j + 1];
-            String fallbackValue = (String) maps[j + 2];
 
             for (int i = 0; i < this.languages.length; i++) {
                 String language = this.languages[i];
@@ -194,12 +194,7 @@ public class Article {
                 if (!map.containsKey(language)) {
                     String fallback = map.get("");
                     if (fallback == null) {
-                        fallback = Localization.getInstance().localize(localizationKey, language, fallbackValue);
-                        if (localizationKey.equals("license")) {
-                            fallback = TextBlock.getCodeFormatted(fallback);
-                        } else {
-                            fallback = TextBlock.getTitleFormatted(fallback);
-                        }
+                        fallback = Localization.get().localize(localizationKey, language);
                     }
                     map.put(language, fallback);
                 }
@@ -309,7 +304,7 @@ public class Article {
             for (int i = this.metaBlocksLength; i < this.blocks.size(); i++) {
                 TextBlock b = this.blocks.get(i);
 
-                if (b.hasAttribute() && !b.getAttribute().equals(language)) {
+                if (b.hasAttribute() && !b.getAttributeLowerCase().equals(language)) {
                     continue;
                 }
 
@@ -396,21 +391,35 @@ public class Article {
 
     private String writeHead(Node root) {
         StringBuilder b = new StringBuilder();
-
+        
+        String headTitle = FontFormatting.escapeAndFormat(getTitle(root.language), true);
+        String headKeywords = getKeywords(root.language);
+        String headDescription = FontFormatting.escapeAndFormat(getDescription(root.language), true);
+        
+        String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, root.language));
+        String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, root.language));
+        
+        String openGraphType = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_TYPE, root.language));
+        String openGraphImageURL = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_IMAGE, root.language));
+        
         b.append("<head>\n");
-        b.append(INDENT).append("<title>").append(FontFormatting.escapeAndFormat(getTitle(root.language), true)).append("</title>\n");
+        b.append(INDENT).append("<title>").append(headTitle).append("</title>\n");
+        b.append(INDENT).append("\n");
+        b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
-        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(getKeywords(root.language)).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(headKeywords).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"description\" content=\"").append(headDescription).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
-        b.append(INDENT).append("<meta name=\"description\" content=\"").append(FontFormatting.escapeAndFormat(getDescription(root.language), true)).append("\"/>\n");
-        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\"/>\n");
-        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("\n");
+        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"").append(icon).append("\"/>\n");
+        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append(stylesheet).append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
-        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(FontFormatting.escapeAndFormat(getTitle(root.language), true)).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(FontFormatting.escapeAndFormat(getDescription(root.language), true)).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:type\" content=\"article\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(headTitle).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(headDescription).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:type\" content=\"").append(openGraphType).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:image\" content=\"").append(openGraphImageURL).append("\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append("</head>");
 
@@ -419,15 +428,21 @@ public class Article {
 
     private String writeHeader(Node root) {
         StringBuilder b = new StringBuilder();
-
+        
+        String titleHeader = FontFormatting.escapeAndFormat(getTitle(root.language));
+        String descriptionHeader = FontFormatting.escapeAndFormat(getDescription(root.language));
+        String idHeader = String.format("%04d", getId());
+        String dateHeader = FontFormatting.escapeAndFormat(getDate(root.language));
+        
         b.append("<header class=\"header\">\n");
-        b.append(INDENT).append("<h1>").append(FontFormatting.escapeAndFormat(getTitle(root.language))).append("</h1>\n");
-        b.append(INDENT).append("<h2>").append(FontFormatting.escapeAndFormat(getDescription(root.language))).append("</h2>\n");
-        b.append(INDENT).append("<h3>").append(String.format("%04d", getId())).append("</h3>\n");
-        b.append(INDENT).append("<h3>").append(FontFormatting.escapeAndFormat(getDate(root.language))).append("</h3>\n");
+        b.append(INDENT).append("<h1>").append(titleHeader).append("</h1>\n");
+        b.append(INDENT).append("<h2>").append(descriptionHeader).append("</h2>\n");
+        b.append(INDENT).append("<h3>").append(idHeader).append("</h3>\n");
+        b.append(INDENT).append("<h3>").append(dateHeader).append("</h3>\n");
         b.append(INDENT).append("<h4>");
         for (int i = 0; i < this.languages.length; i++) {
-            b.append("<a href=\"").append(URLEncoder.encode(getId() + "_" + this.languages[i], StandardCharsets.UTF_8)).append(".html").append("\">");
+            String languageArticleLink = URLEncoder.encode(getId() + "_" + this.languages[i], StandardCharsets.UTF_8) + ".html";
+            b.append("<a href=\"").append(languageArticleLink).append("\">");
             b.append(this.languages[i].toUpperCase());
             b.append("</a>");
             if (i != (this.languages.length - 1)) {
@@ -449,13 +464,10 @@ public class Article {
             }
             return b.toString();
         }
-
-        b
-                .append("<li><a href=\"#")
-                .append(URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8))
-                .append("\">")
-                .append(FontFormatting.escapeAndFormat(node.fullName))
-                .append("</a></li>\n");
+        
+        String sectionLink = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
+        String sectionIndex = FontFormatting.escapeAndFormat(node.fullName);
+        b.append("<li><a href=\"#").append(sectionLink).append("\">").append(sectionIndex).append("</a></li>\n");
         if (!node.children.isEmpty()) {
             b.append("<li>\n");
             b.append(INDENT).append("<ol>\n");
@@ -484,15 +496,19 @@ public class Article {
 
         switch (block.getName()) {
             case "text", "fine", "warning", "severe" -> {
+                String text = FontFormatting.escapeAndFormat(block.getParagraphFormatted()).indent(4);
                 b.append("<p class=\"").append(block.getName()).append("\">\n");
-                b.append(FontFormatting.escapeAndFormat(block.getParagraphFormatted()).indent(4));
+                b.append(text);
                 b.append("</p>");
             }
             case "code" -> {
                 b.append("<ol class=\"code\">\n");
-                Stream<String> lines = TextBlock.getCodeFormatted(block.getCodeFormatted()).lines();
+                Stream<String> lines = block
+                        .getCodeFormatted()
+                        .lines()
+                        .map(FontFormatting::escape);
                 for (String line : lines.toList()) {
-                    b.append(INDENT).append("<li><code>").append(FontFormatting.escape(line)).append("</code></li>\n");
+                    b.append(INDENT).append("<li><code>").append(line).append("</code></li>\n");
                 }
                 b.append("</ol>");
             }
@@ -502,7 +518,8 @@ public class Article {
                     String[] split = block.getTitleFormatted().split("/");
                     altPlaceholder = split[split.length - 1].split(Pattern.quote("."))[0];
                 }
-                b.append("<img class=\"image\" src=\"").append(FontFormatting.escape(block.getTitleFormatted())).append("\" alt=\"").append(altPlaceholder).append("\"/>");
+                String imageURL = FontFormatting.escape(block.getTitleFormatted());
+                b.append("<img class=\"image\" src=\"").append(imageURL).append("\" alt=\"").append(altPlaceholder).append("\"/>");
             }
             case "olist", "ulist" -> {
                 boolean ordered = block.getName().equals("olist");
@@ -515,9 +532,10 @@ public class Article {
 
                 String[] formatted = block.getListFormatted();
                 for (int i = 0; i < formatted.length; i++) {
-                    b.append(INDENT).append("<li><p>").append(FontFormatting.escapeAndFormat(formatted[i])).append("</p></li>\n");
+                    String listElementText = FontFormatting.escapeAndFormat(formatted[i]);
+                    b.append(INDENT).append("<li><p>").append(listElementText).append("</p></li>\n");
                 }
-
+                
                 if (ordered) {
                     b.append("</ol>");
                 } else {
@@ -545,8 +563,11 @@ public class Article {
         String tag = "h" + (depth + 1);
 
         if (rootMultiplier != 0) {
-            b.append("<section id=\"").append(URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8)).append("\">\n");
-            b.append(INDENT).append("<").append(tag).append(">").append(FontFormatting.escapeAndFormat(node.fullName)).append("</").append(tag).append(">\n");
+            String sectionId = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
+            String sectionTitle = FontFormatting.escapeAndFormat(node.fullName);
+            
+            b.append("<section id=\"").append(sectionId).append("\">\n");
+            b.append(INDENT).append("<").append(tag).append(">").append(sectionTitle).append("</").append(tag).append(">\n");
         }
         for (TextBlock resource : node.resources) {
             b.append(writeResource(resource).indent(4 * rootMultiplier));
@@ -574,25 +595,34 @@ public class Article {
 
     private String writeFooter(Node root) {
         StringBuilder b = new StringBuilder();
-
+        
+        String returnLink = URLEncoder.encode("articles_" + root.language, StandardCharsets.UTF_8) + ".html";
+        String returnText = FontFormatting.escapeAndFormat(getFooterReturn(root.language));
+        String notice = FontFormatting.escapeAndFormat(getFooterNotice(root.language));
+        
         b.append("<footer class=\"footer\">\n");
-        b.append(INDENT).append("<p>").append("<a href=\"").append(URLEncoder.encode("articles_" + root.language, StandardCharsets.UTF_8)).append(".html").append("\">").append(FontFormatting.escapeAndFormat(getFooterReturn(root.language))).append("</a>").append("</p>\n");
-        b.append(
-                """
-                <script src="https://utteranc.es/client.js"
-                        repo="{REPO-HERE}"
-                        issue-term="{ARTICLE-ID-HERE}"
-                        label="{LABEL-HERE}"
-                        theme="github-dark"
-                        crossorigin="anonymous"
-                        async="async">
-                </script>
-                """
-                        .replace("{REPO-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-repo", root.language)))
-                        .replace("{ARTICLE-ID-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-issue-term-prefix", root.language) + " " + Integer.toString(getId())))
-                        .replace("{LABEL-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-label", root.language)))
-                        .indent(4));
-        b.append(INDENT).append("<p>").append(FontFormatting.escapeAndFormat(getFooterNotice(root.language))).append("</p>\n");
+        b.append(INDENT).append("<p>").append("<a href=\"").append(returnLink).append("\">").append(returnText).append("</a>").append("</p>\n");
+        if (Boolean.parseBoolean(Localization.get().localize(Localization.UTTERANCES_ENABLED, root.language))) {
+            String utterancesRepo = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_REPO, root.language));
+            String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_PREFIX, root.language)) + " " + Integer.toString(getId());
+            String utterancesLabel = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_LABEL, root.language));
+            String utterancesTheme = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_THEME, root.language));
+            
+            StringBuilder ut = new StringBuilder();
+            
+            ut.append("<script src=\"https://utteranc.es/client.js\"\n");
+            ut.append(INDENT).append(INDENT).append("repo=\"").append(utterancesRepo).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("issue-term=\"").append(utterancesIssueTerm).append("\"\n");;
+            ut.append(INDENT).append(INDENT).append("label=\"").append(utterancesLabel).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("theme=\"").append(utterancesTheme).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("crossorigin=\"anonymous\"\n");
+            ut.append(INDENT).append(INDENT).append("async=\"async\"\n");
+            ut.append(INDENT).append(INDENT).append(">\n");
+            ut.append("</script>");
+            
+            b.append(ut.toString().indent(4));
+        }
+        b.append(INDENT).append("<p>").append(notice).append("</p>\n");
         b.append("</footer>");
         
         return b.toString();
@@ -606,7 +636,7 @@ public class Article {
         b.append(writeArticle(root).indent(4));
         b.append(writeFooter(root).indent(4));
         b.append("</body>");
-
+        
         return b.toString();
     }
 
@@ -616,17 +646,23 @@ public class Article {
             Node root = mapNode(language);
 
             StringBuilder b = new StringBuilder();
-
+            
+            String titleText = FontFormatting.escapeComment(getTitle(root.language));
+            String descriptionText = FontFormatting.escapeComment(getDescription(root.language));
+            String dateText = FontFormatting.escapeComment(getDate(root.language));
+            
+            String licenseText = FontFormatting.escapeComment(getLicense(root.language));
+            
             b.append("<!DOCTYPE html>\n");
             b.append("<!--\n");
             b.append("\n");
-            b.append(FontFormatting.escapeComment(getLicense(root.language)));
-            b.append("\n\n");
+            b.append(licenseText).append("\n");
+            b.append("\n");
             b.append(root.language).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeComment(getTitle(root.language))).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeComment(getDescription(root.language))).append("\n");
+            b.append(INDENT).append(titleText).append("\n");
+            b.append(INDENT).append(descriptionText).append("\n");
             b.append(INDENT).append(getId()).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeComment(getDate(root.language))).append("\n");
+            b.append(INDENT).append(dateText).append("\n");
             b.append("\n");
             b.append(new Date().toString()).append("\n");
             b.append("-->\n");

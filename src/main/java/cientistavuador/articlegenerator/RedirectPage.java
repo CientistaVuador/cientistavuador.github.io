@@ -76,7 +76,7 @@ public class RedirectPage {
         
         b.append("<!DOCTYPE html>\n");
         b.append("<!--\n");
-        b.append(FontFormatting.escapeComment(TextBlock.getCodeFormatted(Localization.getInstance().localize("license", null, "All Rights Reserved"))));
+        b.append(FontFormatting.escapeComment(TextBlock.getCodeFormatted(Localization.get().localize(Localization.LICENSE, null))));
         b.append("\n\n");
         b.append("Redirect Page:\n");
         b.append(INDENT).append("To: ").append(FontFormatting.escapeComment(url)).append("\n");

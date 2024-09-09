@@ -104,8 +104,8 @@ public class Main {
             System.out.println("Written main articles page of language "+mainArticlesPage.getLanguage(i));
         }
         
-        String defaultLanguage = Localization.getInstance().localize("articles-default-lang", null, "en-US");
-        String title = Localization.getInstance().localize("articles", defaultLanguage, "Articles");
+        String defaultLanguage = Localization.get().localize(Localization.DEFAULT_LANG, null);
+        String title = Localization.get().localize(Localization.ARTICLES, defaultLanguage);
         String description = title;
         
         System.out.println("Generating redirect pages.");

@@ -38,6 +38,15 @@ import java.util.stream.Stream;
  */
 public class TextBlock {
 
+    public static boolean containsWhiteSpaces(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isWhitespace(s.codePointAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     private static String formatBlockNameOrAttribute(String blockName) {
         return blockName
                 .lines()
@@ -45,13 +54,11 @@ public class TextBlock {
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.joining(" "));
     }
-
+    
     private static String formatAndValidateBlockName(String blockName, int line) {
         blockName = formatBlockNameOrAttribute(blockName).toLowerCase();
-        for (int j = 0; j < blockName.length(); j++) {
-            if (Character.isWhitespace(blockName.codePointAt(j))) {
-                throw new IllegalArgumentException("Block name contains white spaces at line " + line);
-            }
+        if (containsWhiteSpaces(blockName)) {
+            throw new IllegalArgumentException("Block name contains white spaces at line " + line);
         }
         if (blockName.isEmpty()) {
             throw new IllegalArgumentException("Block name is empty at line " + line);
@@ -297,13 +304,14 @@ public class TextBlock {
     private final String name;
     private final String attribute;
     private final String rawText;
+    private final int line;
 
     private String titleFormatted = null;
     private Integer integerFormatted = null;
     private String paragraphFormatted = null;
     private String codeFormatted = null;
     private String[] listFormatted = null;
-    private final int line;
+    private String attributeLowerCase;
 
     private TextBlock(String name, String attribute, String rawText, int line) {
         this.name = name;
@@ -319,7 +327,7 @@ public class TextBlock {
     public String getAttribute() {
         return attribute;
     }
-
+    
     public boolean hasAttribute() {
         return !getAttribute().isEmpty();
     }
@@ -369,6 +377,13 @@ public class TextBlock {
             this.listFormatted = getListFormatted(this.rawText);
         }
         return this.listFormatted.clone();
+    }
+    
+    public String getAttributeLowerCase() {
+        if (this.attributeLowerCase == null) {
+            this.attributeLowerCase = getAttribute().toLowerCase();
+        }
+        return this.attributeLowerCase;
     }
 
 }

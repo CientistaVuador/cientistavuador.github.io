@@ -67,7 +67,7 @@ public class ArticlesPage {
                 }
             }
         }
-        String defaultLanguage = Localization.getInstance().localize("articles-default-lang", null, "en-US");
+        String defaultLanguage = Localization.get().localize(Localization.DEFAULT_LANG, null);
         if (!languagesSet.contains(defaultLanguage)) {
             languagesSet.add(defaultLanguage);
         }
@@ -95,7 +95,11 @@ public class ArticlesPage {
         if (articleZero != null) {
             sortedList.addFirst(articleZero);
         }
-
+        
+        for (int i = 0; i < this.languages.length; i++) {
+            this.languageIndexMap.put(this.languages[i], i);
+        }
+        
         this.articles = sortedList;
     }
 
@@ -150,22 +154,34 @@ public class ArticlesPage {
             keywords = KeywordMapper.getKeywords(builder.toString());
         }
         
-        String title = Localization.getInstance().localize("articles", language, "Articles");
+        String headTitle = Localization.get().localize(Localization.ARTICLES, language);
+        String headKeywords = keywords;
+        String headDescription = headTitle;
+        
+        String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, language));
+        String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, language));
+        
+        String openGraphType = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_TYPE, language));
+        String openGraphImageURL = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_IMAGE, language));
         
         b.append("<head>\n");
-        b.append(INDENT).append("<title>").append(title).append("</title>\n");
+        b.append(INDENT).append("<title>").append(headTitle).append("</title>\n");
+        b.append(INDENT).append("\n");
+        b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("<meta charset=\"UTF-8\"/>\n");
-        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(keywords).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"keywords\" content=\"").append(headKeywords).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"description\" content=\"").append(headDescription).append("\"/>\n");
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
-        b.append(INDENT).append("<meta name=\"description\" content=\"").append(title).append("\"/>\n");
-        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"../resources/icon.png\"/>\n");
-        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append("../resources/style.css").append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("\n");
+        b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"").append(icon).append("\"/>\n");
+        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append(stylesheet).append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
-        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(title).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(title).append("\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:type\" content=\"website\"/>\n");
-        b.append(INDENT).append("<meta name=\"og:image\" content=\"../resources/icon.png\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:title\" content=\"").append(headTitle).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:description\" content=\"").append(headDescription).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:type\" content=\"").append(openGraphType).append("\"/>\n");
+        b.append(INDENT).append("<meta name=\"og:image\" content=\"").append(openGraphImageURL).append("\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append("</head>");
         
@@ -175,13 +191,14 @@ public class ArticlesPage {
     private String writeHeader(String language) {
         StringBuilder b = new StringBuilder();
         
-        String title = Localization.getInstance().localize("articles", language, "Articles");
+        String titleHeader = Localization.get().localize(Localization.ARTICLES, language);
         
         b.append("<header class=\"header\">\n");
-        b.append(INDENT).append("<h1>").append(title).append("</h1>\n");
+        b.append(INDENT).append("<h1>").append(titleHeader).append("</h1>\n");
         b.append(INDENT).append("<h4>");
         for (int i = 0; i < this.languages.length; i++) {
-            b.append("<a href=\"").append(URLEncoder.encode("articles_" + this.languages[i], StandardCharsets.UTF_8)).append(".html").append("\">");
+            String languageArticleLink = URLEncoder.encode("articles_" + this.languages[i], StandardCharsets.UTF_8) + ".html";
+            b.append("<a href=\"").append(languageArticleLink).append("\">");
             b.append(this.languages[i].toUpperCase());
             b.append("</a>");
             if (i != (this.languages.length - 1)) {
@@ -241,25 +258,30 @@ public class ArticlesPage {
     private String writeFooter(String language) {
         StringBuilder b = new StringBuilder();
         
-        String footerNotice = Localization.getInstance().localize("footer-notice", language, "All Rights Reserved");
+        String notice = FontFormatting.escapeAndFormat(Localization.get().localize(Localization.FOOTER_NOTICE, language));
         
         b.append("<footer class=\"footer\">\n");
-        b.append(
-                """
-                <script src="https://utteranc.es/client.js"
-                        repo="{REPO-HERE}"
-                        issue-term="{ARTICLE-ID-HERE}"
-                        label="{LABEL-HERE}"
-                        theme="github-dark"
-                        crossorigin="anonymous"
-                        async="async">
-                </script>
-                """
-                        .replace("{REPO-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-repo", language)))
-                        .replace("{ARTICLE-ID-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-issue-term-prefix", language)))
-                        .replace("{LABEL-HERE}", FontFormatting.escape(Localization.getInstance().localize("utterances-label", language)))
-                        .indent(4));
-        b.append(INDENT).append("<p>").append(FontFormatting.escapeAndFormat(footerNotice)).append("</p>\n");
+        if (Boolean.parseBoolean(Localization.get().localize(Localization.UTTERANCES_ENABLED, language))) {
+            String utterancesRepo = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_REPO, language));
+            String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_PREFIX, language));
+            String utterancesLabel = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_LABEL, language));
+            String utterancesTheme = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_THEME, language));
+            
+            StringBuilder ut = new StringBuilder();
+            
+            ut.append("<script src=\"https://utteranc.es/client.js\"\n");
+            ut.append(INDENT).append(INDENT).append("repo=\"").append(utterancesRepo).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("issue-term=\"").append(utterancesIssueTerm).append("\"\n");;
+            ut.append(INDENT).append(INDENT).append("label=\"").append(utterancesLabel).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("theme=\"").append(utterancesTheme).append("\"\n");
+            ut.append(INDENT).append(INDENT).append("crossorigin=\"anonymous\"\n");
+            ut.append(INDENT).append(INDENT).append("async=\"async\"\n");
+            ut.append(INDENT).append(INDENT).append(">\n");
+            ut.append("</script>");
+            
+            b.append(ut.toString().indent(4));
+        }
+        b.append(INDENT).append("<p>").append(notice).append("</p>\n");
         b.append("</footer>");
         
         return b.toString();
@@ -279,19 +301,27 @@ public class ArticlesPage {
     
     private String toHTML(String language) {
         StringBuilder b = new StringBuilder();
-
+        
+        String licenseText = FontFormatting.escapeComment(TextBlock.getCodeFormatted(Localization.get().localize(Localization.LICENSE, language)));
+        
         b.append("<!DOCTYPE html>\n");
         b.append("<!--\n");
         b.append("\n");
-        b.append(FontFormatting.escapeComment(TextBlock.getCodeFormatted(Localization.getInstance().localize("license", language, "All Rights Reserved"))));
-        b.append("\n\n");
+        b.append(licenseText).append("\n");
+        b.append("\n");
         b.append(language).append("\n");
         for (Article a : this.articles) {
             int articleLanguageIndex = findArticleLanguageIndex(a, language);
-            b.append(INDENT).append(FontFormatting.escapeComment(a.getTitle(articleLanguageIndex))).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeComment(a.getDescription(articleLanguageIndex))).append("\n");
-            b.append(INDENT).append(a.getId()).append("\n");
-            b.append(INDENT).append(FontFormatting.escapeComment(a.getDate(articleLanguageIndex))).append("\n\n");
+            
+            String titleText = FontFormatting.escapeComment(a.getTitle(articleLanguageIndex));
+            String descriptionText = FontFormatting.escapeComment(a.getDescription(articleLanguageIndex));
+            int id = a.getId();
+            String dateText = FontFormatting.escapeComment(a.getDate(articleLanguageIndex));
+            
+            b.append(INDENT).append(titleText).append("\n");
+            b.append(INDENT).append(descriptionText).append("\n");
+            b.append(INDENT).append(id).append("\n");
+            b.append(INDENT).append(dateText).append("\n\n");
         }
         b.append(new Date().toString()).append("\n");
         b.append("-->\n");
