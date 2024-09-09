@@ -133,10 +133,10 @@ public class Localization {
             String lang = "";
             
             {
-                String[] split = key.split(Pattern.quote("."), 2);
-                key = split[0].trim().toLowerCase();
+                String[] split = key.toLowerCase().split(Pattern.quote("."), 2);
+                key = split[0].trim();
                 if (split.length > 1) {
-                    lang = split[1].trim().toLowerCase();
+                    lang = split[1].trim();
                 }
             }
             
