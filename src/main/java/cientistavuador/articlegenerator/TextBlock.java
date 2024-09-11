@@ -28,9 +28,6 @@ package cientistavuador.articlegenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -39,31 +36,21 @@ import java.util.stream.Stream;
 public class TextBlock {
 
     public static boolean containsWhiteSpaces(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isWhitespace(s.codePointAt(i))) {
-                return true;
-            }
-        }
+        
         return false;
     }
     
-    private static String formatBlockNameOrAttribute(String blockName) {
-        return blockName
-                .lines()
-                .map(s -> s.trim())
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.joining(" "));
-    }
-    
     private static String formatAndValidateBlockName(String blockName, int line) {
-        blockName = formatBlockNameOrAttribute(blockName).toLowerCase();
-        if (containsWhiteSpaces(blockName)) {
-            throw new IllegalArgumentException("Block name contains white spaces at line " + line);
+        blockName = blockName.trim().toLowerCase();
+        for (int i = 0; i < blockName.length(); i++) {
+            if (Character.isWhitespace(blockName.codePointAt(i))) {
+                throw new IllegalArgumentException("Block name contains white spaces at line " + line);
+            }
         }
         if (blockName.isEmpty()) {
             throw new IllegalArgumentException("Block name is empty at line " + line);
         }
-
+        
         return blockName;
     }
 
@@ -158,6 +145,26 @@ public class TextBlock {
                 }
                 continue;
             }
+            
+            if (attributeOpen) {
+                switch (unicode) {
+                    case '<', '>' -> {
+                        int nextUnicode = 0;
+                        if (i < (text.length() - 1)) {
+                            nextUnicode = text.codePointAt(i + 1);
+                        }
+                        if (unicode == nextUnicode) {
+                            i++;
+                            b.appendCodePoint(unicode);
+                            continue;
+                        }
+                    }
+                    default -> {
+                        b.appendCodePoint(unicode);
+                        continue;
+                    }
+                }
+            }
 
             switch (unicode) {
                 case ';' -> {
@@ -189,6 +196,9 @@ public class TextBlock {
                     continue;
                 }
                 case '<' -> {
+                    if (!blockOpen) {
+                        throw new IllegalArgumentException("Block not open for attribute at line " + line);
+                    }
                     if (attributeOpen) {
                         throw new IllegalArgumentException("Attribute already open at line " + line);
                     }
@@ -205,7 +215,7 @@ public class TextBlock {
                         throw new IllegalArgumentException("Attribute not open at line " + line);
                     }
                     attributeOpen = false;
-                    blockAttribute = formatBlockNameOrAttribute(b.toString());
+                    blockAttribute = b.toString();
                     b.setLength(0);
                     continue;
                 }
@@ -227,80 +237,7 @@ public class TextBlock {
 
         return blocks;
     }
-
-    public static String getTitleFormatted(String text) {
-        return text
-                .lines()
-                .map((s) -> s.trim())
-                .filter((s) -> !s.isEmpty())
-                .collect(Collectors.joining(" "));
-    }
-
-    public static String getParagraphFormatted(String text) {
-        return text
-                .lines()
-                .map((s) -> s.trim())
-                .filter((s) -> !s.isEmpty())
-                .collect(Collectors.joining("\n"));
-    }
-
-    public static String getCodeFormatted(String text) {
-        return text
-                .lines()
-                .filter(new Predicate<String>() {
-                    boolean startFound = false;
-
-                    @Override
-                    public boolean test(String t) {
-                        if (t.isBlank() && !this.startFound) {
-                            return false;
-                        }
-                        this.startFound = true;
-                        return true;
-                    }
-                })
-                .collect(Collectors.joining("\n"))
-                .stripTrailing()
-                .stripIndent();
-    }
-
-    public static String[] splitByComma(String text) {
-        List<String> list = new ArrayList<>();
-
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i);
-
-            if (unicode == ',') {
-                int nextUnicode = 0;
-                if (i < (text.length() - 1)) {
-                    nextUnicode = text.codePointAt(i + 1);
-                }
-                if (nextUnicode == ',') {
-                    i++;
-                    b.append(',');
-                    continue;
-                }
-                list.add(b.toString());
-                b.setLength(0);
-                continue;
-            }
-
-            b.appendCodePoint(unicode);
-        }
-        list.add(b.toString());
-
-        return list.toArray(String[]::new);
-    }
-
-    public static String[] getListFormatted(String text) {
-        return Stream
-                .of(splitByComma(text))
-                .map(s -> getTitleFormatted(s))
-                .filter(s -> !s.isEmpty())
-                .toArray(String[]::new);
-    }
-
+    
     private final String name;
     private final String attribute;
     private final String rawText;
@@ -311,7 +248,10 @@ public class TextBlock {
     private String paragraphFormatted = null;
     private String codeFormatted = null;
     private String[] listFormatted = null;
+    private ISOLanguage[] languageListFormatted = null;
+    
     private String attributeLowerCase;
+    private ISOLanguage attributeLanguage;
 
     private TextBlock(String name, String attribute, String rawText, int line) {
         this.name = name;
@@ -327,11 +267,22 @@ public class TextBlock {
     public String getAttribute() {
         return attribute;
     }
-    
+
     public boolean hasAttribute() {
         return !getAttribute().isEmpty();
     }
-
+    
+    public ISOLanguage getAttributeLanguage() {
+        if (this.attributeLanguage == null) {
+            try {
+                this.attributeLanguage = TextFormatting.getISOLanguageFormatted(getAttribute());
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Invalid ISO Language in line "+this.line, ex);
+            }
+        }
+        return this.attributeLanguage;
+    }
+    
     public String getRawText() {
         return rawText;
     }
@@ -342,7 +293,7 @@ public class TextBlock {
 
     public String getTitleFormatted() {
         if (this.titleFormatted == null) {
-            this.titleFormatted = getTitleFormatted(this.rawText);
+            this.titleFormatted = TextFormatting.getTitleFormatted(this.rawText);
         }
         return this.titleFormatted;
     }
@@ -360,30 +311,34 @@ public class TextBlock {
 
     public String getParagraphFormatted() {
         if (this.paragraphFormatted == null) {
-            this.paragraphFormatted = getParagraphFormatted(this.rawText);
+            this.paragraphFormatted = TextFormatting.getParagraphFormatted(this.rawText);
         }
         return this.paragraphFormatted;
     }
 
     public String getCodeFormatted() {
         if (this.codeFormatted == null) {
-            this.codeFormatted = getCodeFormatted(this.rawText);
+            this.codeFormatted = TextFormatting.getCodeFormatted(this.rawText);
         }
         return this.codeFormatted;
     }
 
     public String[] getListFormatted() {
         if (this.listFormatted == null) {
-            this.listFormatted = getListFormatted(this.rawText);
+            this.listFormatted = TextFormatting.getListFormatted(this.rawText);
         }
         return this.listFormatted.clone();
     }
-    
-    public String getAttributeLowerCase() {
-        if (this.attributeLowerCase == null) {
-            this.attributeLowerCase = getAttribute().toLowerCase();
-        }
-        return this.attributeLowerCase;
-    }
 
+    public ISOLanguage[] getLanguageListFormatted() {
+        if (this.languageListFormatted == null) {
+            try {
+                this.languageListFormatted = TextFormatting.getISOLanguagesFormatted(this.rawText);
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Invalid ISO Language in block line "+this.line, ex);
+            }
+        }
+        return this.languageListFormatted.clone();
+    }
+    
 }

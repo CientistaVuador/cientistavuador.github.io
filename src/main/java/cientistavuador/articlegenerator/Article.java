@@ -30,11 +30,14 @@ import static cientistavuador.articlegenerator.Article.INDENT;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -48,162 +51,142 @@ public class Article {
 
     public static final String INDENT = " ".repeat(4);
 
-    private final List<TextBlock> blocks;
-    private final int id;
-    private final String[] languages;
-    private final Map<String, Integer> languageMap = new HashMap<>();
-    private final Map<String, String> title = new HashMap<>();
-    private final Map<String, String> description = new HashMap<>();
-    private final Map<String, String> date = new HashMap<>();
-    private final Map<String, String> license = new HashMap<>();
-    private final Map<String, String> footerReturn = new HashMap<>();
-    private final Map<String, String> footerNotice = new HashMap<>();
-    private final int metaBlocksLength;
+    public static final String KEYWORDS = "keywords";
 
-    private final Map<String, Node> nodeMap = new HashMap<>();
-    private final Map<String, String> keywordsMap = new HashMap<>();
-    private final Map<String, String> htmlMap = new HashMap<>();
+    private final List<TextBlock> headBlocks;
+    private final List<TextBlock> bodyBlocks;
+
+    private final int id;
+    private final ISOLanguage[] languages;
+    private final Set<ISOLanguage> languagesSet = new HashSet<>();
+    private final Map<String, String> fields = new HashMap<>();
 
     public Article(List<TextBlock> blocks) {
         Objects.requireNonNull(blocks, "Blocks is null.");
-        this.blocks = blocks;
-
         if (blocks.size() < 2) {
             throw new IllegalArgumentException("Blocks must contain at least 2 blocks (id and languages).");
         }
 
-        TextBlock idBlock = blocks.get(0);
-        TextBlock languagesBlock = blocks.get(1);
+        int articleId = -1;
+        ISOLanguage[] langsArray = null;
 
-        if (!idBlock.getName().equals("id")) {
-            throw new IllegalArgumentException("First block must be the id.");
-        }
+        int headLength = -1;
 
-        if (!languagesBlock.getName().equals("languages")) {
-            throw new IllegalArgumentException("Second block must be the languages.");
-        }
-
-        if (idBlock.hasAttribute()) {
-            throw new IllegalArgumentException("Id block must not have a language at line " + languagesBlock.getLine());
-        }
-
-        if (languagesBlock.hasAttribute()) {
-            throw new IllegalArgumentException("Languages block must not have a language at line " + languagesBlock.getLine());
-        }
-
-        this.id = idBlock.getIntegerFormatted();
-        this.languages = languagesBlock.getListFormatted();
-        
-        if (this.languages.length == 0) {
-            throw new IllegalArgumentException("Languages block is empty at line " + languagesBlock.getLine());
-        }
-        
-        for (int i = 0; i < this.languages.length; i++) {
-            this.languages[i] = this.languages[i].toLowerCase();
-            this.languageMap.put(this.languages[i], i);
-        }
-
-        Set<String> languageSet = new HashSet<>();
-        for (String lang : this.languages) {
-            for (int i = 0; i < lang.length(); i++) {
-                int unicode = lang.codePointAt(i);
-                switch (unicode) {
-                    case '&', '>', '<', '"', '\'' ->
-                        throw new IllegalArgumentException("Languages contains invalid characteres at line " + languagesBlock.getLine());
-                }
-            }
-            if (languageSet.contains(lang)) {
-                throw new IllegalArgumentException("Duplicate language at languages block in line " + languagesBlock.getLine());
-            }
-            languageSet.add(lang);
-        }
-
-        for (TextBlock b : this.blocks) {
-            if (b.hasAttribute() && !languageSet.contains(b.getAttributeLowerCase())) {
-                throw new IllegalArgumentException("Invalid language " + b.getAttributeLowerCase()+ " at line " + b.getLine());
-            }
-        }
-        
-        int metaLength = 2;
-        metaLoop:
-        for (int i = metaLength; i < this.blocks.size(); i++) {
-            TextBlock b = this.blocks.get(i);
-            switch (b.getName()) {
-                case "id", "languages" -> {
-                    throw new IllegalArgumentException("Invalid duplicated " + b.getName() + " at line " + b.getLine());
-                }
-                case "title", "description", "date", "license", "footer-return", "footer-notice" -> {
-                    Map<String, String> map = null;
-                    switch (b.getName()) {
-                        case "title" ->
-                            map = this.title;
-                        case "description" ->
-                            map = this.description;
-                        case "date" ->
-                            map = this.date;
-                        case "license" ->
-                            map = this.license;
-                        case "footer-return" ->
-                            map = this.footerReturn;
-                        case "footer-notice" ->
-                            map = this.footerNotice;
+        for (int i = 0; i < blocks.size(); i++) {
+            TextBlock block = blocks.get(i);
+            switch (block.getName()) {
+                case "id", "languages", "license", "title", "description", "date", "footer-return", "footer-notice" -> {
+                    if (headLength != -1) {
+                        throw new IllegalArgumentException("Invalid head block at line " + block.getLine());
                     }
-                    Objects.requireNonNull(map, "Map is null?");
-                    if (map.containsKey(b.getAttributeLowerCase())) {
-                        throw new IllegalArgumentException("Duplicated block " + b.getName() + " for language " + b.getAttributeLowerCase()+ " at line " + b.getLine());
+                    switch (block.getName()) {
+                        case "id", "languages" -> {
+                            if (block.hasAttribute()) {
+                                throw new IllegalArgumentException(block.getName() + " block must not contain a attribute at line " + block.getLine());
+                            }
+                        }
                     }
-                    if (b.getName().equals("license")) {
-                        map.put(b.getAttributeLowerCase(), b.getCodeFormatted());
-                    } else {
-                        map.put(b.getAttributeLowerCase(), b.getTitleFormatted());
+                    switch (block.getName()) {
+                        case "id" -> {
+                            if (articleId != -1) {
+                                throw new IllegalArgumentException("id block redeclaration at line " + block.getLine());
+                            }
+                            articleId = block.getIntegerFormatted();
+                            if (articleId < 0) {
+                                throw new IllegalArgumentException("Negative article id at line " + block.getName());
+                            }
+                        }
+                        case "languages" -> {
+                            if (!this.languagesSet.isEmpty()) {
+                                throw new IllegalArgumentException("languages block redeclaration at line " + block.getLine());
+                            }
+                            ISOLanguage[] articleLanguages = block.getLanguageListFormatted();
+                            if (articleLanguages.length == 0) {
+                                throw new IllegalArgumentException("languages block has no languages at line " + block.getLine());
+                            }
+                            this.languagesSet.addAll(Arrays.asList(articleLanguages));
+                            if (this.languagesSet.size() != articleLanguages.length) {
+                                throw new IllegalArgumentException("Duplicated languages at line " + block.getLine());
+                            }
+                            langsArray = articleLanguages;
+                        }
+                        default -> {
+                            String key = block.getName() + "." + block.getAttributeLanguage();
+                            if (this.fields.containsKey(key)) {
+                                throw new IllegalArgumentException(block.getName() + " redeclaration for language " + block.getAttributeLanguage() + " at line " + block.getLine());
+                            }
+                            String value;
+                            switch (block.getName()) {
+                                case "license" -> {
+                                    value = block.getCodeFormatted();
+                                }
+                                default -> {
+                                    value = block.getTitleFormatted();
+                                }
+                            }
+                            this.fields.put(key, value);
+                        }
                     }
-                    metaLength++;
                 }
                 default -> {
-                    break metaLoop;
-                }
-            }
-        }
-        this.metaBlocksLength = metaLength;
-
-        for (int i = this.metaBlocksLength; i < this.blocks.size(); i++) {
-            TextBlock b = this.blocks.get(i);
-            switch (b.getName()) {
-                case "id", "languages", "title", "description", "date" -> {
-                    throw new IllegalArgumentException("Invalid meta block at line " + b.getLine());
-                }
-            }
-        }
-
-        Object[] maps = {
-            Localization.TITLE, this.title,
-            Localization.DESCRIPTION, this.description,
-            Localization.DATE, this.date,
-            Localization.LICENSE, this.license,
-            Localization.FOOTER_RETURN, this.footerReturn,
-            Localization.FOOTER_NOTICE, this.footerNotice,
-        };
-        for (int j = 0; j < maps.length; j += 2) {
-            String localizationKey = (String) maps[j + 0];
-            @SuppressWarnings("unchecked")
-            Map<String, String> map = (Map<String, String>) maps[j + 1];
-
-            for (int i = 0; i < this.languages.length; i++) {
-                String language = this.languages[i];
-                
-                if (!map.containsKey(language)) {
-                    String fallback = map.get("");
-                    if (fallback == null) {
-                        fallback = Localization.get().localize(localizationKey, language);
+                    if (headLength == -1) {
+                        headLength = i;
                     }
-                    map.put(language, fallback);
+                    ISOLanguage blockLanguage = block.getAttributeLanguage();
+                    if (blockLanguage.hasLanguage() && !this.languagesSet.contains(blockLanguage)) {
+                        throw new IllegalArgumentException("Block at line " + block.getLine() + " has undefined language " + blockLanguage.toString());
+                    }
+                }
+
+            }
+        }
+        if (headLength == -1) {
+            headLength = blocks.size();
+        }
+
+        this.headBlocks = Collections.unmodifiableList(blocks.subList(0, headLength));
+        this.bodyBlocks = Collections.unmodifiableList(blocks.subList(headLength, blocks.size()));
+        this.id = articleId;
+
+        if (articleId == -1) {
+            throw new IllegalArgumentException("id block not found.");
+        }
+
+        if (this.languagesSet.isEmpty()) {
+            throw new IllegalArgumentException("languages block not found.");
+        }
+
+        this.languages = langsArray;
+
+        Map<ISOLanguage, StringBuilder> keywords = new HashMap<>();
+        for (ISOLanguage e : this.languagesSet) {
+            keywords.put(e, new StringBuilder());
+        }
+        for (TextBlock bodyBlock : this.bodyBlocks) {
+            switch (bodyBlock.getName()) {
+                case "section", "subsection", "text", "fine", "warning", "severe", "olist", "ulist" -> {
+                    ISOLanguage language = bodyBlock.getAttributeLanguage();
+                    if (language.hasLanguage()) {
+                        keywords.get(language).append(" ").append(bodyBlock.getRawText());
+                    } else {
+                        for (Entry<ISOLanguage, StringBuilder> entry : keywords.entrySet()) {
+                            entry.getValue().append(" ").append(bodyBlock.getRawText());
+                        }
+                    }
                 }
             }
+        }
+        for (Entry<ISOLanguage, StringBuilder> entry : keywords.entrySet()) {
+            this.fields.put(KEYWORDS + "." + entry.getKey(), KeywordMapper.getKeywords(entry.getValue().toString()));
         }
     }
 
-    public List<TextBlock> getBlocks() {
-        return blocks;
+    public List<TextBlock> getHeadBlocks() {
+        return headBlocks;
+    }
+
+    public List<TextBlock> getBodyBlocks() {
+        return bodyBlocks;
     }
 
     public int getId() {
@@ -214,73 +197,64 @@ public class Article {
         return this.languages.length;
     }
 
-    public String getLanguage(int index) {
+    public ISOLanguage getLanguage(int index) {
         return this.languages[index];
     }
 
-    public int indexOfLanguage(String language) {
-        Integer i = this.languageMap.get(language);
-        if (i == null) {
-            return -1;
+    public boolean containsLanguage(ISOLanguage language) {
+        return this.languagesSet.contains(language);
+    }
+
+    public ISOLanguage findBestAvailableLanguage(ISOLanguage language) {
+        if (language == null) {
+            language = ISOLanguage.EMPTY;
         }
-        return i;
-    }
-    
-    private String getTitle(String language) {
-        return this.title.get(language);
-    }
-
-    private String getDescription(String language) {
-        return this.description.get(language);
-    }
-
-    private String getDate(String language) {
-        return this.date.get(language);
-    }
-
-    private String getLicense(String language) {
-        return this.license.get(language);
+        if (containsLanguage(language)) {
+            return language;
+        }
+        if (containsLanguage(language.toLanguageOnly())) {
+            return language.toLanguageOnly();
+        }
+        ISOLanguage defLanguage = Localization.get().getDefaultLanguage();
+        if (containsLanguage(defLanguage)) {
+            return defLanguage;
+        }
+        if (containsLanguage(defLanguage.toLanguageOnly())) {
+            return defLanguage.toLanguageOnly();
+        }
+        return getLanguage(0);
     }
 
-    private String getFooterReturn(String language) {
-        return this.footerReturn.get(language);
-    }
-
-    private String getFooterNotice(String language) {
-        return this.footerNotice.get(language);
-    }
-
-    public String getTitle(int languageIndex) {
-        return getTitle(this.languages[languageIndex]);
-    }
-
-    public String getDescription(int languageIndex) {
-        return getDescription(this.languages[languageIndex]);
-    }
-
-    public String getDate(int languageIndex) {
-        return getDate(this.languages[languageIndex]);
-    }
-
-    public String getLicense(int languageIndex) {
-        return getLicense(this.languages[languageIndex]);
-    }
-
-    public String getFooterReturn(int languageIndex) {
-        return getFooterReturn(this.languages[languageIndex]);
-    }
-
-    public String getFooterNotice(int languageIndex) {
-        return getFooterNotice(this.languages[languageIndex]);
-    }
-
-    public int getMetaBlocksLength() {
-        return metaBlocksLength;
+    public String getField(String key, ISOLanguage language) {
+        Objects.requireNonNull(key, "Key is null.");
+        if (language == null) {
+            language = ISOLanguage.EMPTY;
+        }
+        
+        String keyA = key + "." + language.toString();
+        String keyB = key + ".";
+        
+        String value = this.fields.get(keyA);
+        if (value == null) {
+            value = this.fields.get(keyB);
+            if (value == null) {
+                value = Localization.get().localize(key, language);
+                if (value == null) {
+                    throw new IllegalArgumentException("Invalid key " + key + " for language " + language);
+                } else {
+                    this.fields.put(keyA, value);
+                    this.fields.put(keyB, value);
+                }
+            } else {
+                this.fields.put(keyA, value);
+            }
+        }
+        return value;
     }
 
     private static class Node {
 
-        private String language;
+        private ISOLanguage language;
 
         private TextBlock block;
         private final List<TextBlock> resources = new ArrayList<>();
@@ -288,120 +262,82 @@ public class Article {
         private String fullName;
     }
 
-    private Node mapNode(String language) {
-        Node root = this.nodeMap.get(language);
-        if (root == null) {
-            root = new Node();
-            root.fullName = "(root)";
-            root.language = language;
+    private Node mapNode(ISOLanguage language) {
+        Node root = new Node();
+        root.fullName = "(root)";
+        root.language = language;
 
-            int sectionIds = 0;
-            int subsectionIds = 0;
+        int sectionIds = 0;
+        int subsectionIds = 0;
 
-            Node section = null;
-            Node subsection = null;
+        Node section = null;
+        Node subsection = null;
 
-            for (int i = this.metaBlocksLength; i < this.blocks.size(); i++) {
-                TextBlock b = this.blocks.get(i);
+        for (int i = 0; i < this.bodyBlocks.size(); i++) {
+            TextBlock b = this.bodyBlocks.get(i);
 
-                if (b.hasAttribute() && !b.getAttributeLowerCase().equals(language)) {
-                    continue;
-                }
-
-                switch (b.getName()) {
-                    case "section" -> {
-                        sectionIds++;
-                        subsectionIds = 0;
-
-                        section = new Node();
-                        section.language = language;
-                        section.block = b;
-                        section.fullName = sectionIds + " " + b.getTitleFormatted();
-                        root.children.add(section);
-
-                        subsection = null;
-                        continue;
-                    }
-                    case "subsection" -> {
-                        if (section == null) {
-                            throw new IllegalArgumentException("Subsection without parent section at line " + b.getLine());
-                        }
-                        subsectionIds++;
-
-                        subsection = new Node();
-                        subsection.language = language;
-                        subsection.block = b;
-                        subsection.fullName = sectionIds + "." + subsectionIds + " " + b.getTitleFormatted();
-                        section.children.add(subsection);
-                        continue;
-                    }
-                    case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html" -> {
-                        Node toAdd = root;
-                        if (section != null) {
-                            toAdd = section;
-                        }
-                        if (subsection != null) {
-                            toAdd = subsection;
-                        }
-                        toAdd.resources.add(b);
-                    }
-                    default ->
-                        throw new IllegalArgumentException("Unknown block " + b.getName() + " at line " + b.getLine());
-                }
+            ISOLanguage blockLanguage = b.getAttributeLanguage();
+            if (blockLanguage.hasLanguage() && !language.equals(blockLanguage)) {
+                continue;
             }
 
-            this.nodeMap.put(language, root);
+            switch (b.getName()) {
+                case "section" -> {
+                    sectionIds++;
+                    subsectionIds = 0;
+
+                    section = new Node();
+                    section.language = language;
+                    section.block = b;
+                    section.fullName = sectionIds + " " + b.getTitleFormatted();
+                    root.children.add(section);
+
+                    subsection = null;
+                    continue;
+                }
+                case "subsection" -> {
+                    if (section == null) {
+                        throw new IllegalArgumentException("Subsection without parent section at line " + b.getLine());
+                    }
+                    subsectionIds++;
+
+                    subsection = new Node();
+                    subsection.language = language;
+                    subsection.block = b;
+                    subsection.fullName = sectionIds + "." + subsectionIds + " " + b.getTitleFormatted();
+                    section.children.add(subsection);
+                    continue;
+                }
+                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html" -> {
+                    Node toAdd = root;
+                    if (section != null) {
+                        toAdd = section;
+                    }
+                    if (subsection != null) {
+                        toAdd = subsection;
+                    }
+                    toAdd.resources.add(b);
+                }
+                default ->
+                    throw new IllegalArgumentException("Unknown block " + b.getName() + " at line " + b.getLine());
+            }
         }
         return root;
     }
 
-    private String mapNodeFullText(Node n) {
-        StringBuilder b = new StringBuilder();
-
-        if (n.block != null) {
-            b.append(n.block.getRawText()).append(" ");
-        }
-        for (TextBlock resource : n.resources) {
-            switch (resource.getName()) {
-                case "code", "image", "html" -> {
-                    continue;
-                }
-            }
-            b.append(resource.getRawText()).append(" ");
-        }
-        for (Node child : n.children) {
-            b.append(mapNodeFullText(child)).append(" ");
-        }
-        
-        return b.toString();
-    }
-
-    private String getKeywords(String language) {
-        String keywords = this.keywordsMap.get(language);
-        if (keywords == null) {
-            keywords = KeywordMapper.getKeywords(mapNodeFullText(mapNode(language)));
-            this.keywordsMap.put(language, keywords);
-        }
-        return keywords;
-    }
-
-    public String getKeywords(int languageIndex) {
-        return getKeywords(this.languages[languageIndex]);
-    }
-
     private String writeHead(Node root) {
         StringBuilder b = new StringBuilder();
-        
-        String headTitle = FontFormatting.escapeAndFormat(getTitle(root.language), true);
-        String headKeywords = getKeywords(root.language);
-        String headDescription = FontFormatting.escapeAndFormat(getDescription(root.language), true);
-        
+
+        String headTitle = FontFormatting.escapeAndFormat(getField(Localization.TITLE, root.language), true);
+        String headKeywords = getField(Article.KEYWORDS, root.language);
+        String headDescription = FontFormatting.escapeAndFormat(getField(Localization.DESCRIPTION, root.language), true);
+
         String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, root.language));
         String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, root.language));
-        
+
         String openGraphType = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_TYPE, root.language));
         String openGraphImageURL = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_IMAGE, root.language));
-        
+
         b.append("<head>\n");
         b.append(INDENT).append("<title>").append(headTitle).append("</title>\n");
         b.append(INDENT).append("\n");
@@ -428,12 +364,12 @@ public class Article {
 
     private String writeHeader(Node root) {
         StringBuilder b = new StringBuilder();
-        
-        String titleHeader = FontFormatting.escapeAndFormat(getTitle(root.language));
-        String descriptionHeader = FontFormatting.escapeAndFormat(getDescription(root.language));
+
+        String titleHeader = FontFormatting.escapeAndFormat(getField(Localization.TITLE, root.language));
+        String descriptionHeader = FontFormatting.escapeAndFormat(getField(Localization.DESCRIPTION, root.language));
         String idHeader = String.format("%04d", getId());
-        String dateHeader = FontFormatting.escapeAndFormat(getDate(root.language));
-        
+        String dateHeader = FontFormatting.escapeAndFormat(getField(Localization.DATE, root.language));
+
         b.append("<header class=\"header\">\n");
         b.append(INDENT).append("<h1>").append(titleHeader).append("</h1>\n");
         b.append(INDENT).append("<h2>").append(descriptionHeader).append("</h2>\n");
@@ -443,7 +379,7 @@ public class Article {
         for (int i = 0; i < this.languages.length; i++) {
             String languageArticleLink = URLEncoder.encode(getId() + "_" + this.languages[i], StandardCharsets.UTF_8) + ".html";
             b.append("<a href=\"").append(languageArticleLink).append("\">");
-            b.append(this.languages[i].toUpperCase());
+            b.append(this.languages[i].toStringUpperCase());
             b.append("</a>");
             if (i != (this.languages.length - 1)) {
                 b.append(" | ");
@@ -464,7 +400,7 @@ public class Article {
             }
             return b.toString();
         }
-        
+
         String sectionLink = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
         String sectionIndex = FontFormatting.escapeAndFormat(node.fullName);
         b.append("<li><a href=\"#").append(sectionLink).append("\">").append(sectionIndex).append("</a></li>\n");
@@ -503,10 +439,10 @@ public class Article {
             }
             case "code" -> {
                 b.append("<ol class=\"code\">\n");
-                Stream<String> lines = block
-                        .getCodeFormatted()
-                        .lines()
-                        .map(FontFormatting::escape);
+                Stream<String> lines
+                        = block.getCodeFormatted()
+                                .lines()
+                                .map(FontFormatting::escape);
                 for (String line : lines.toList()) {
                     b.append(INDENT).append("<li><code>").append(line).append("</code></li>\n");
                 }
@@ -535,7 +471,7 @@ public class Article {
                     String listElementText = FontFormatting.escapeAndFormat(formatted[i]);
                     b.append(INDENT).append("<li><p>").append(listElementText).append("</p></li>\n");
                 }
-                
+
                 if (ordered) {
                     b.append("</ol>");
                 } else {
@@ -565,7 +501,7 @@ public class Article {
         if (rootMultiplier != 0) {
             String sectionId = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
             String sectionTitle = FontFormatting.escapeAndFormat(node.fullName);
-            
+
             b.append("<section id=\"").append(sectionId).append("\">\n");
             b.append(INDENT).append("<").append(tag).append(">").append(sectionTitle).append("</").append(tag).append(">\n");
         }
@@ -595,11 +531,11 @@ public class Article {
 
     private String writeFooter(Node root) {
         StringBuilder b = new StringBuilder();
-        
+
         String returnLink = URLEncoder.encode("articles_" + root.language, StandardCharsets.UTF_8) + ".html";
-        String returnText = FontFormatting.escapeAndFormat(getFooterReturn(root.language));
-        String notice = FontFormatting.escapeAndFormat(getFooterNotice(root.language));
-        
+        String returnText = FontFormatting.escapeAndFormat(getField(Localization.FOOTER_RETURN, root.language));
+        String notice = FontFormatting.escapeAndFormat(getField(Localization.FOOTER_NOTICE, root.language));
+
         b.append("<footer class=\"footer\">\n");
         b.append(INDENT).append("<p>").append("<a href=\"").append(returnLink).append("\">").append(returnText).append("</a>").append("</p>\n");
         if (Boolean.parseBoolean(Localization.get().localize(Localization.UTTERANCES_ENABLED, root.language))) {
@@ -607,9 +543,9 @@ public class Article {
             String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_PREFIX, root.language)) + " " + Integer.toString(getId());
             String utterancesLabel = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_LABEL, root.language));
             String utterancesTheme = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_THEME, root.language));
-            
+
             StringBuilder ut = new StringBuilder();
-            
+
             ut.append("<script src=\"https://utteranc.es/client.js\"\n");
             ut.append(INDENT).append(INDENT).append("repo=\"").append(utterancesRepo).append("\"\n");
             ut.append(INDENT).append(INDENT).append("issue-term=\"").append(utterancesIssueTerm).append("\"\n");;
@@ -619,12 +555,12 @@ public class Article {
             ut.append(INDENT).append(INDENT).append("async=\"async\"\n");
             ut.append(INDENT).append(INDENT).append(">\n");
             ut.append("</script>");
-            
+
             b.append(ut.toString().indent(4));
         }
         b.append(INDENT).append("<p>").append(notice).append("</p>\n");
         b.append("</footer>");
-        
+
         return b.toString();
     }
 
@@ -636,48 +572,43 @@ public class Article {
         b.append(writeArticle(root).indent(4));
         b.append(writeFooter(root).indent(4));
         b.append("</body>");
-        
+
         return b.toString();
     }
 
-    private String toHTML(String language) {
-        String html = this.htmlMap.get(language);
-        if (html == null) {
-            Node root = mapNode(language);
-
-            StringBuilder b = new StringBuilder();
-            
-            String titleText = FontFormatting.escapeComment(getTitle(root.language));
-            String descriptionText = FontFormatting.escapeComment(getDescription(root.language));
-            String dateText = FontFormatting.escapeComment(getDate(root.language));
-            
-            String licenseText = FontFormatting.escapeComment(getLicense(root.language));
-            
-            b.append("<!DOCTYPE html>\n");
-            b.append("<!--\n");
-            b.append("\n");
-            b.append(licenseText).append("\n");
-            b.append("\n");
-            b.append(root.language).append("\n");
-            b.append(INDENT).append(titleText).append("\n");
-            b.append(INDENT).append(descriptionText).append("\n");
-            b.append(INDENT).append(getId()).append("\n");
-            b.append(INDENT).append(dateText).append("\n");
-            b.append("\n");
-            b.append(new Date().toString()).append("\n");
-            b.append("-->\n");
-            b.append("<html lang=\"").append(root.language).append("\">\n");
-            b.append(writeHead(root).indent(4));
-            b.append(writeBody(root).indent(4));
-            b.append("</html>");
-
-            html = b.toString();
-            this.htmlMap.put(language, html);
+    public String toHTML(ISOLanguage language) {
+        if (!containsLanguage(language)) {
+            throw new IllegalArgumentException("Invalid language " + language);
         }
-        return html;
-    }
 
-    public String toHTML(int languageIndex) {
-        return toHTML(this.languages[languageIndex]);
+        Node root = mapNode(language);
+
+        StringBuilder b = new StringBuilder();
+
+        String titleText = FontFormatting.escapeComment(getField(Localization.TITLE, language));
+        String descriptionText = FontFormatting.escapeComment(getField(Localization.DESCRIPTION, language));
+        String dateText = FontFormatting.escapeComment(getField(Localization.DATE, language));
+
+        String licenseText = FontFormatting.escapeComment(getField(Localization.LICENSE, language));
+
+        b.append("<!DOCTYPE html>\n");
+        b.append("<!--\n");
+        b.append("\n");
+        b.append(licenseText).append("\n");
+        b.append("\n");
+        b.append(root.language).append("\n");
+        b.append(INDENT).append(titleText).append("\n");
+        b.append(INDENT).append(descriptionText).append("\n");
+        b.append(INDENT).append(getId()).append("\n");
+        b.append(INDENT).append(dateText).append("\n");
+        b.append("\n");
+        b.append(new Date().toString()).append("\n");
+        b.append("-->\n");
+        b.append("<html lang=\"").append(root.language).append("\">\n");
+        b.append(writeHead(root).indent(4));
+        b.append(writeBody(root).indent(4));
+        b.append("</html>");
+
+        return b.toString();
     }
 }

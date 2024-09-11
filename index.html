@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <!--
+
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
@@ -25,34 +26,65 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/>
 
-Redirect Page:
-    To: articles/articles_en-us.html
-    Title: Articles
-    Description: Articles
+Languages: en-us, pt-br
 
-Mon Sep 09 02:25:44 BRT 2024
+Wed Sep 11 18:11:59 BRT 2024
 -->
 <html lang="en-us">
     <head>
         <title>Articles</title>
+        
+        <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
+        <meta name="keywords" content="allowed, language, section, integer, body, defines, empty, blockname, white, bird, only, block, html, text, id, if, all, unordered, image, using, leftover, this, raw, is, it, then, bold, list, article, escaped, sequence, as, at, converted, meta, spaces, formatting, paragraph, be, code, line, link, title, can, not, are, and, of, by, have, attribute, lines, declared, ordered, languages, blocks, joined, separated, the, with, removed, uses, to, font"/>
+        <meta name="description" content="Articles"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta http-equiv="refresh" content="0; url=articles/articles_en-us.html"/>
+        <link rel="icon" type="image/x-icon" href="../data/icon.png"/>
+        <!-- HTML Meta Tags -->
         
         <!-- OpenGraph -->
         <meta name="og:title" content="Articles"/>
         <meta name="og:description" content="Articles"/>
-        <meta name="og:type" content="website"/>
-        <meta name="og:image" content="resources/icon.png"/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="https://cientistavuador.github.io/data/icon.png"/>
         <!-- OpenGraph -->
         
-        <script>
+        <!-- Redirect Script -->
+        <script type="text/javascript">
             // <![CDATA[
-            window.location.href = "articles/articles_en-us.html";
+            const prefix = "articles/articles_";
+            const suffix = ".html";
+            
+            const availableLanguages = [
+                "en-us",
+                "pt-br"
+            ];
+            const fallbackLanguages = [
+                "en",
+                "pt"
+            ];
+            
+            const userLang = (navigator.language || navigator.userLanguage).toLowerCase();
+            
+            let redirectString = prefix + availableLanguages[0] + suffix;
+            if (availableLanguages.includes(userLang)) {
+                redirectString = prefix + userLang + suffix;
+            } else {
+                const fallbackIndex = fallbackLanguages.indexOf(userLang.split("-")[0]);
+                if (fallbackIndex !== -1) {
+                    redirectString = prefix + availableLanguages[fallbackIndex] + suffix;
+                }
+            }
+            
+            window.location.href = redirectString;
             // ]]>
         </script>
+        <!-- Redirect Script -->
     </head>
     <body>
-        <p><a href="articles/articles_en-us.html">articles/articles_en-us.html</a></p>
+        <ul>
+            <li><p><a href="articles/articles_en-us.html">EN-US</a></p></li>
+            <li><p><a href="articles/articles_pt-br.html">PT-BR</a></p></li>
+        </ul>
     </body>
 </html>

@@ -89,9 +89,9 @@ public class Main {
         
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
-                String language = c.getLanguage(i);
-                Files.writeString(articlesFolder.resolve(URLEncoder.encode(c.getId() + "_" + language, StandardCharsets.UTF_8) + ".html"), c.toHTML(i));
-                System.out.println("Written " + c.getTitle(i) + ", ID: " + c.getId()+", Language: "+language);
+                ISOLanguage language = c.getLanguage(i);
+                Files.writeString(articlesFolder.resolve(URLEncoder.encode(c.getId() + "_" + language, StandardCharsets.UTF_8) + ".html"), c.toHTML(language));
+                System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId()+", Language: "+language);
             }
         }
         
@@ -100,15 +100,9 @@ public class Main {
         ArticlesPage mainArticlesPage = new ArticlesPage(articles);
         for (int i = 0; i < mainArticlesPage.getNumberOfLanguages(); i++) {
             String fileName = URLEncoder.encode("articles_"+mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8)+".html";
-            Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(i));
+            Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)));
             System.out.println("Written main articles page of language "+mainArticlesPage.getLanguage(i));
         }
-        
-        String defaultLanguage = Localization.get().localize(Localization.DEFAULT_LANG, null);
-        String title = Localization.get().localize(Localization.ARTICLES, defaultLanguage);
-        String description = title;
-        
-        System.out.println("Generating redirect pages.");
         
         Path indexFile = Path.of("index.html");
         if (Files.exists(indexFile)) {
@@ -116,15 +110,19 @@ public class Main {
             Files.delete(indexFile);
         }
         
+        ISOLanguage[] languages = new ISOLanguage[mainArticlesPage.getNumberOfLanguages()];
+        for (int i = 0; i < languages.length; i++) {
+            languages[i] = mainArticlesPage.getLanguage(i);
+        }
+        
         Files.writeString(
                 indexFile,
-                RedirectPage.createRedirectPage(
-                        "articles/articles_"+defaultLanguage+".html",
-                        defaultLanguage,
-                        title,
-                        description
+                IndexRedirectPage.generate(
+                        mainArticlesPage.getKeywords(languages[0]),
+                        languages
                 )
         );
+        System.out.println("Generated index.html");
     }
 
 }

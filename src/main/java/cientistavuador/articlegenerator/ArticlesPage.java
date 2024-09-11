@@ -31,12 +31,15 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,123 +50,102 @@ import java.util.Set;
 public class ArticlesPage {
 
     private final List<Article> articles;
-    private final String[] languages;
-
-    private final Map<String, Integer> languageIndexMap = new HashMap<>();
-    private final Map<String, String> generatedHTML = new HashMap<>();
-
+    private final ISOLanguage[] languages;
+    private final Set<ISOLanguage> languagesSet = new HashSet<>();
+    private final Map<ISOLanguage, String> keywords;
+    
     public ArticlesPage(List<Article> articles) {
         Objects.requireNonNull(articles, "Articles is null.");
-
-        if (articles.isEmpty()) {
-            throw new IllegalArgumentException("Articles is empty.");
-        }
-
-        Set<String> languagesSet = new HashSet<>();
-        for (Article c : articles) {
-            for (int i = 0; i < c.getNumberOfLanguages(); i++) {
-                if (!languagesSet.contains(c.getLanguage(i))) {
-                    languagesSet.add(c.getLanguage(i));
-                }
+        
+        for (Article article : articles) {
+            for (int i = 0; i < article.getNumberOfLanguages(); i++) {
+                this.languagesSet.add(article.getLanguage(i));
             }
         }
-        String defaultLanguage = Localization.get().localize(Localization.DEFAULT_LANG, null);
-        if (!languagesSet.contains(defaultLanguage)) {
-            languagesSet.add(defaultLanguage);
-        }
-        this.languages = languagesSet.toArray(String[]::new);
+
+        ISOLanguage defaultLanguage = Localization.get().getDefaultLanguage();
+        this.languagesSet.add(defaultLanguage);
+        this.languages = this.languagesSet.toArray(ISOLanguage[]::new);
         Arrays.sort(this.languages, (o1, o2) -> {
             return Integer.compare(
                     (o1.equals(defaultLanguage) ? 0 : 1),
                     (o2.equals(defaultLanguage) ? 0 : 1)
             );
         });
-
+        
         Article articleZero = null;
         for (Article a : articles) {
             if (a.getId() == 0) {
                 articleZero = a;
-                articles.remove(a);
                 break;
             }
         }
 
         List<Article> sortedList = new ArrayList<>();
         sortedList.addAll(articles);
+        sortedList.remove(articleZero);
         Comparator<Article> comparator = (o1, o2) -> Integer.compare(o1.getId(), o2.getId());
         sortedList.sort(comparator.reversed());
         if (articleZero != null) {
             sortedList.addFirst(articleZero);
         }
         
-        for (int i = 0; i < this.languages.length; i++) {
-            this.languageIndexMap.put(this.languages[i], i);
-        }
+        this.articles = Collections.unmodifiableList(sortedList);
         
-        this.articles = sortedList;
+        Map<ISOLanguage, StringBuilder> keywordBuilder = new HashMap<>();
+        for (ISOLanguage lang:this.languages) {
+            keywordBuilder.put(lang, new StringBuilder());
+        }
+        for (ISOLanguage lang:this.languages) {
+            StringBuilder b = keywordBuilder.get(lang);
+            for (Article article:this.articles) {
+                b.append(" ").append(article.getField(Article.KEYWORDS, article.findBestAvailableLanguage(lang)));
+            }
+        }
+        Map<ISOLanguage, String> resultKeywords = new HashMap<>();
+        for (Entry<ISOLanguage, StringBuilder> entry:keywordBuilder.entrySet()) {
+            resultKeywords.put(entry.getKey(), KeywordMapper.getKeywords(entry.getValue().toString()));
+        }
+        this.keywords = resultKeywords;
     }
-
+    
     public List<Article> getArticles() {
         return articles;
     }
-
-    public int getDefaultLanguageIndex() {
-        return 0;
-    }
-
-    public String getDefaultLanguage() {
-        return this.languages[getDefaultLanguageIndex()];
-    }
-
-    public int indexOfLanguage(String language) {
-        Integer i = this.languageIndexMap.get(language);
-        if (i == null) {
-            return -1;
-        }
-        return i;
-    }
-
+    
     public int getNumberOfLanguages() {
         return this.languages.length;
     }
-
-    public String getLanguage(int languageIndex) {
-        return this.languages[languageIndex];
+    
+    public ISOLanguage getLanguage(int index) {
+        return this.languages[index];
     }
     
-    private int findArticleLanguageIndex(Article a, String language) {
-        int articleLanguageIndex = a.indexOfLanguage(language);
-        if (articleLanguageIndex == -1) {
-            articleLanguageIndex = a.indexOfLanguage(getDefaultLanguage());
-        }
-        if (articleLanguageIndex == -1) {
-            articleLanguageIndex = 0;
-        }
-        return articleLanguageIndex;
+    public boolean containsLanguage(ISOLanguage language) {
+        return this.languagesSet.contains(language);
     }
     
-    private String writeHead(String language) {
+    public String getKeywords(ISOLanguage language) {
+        String keyword = this.keywords.get(language);
+        if (keyword == null) {
+            throw new IllegalArgumentException("Invalid language "+language);
+        }
+        return keyword;
+    }
+    
+    private String writeHead(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
-        String keywords;
-        {
-            StringBuilder builder = new StringBuilder();
-            for (Article art:this.articles) {
-                builder.append(art.getKeywords(findArticleLanguageIndex(art, language))).append(' ');
-            }
-            keywords = KeywordMapper.getKeywords(builder.toString());
-        }
-        
+
         String headTitle = Localization.get().localize(Localization.ARTICLES, language);
-        String headKeywords = keywords;
+        String headKeywords = getKeywords(language);
         String headDescription = headTitle;
-        
+
         String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, language));
         String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, language));
-        
+
         String openGraphType = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_TYPE, language));
         String openGraphImageURL = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_IMAGE, language));
-        
+
         b.append("<head>\n");
         b.append(INDENT).append("<title>").append(headTitle).append("</title>\n");
         b.append(INDENT).append("\n");
@@ -184,22 +166,22 @@ public class ArticlesPage {
         b.append(INDENT).append("<meta name=\"og:image\" content=\"").append(openGraphImageURL).append("\"/>\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");
         b.append("</head>");
-        
+
         return b.toString();
-    } 
-    
-    private String writeHeader(String language) {
+    }
+
+    private String writeHeader(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         String titleHeader = Localization.get().localize(Localization.ARTICLES, language);
-        
+
         b.append("<header class=\"header\">\n");
         b.append(INDENT).append("<h1>").append(titleHeader).append("</h1>\n");
         b.append(INDENT).append("<h4>");
         for (int i = 0; i < this.languages.length; i++) {
             String languageArticleLink = URLEncoder.encode("articles_" + this.languages[i], StandardCharsets.UTF_8) + ".html";
             b.append("<a href=\"").append(languageArticleLink).append("\">");
-            b.append(this.languages[i].toUpperCase());
+            b.append(this.languages[i].toStringUpperCase());
             b.append("</a>");
             if (i != (this.languages.length - 1)) {
                 b.append(" | ");
@@ -207,20 +189,19 @@ public class ArticlesPage {
         }
         b.append("</h4>\n");
         b.append("</header>");
-        
+
         return b.toString();
     }
-    
-    private String writeArticle(String language, Article article) {
+
+    private String writeArticle(ISOLanguage language, Article article) {
         StringBuilder b = new StringBuilder();
         
-        int articleLanguageIndex = findArticleLanguageIndex(article, language);
-        String articleLanguage = article.getLanguage(articleLanguageIndex);
-        
-        String articleLink = URLEncoder.encode(article.getId()+"_"+articleLanguage, StandardCharsets.UTF_8) + ".html";
-        String articleTitle = String.format("%04d", article.getId()) + " - " + FontFormatting.escapeAndFormat(article.getTitle(articleLanguageIndex));
-        String articleDescription = FontFormatting.escapeAndFormat(article.getDescription(articleLanguageIndex));
-        String articleDate = FontFormatting.escapeAndFormat(article.getDate(articleLanguageIndex));
+        ISOLanguage articleLanguage = article.findBestAvailableLanguage(language);
+
+        String articleLink = URLEncoder.encode(article.getId() + "_" + articleLanguage, StandardCharsets.UTF_8) + ".html";
+        String articleTitle = String.format("%04d", article.getId()) + " - " + FontFormatting.escapeAndFormat(article.getField(Localization.TITLE, articleLanguage));
+        String articleDescription = FontFormatting.escapeAndFormat(article.getField(Localization.DESCRIPTION, articleLanguage));
+        String articleDate = FontFormatting.escapeAndFormat(article.getField(Localization.DATE, articleLanguage));
         
         b.append("<li>\n");
         b.append(INDENT.repeat(1)).append("<section>\n");
@@ -229,81 +210,85 @@ public class ArticlesPage {
         b.append(INDENT.repeat(2)).append("<p>").append(articleDate).append("</p>\n");
         b.append(INDENT.repeat(1)).append("</section>\n");
         b.append("</li>");
-        
+
         return b.toString();
     }
-    
-    private String writeArticles(String language) {
+
+    private String writeArticles(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         b.append("<ol>\n");
-        for (Article a:this.articles) {
+        for (Article a : this.articles) {
             b.append(writeArticle(language, a).indent(4));
         }
         b.append("</ol>");
-        
+
         return b.toString();
     }
-    
-    private String writeMain(String language) {
+
+    private String writeMain(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         b.append("<main class=\"articles\">\n");
         b.append(writeArticles(language).indent(4));
         b.append("</main>");
-        
+
         return b.toString();
     }
-    
-    private String writeFooter(String language) {
+
+    private String writeFooter(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         String notice = FontFormatting.escapeAndFormat(Localization.get().localize(Localization.FOOTER_NOTICE, language));
-        
+
         b.append("<footer class=\"footer\">\n");
         if (Boolean.parseBoolean(Localization.get().localize(Localization.UTTERANCES_ENABLED, language))) {
             String utterancesRepo = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_REPO, language));
             String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_PREFIX, language));
             String utterancesLabel = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_LABEL, language));
             String utterancesTheme = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_THEME, language));
-            
+
             StringBuilder ut = new StringBuilder();
-            
+
             ut.append("<script src=\"https://utteranc.es/client.js\"\n");
             ut.append(INDENT).append(INDENT).append("repo=\"").append(utterancesRepo).append("\"\n");
-            ut.append(INDENT).append(INDENT).append("issue-term=\"").append(utterancesIssueTerm).append("\"\n");;
+            ut.append(INDENT).append(INDENT).append("issue-term=\"").append(utterancesIssueTerm).append("\"\n");
             ut.append(INDENT).append(INDENT).append("label=\"").append(utterancesLabel).append("\"\n");
             ut.append(INDENT).append(INDENT).append("theme=\"").append(utterancesTheme).append("\"\n");
             ut.append(INDENT).append(INDENT).append("crossorigin=\"anonymous\"\n");
             ut.append(INDENT).append(INDENT).append("async=\"async\"\n");
             ut.append(INDENT).append(INDENT).append(">\n");
             ut.append("</script>");
-            
+
             b.append(ut.toString().indent(4));
         }
         b.append(INDENT).append("<p>").append(notice).append("</p>\n");
         b.append("</footer>");
-        
+
         return b.toString();
     }
-    
-    private String writeBody(String language) {
+
+    private String writeBody(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         b.append("<body class=\"body\">\n");
         b.append(writeHeader(language).indent(4));
         b.append(writeMain(language).indent(4));
         b.append(writeFooter(language).indent(4));
         b.append("</body>");
-        
+
         return b.toString();
     }
-    
-    private String toHTML(String language) {
+
+    public String toHTML(ISOLanguage language) {
+        if (!containsLanguage(language)) {
+            throw new IllegalArgumentException("Invalid language: "+language);
+        }
+        
         StringBuilder b = new StringBuilder();
         
-        String licenseText = FontFormatting.escapeComment(TextBlock.getCodeFormatted(Localization.get().localize(Localization.LICENSE, language)));
-        
+        String licenseText = FontFormatting.escapeComment(TextFormatting.getCodeFormatted(Localization.get().localize(Localization.LICENSE, language)));
+
         b.append("<!DOCTYPE html>\n");
         b.append("<!--\n");
         b.append("\n");
@@ -311,13 +296,13 @@ public class ArticlesPage {
         b.append("\n");
         b.append(language).append("\n");
         for (Article a : this.articles) {
-            int articleLanguageIndex = findArticleLanguageIndex(a, language);
+            ISOLanguage articleLanguage = a.findBestAvailableLanguage(language);
             
-            String titleText = FontFormatting.escapeComment(a.getTitle(articleLanguageIndex));
-            String descriptionText = FontFormatting.escapeComment(a.getDescription(articleLanguageIndex));
+            String titleText = FontFormatting.escapeComment(a.getField(Localization.TITLE, articleLanguage));
+            String descriptionText = FontFormatting.escapeComment(a.getField(Localization.DESCRIPTION, articleLanguage));
             int id = a.getId();
-            String dateText = FontFormatting.escapeComment(a.getDate(articleLanguageIndex));
-            
+            String dateText = FontFormatting.escapeComment(a.getField(Localization.DATE, articleLanguage));
+
             b.append(INDENT).append(titleText).append("\n");
             b.append(INDENT).append(descriptionText).append("\n");
             b.append(INDENT).append(id).append("\n");
@@ -329,18 +314,8 @@ public class ArticlesPage {
         b.append(writeHead(language).indent(4));
         b.append(writeBody(language).indent(4));
         b.append("</html>");
-        
-        return b.toString();
-    }
 
-    public String toHTML(int languageIndex) {
-        String language = this.languages[languageIndex];
-        String html = this.generatedHTML.get(language);
-        if (html == null) {
-            html = toHTML(language);
-            this.generatedHTML.put(language, html);
-        }
-        return html;
+        return b.toString();
     }
 
 }
