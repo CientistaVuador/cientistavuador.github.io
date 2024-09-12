@@ -230,10 +230,10 @@ public class Article {
         if (language == null) {
             language = ISOLanguage.EMPTY;
         }
-        
+
         String keyA = key + "." + language.toString();
         String keyB = key + ".";
-        
+
         String value = this.fields.get(keyA);
         if (value == null) {
             value = this.fields.get(keyB);
@@ -308,7 +308,7 @@ public class Article {
                     section.children.add(subsection);
                     continue;
                 }
-                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html" -> {
+                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html", "csv" -> {
                     Node toAdd = root;
                     if (section != null) {
                         toAdd = section;
@@ -480,6 +480,27 @@ public class Article {
             }
             case "html" -> {
                 b.append(block.getCodeFormatted());
+            }
+            case "csv" -> {
+                CSV csv = block.getCSVFormatted();
+                b.append("<table class=\"table\">\n");
+                for (int record = 0; record < csv.getNumberOfRecords(); record++) {
+                    b.append(INDENT).append("<tr>\n");
+                    for (int field = 0; field < csv.getNumberOfFields(); field++) {
+                        b
+                                .append(INDENT)
+                                .append(INDENT)
+                                .append("<")
+                                .append((record == 0 ? "th" : "td"))
+                                .append(">")
+                                .append(FontFormatting.escapeAndFormat(TextFormatting.getTitleFormatted(csv.get(field, record))))
+                                .append("</")
+                                .append((record == 0 ? "th" : "td"))
+                                .append(">\n");
+                    }
+                    b.append(INDENT).append("</tr>\n");
+                }
+                b.append("</table>");
             }
             default ->
                 throw new IllegalArgumentException("Unknown resource " + block.getName() + " at line " + block.getLine());

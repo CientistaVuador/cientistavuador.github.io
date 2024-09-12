@@ -167,6 +167,22 @@ For more information, please refer to <https://unlicense.org>
     width: 100%;
     height: auto;
 }
+.table {
+    max-width: 800px;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-collapse: collapse;
+}
+.table th, .table td {
+    border: 2px;
+    border-color: #aaaaaa;
+    border-style: solid;
+    padding: 6px;
+    text-align: center;
+}
 .footer {
     font-family: monospace;
     text-align: center;

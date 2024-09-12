@@ -31,7 +31,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -177,7 +176,7 @@ public class ArticlesPage {
 
         b.append("<header class=\"header\">\n");
         b.append(INDENT).append("<h1>").append(titleHeader).append("</h1>\n");
-        b.append(INDENT).append("<h4>");
+        b.append(INDENT).append("<h2>");
         for (int i = 0; i < this.languages.length; i++) {
             String languageArticleLink = URLEncoder.encode("articles_" + this.languages[i], StandardCharsets.UTF_8) + ".html";
             b.append("<a href=\"").append(languageArticleLink).append("\">");
@@ -187,7 +186,7 @@ public class ArticlesPage {
                 b.append(" | ");
             }
         }
-        b.append("</h4>\n");
+        b.append("</h2>\n");
         b.append("</header>");
 
         return b.toString();

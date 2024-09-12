@@ -152,7 +152,7 @@ public class TextFormatting {
         
         return formatted;
     }
-
+    
     private TextFormatting() {
 
     }

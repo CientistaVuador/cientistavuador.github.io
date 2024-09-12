@@ -208,3 +208,10 @@ or used as a fallback if it is a meta block. [;<;>]
 [code] [olist] This, is, a, ordered, list! [;<;>]; [;<;>]
 [subsection] Unordered List [;<;>] [ulist] This, is, a, unordered, list! [;<;>]
 [code] [ulist] This, is, a, unordered, list! [;<;>]; [;<;>]
+
+[csv]
+    First Name,Last Name,Email,Phone Number
+    John,Doe,john@doe.com,0123456789
+    Jane,Doe,jane@doe.com,9876543210
+    James,Bond,james.bond@mi6.co.uk,0612345678
+[;<;>]

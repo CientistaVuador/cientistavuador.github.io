@@ -32,7 +32,7 @@ pt-br
     0
     No Date
 
-Wed Sep 11 18:11:59 BRT 2024
+Thu Sep 12 03:01:51 BRT 2024
 -->
 <html lang="pt-br">
     <head>
@@ -66,6 +66,117 @@ Wed Sep 11 18:11:59 BRT 2024
         <main class="article">
             <ol class="indices">
             </ol>
+            <table class="table">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@doe.com</td>
+                    <td>0123456789</td>
+                </tr>
+                <tr>
+                    <td>Jane</td>
+                    <td>Doe</td>
+                    <td>jane@doe.com</td>
+                    <td>9876543210</td>
+                </tr>
+                <tr>
+                    <td>James</td>
+                    <td>Bond</td>
+                    <td>james.bond@mi6.co.uk</td>
+                    <td>0612345678</td>
+                </tr>
+            </table>
+            <table class="table">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Salary</th>
+                    <th>Department</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>john</td>
+                    <td><strong>2000</strong></td>
+                    <td>sales</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Andrew</td>
+                    <td><em>5000</em></td>
+                    <td>finance</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Mark</td>
+                    <td><del>8000</del></td>
+                    <td>hr</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Rey</td>
+                    <td><u>5000</u></td>
+                    <td>marketing</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Tan</td>
+                    <td><code>4000</code></td>
+                    <td>IT</td>
+                </tr>
+            </table>
+            <table class="table">
+                <tr>
+                    <th>Texture Format</th>
+                    <th>Size Per Pixel</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td>RGB32F</td>
+                    <td>16 Bytes</td>
+                    <td>Overkill for colors, due to padding has the same size as RGBA32F</td>
+                </tr>
+                <tr>
+                    <td>RGB16F</td>
+                    <td>8 Bytes</td>
+                    <td>Good for colors, due to padding has the same size as RGBA16F</td>
+                </tr>
+                <tr>
+                    <td>RGBA8 RGBE</td>
+                    <td>4 Bytes</td>
+                    <td>Has linear interpolation problems due to exponential values</td>
+                </tr>
+                <tr>
+                    <td>RGBA8 RGBM</td>
+                    <td>4 Bytes</td>
+                    <td>Has precision or hue shifting problems due to fixed precision</td>
+                </tr>
+                <tr>
+                    <td>DXT5 RGBE</td>
+                    <td>1 Byte</td>
+                    <td>Same as RGBA8 RGBE but compressed in DXT5</td>
+                </tr>
+                <tr>
+                    <td>DXT5 RGBM</td>
+                    <td>1 Byte</td>
+                    <td>Same as RGBA8 RGBM but compressed in DXT5</td>
+                </tr>
+                <tr>
+                    <td>BC6H</td>
+                    <td>1 Byte</td>
+                    <td>Modern texture compression for HDR Textures, may not work in older hardware tools or libraries for compression are more scarce, I recommend using NVIDIA Texture Tools</td>
+                </tr>
+                <tr>
+                    <td>DXT1 sRGB * Intensity</td>
+                    <td>0.5 Bytes</td>
+                    <td>Highly agressive compression, may have precision problems.</td>
+                </tr>
+            </table>
         </main>
         <footer class="footer">
             <p><a href="articles_pt-br.html">&lt;&lt;&lt; Return to Articles</a></p>

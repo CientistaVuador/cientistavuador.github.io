@@ -249,8 +249,8 @@ public class TextBlock {
     private String codeFormatted = null;
     private String[] listFormatted = null;
     private ISOLanguage[] languageListFormatted = null;
+    private CSV csvFormatted = null;
     
-    private String attributeLowerCase;
     private ISOLanguage attributeLanguage;
 
     private TextBlock(String name, String attribute, String rawText, int line) {
@@ -339,6 +339,17 @@ public class TextBlock {
             }
         }
         return this.languageListFormatted.clone();
+    }
+    
+    public CSV getCSVFormatted() {
+        if (this.csvFormatted == null) {
+            try {
+                this.csvFormatted = new CSV(getCodeFormatted());
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Invalid CSV in block line "+this.line, ex);
+            }
+        }
+        return this.csvFormatted;
     }
     
 }
