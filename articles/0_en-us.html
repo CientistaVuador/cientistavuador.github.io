@@ -32,7 +32,7 @@ en-us
     0
     No Date
 
-Thu Sep 12 14:46:14 BRT 2024
+Thu Sep 12 15:33:47 BRT 2024
 -->
 <html lang="en-us">
     <head>
@@ -70,890 +70,163 @@ Thu Sep 12 14:46:14 BRT 2024
             <section id="1+CSV+Hell">
                 <h2>1 CSV Hell</h2>
                 <table class="table">
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                    </tr>
-                    <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@doe.com</td>
-                        <td>0123456789</td>
-                    </tr>
-                    <tr>
-                        <td>Jane</td>
-                        <td>Doe</td>
-                        <td>jane@doe.com</td>
-                        <td>9876543210</td>
-                    </tr>
-                    <tr>
-                        <td>James</td>
-                        <td>Bond</td>
-                        <td>james.bond@mi6.co.uk</td>
-                        <td>0612345678</td>
-                    </tr>
+                    <tr><th>First Name</th><th>Last Name</th><th>Email               </th><th>Phone Number</th></tr>
+                    <tr><td>John      </td><td>Doe      </td><td>john@doe.com        </td><td>0123456789  </td></tr>
+                    <tr><td>Jane      </td><td>Doe      </td><td>jane@doe.com        </td><td>9876543210  </td></tr>
+                    <tr><td>James     </td><td>Bond     </td><td>james.bond@mi6.co.uk</td><td>0612345678  </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Salary</th>
-                        <th>Department</th>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>john</td>
-                        <td><strong>2000</strong></td>
-                        <td>sales</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Andrew</td>
-                        <td><em>5000</em></td>
-                        <td>finance</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Mark</td>
-                        <td><del>8000</del></td>
-                        <td>hr</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Rey</td>
-                        <td><u>5000</u></td>
-                        <td>marketing</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>Tan</td>
-                        <td><code>4000</code></td>
-                        <td>IT</td>
-                    </tr>
+                    <tr><th>Id</th><th>Name  </th><th>Salary               </th><th>Department</th></tr>
+                    <tr><td>1 </td><td>john  </td><td><strong>2000</strong></td><td>sales     </td></tr>
+                    <tr><td>2 </td><td>Andrew</td><td><em>5000</em>        </td><td>finance   </td></tr>
+                    <tr><td>3 </td><td>Mark  </td><td><del>8000</del>      </td><td>hr        </td></tr>
+                    <tr><td>4 </td><td>Rey   </td><td><u>5000</u>          </td><td>marketing </td></tr>
+                    <tr><td>5 </td><td>Tan   </td><td><code>4000</code>    </td><td>IT        </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Texture Format</th>
-                        <th>Size Per Pixel</th>
-                        <th>Notes</th>
-                    </tr>
-                    <tr>
-                        <td>RGB32F</td>
-                        <td>16 bytes</td>
-                        <td>Overkill for colors, due to padding has the same size as RGBA32F</td>
-                    </tr>
-                    <tr>
-                        <td>RGB16F</td>
-                        <td>8 bytes</td>
-                        <td>Good for colors, due to padding has the same size as RGBA16F</td>
-                    </tr>
-                    <tr>
-                        <td>RGBA8 RGBE</td>
-                        <td>4 bytes</td>
-                        <td>Has linear interpolation problems due to exponential values</td>
-                    </tr>
-                    <tr>
-                        <td>RGBA8 RGBM</td>
-                        <td>4 bytes</td>
-                        <td>Has precision or hue shifting problems due to fixed precision</td>
-                    </tr>
-                    <tr>
-                        <td>DXT5 RGBE</td>
-                        <td>1 byte</td>
-                        <td>Same as RGBA8 RGBE but compressed in DXT5</td>
-                    </tr>
-                    <tr>
-                        <td>DXT5 RGBM</td>
-                        <td>1 byte</td>
-                        <td>Same as RGBA8 RGBM but compressed in DXT5</td>
-                    </tr>
-                    <tr>
-                        <td>BC6H</td>
-                        <td>1 byte</td>
-                        <td>Modern texture compression for HDR Textures, may not work in older hardware tools or libraries for compression are more scarce, I recommend using NVIDIA Texture Tools</td>
-                    </tr>
-                    <tr>
-                        <td>DXT1 sRGB * Intensity</td>
-                        <td>0.5 bytes</td>
-                        <td>Highly agressive compression, may have precision problems.</td>
-                    </tr>
+                    <tr><th>Texture Format       </th><th>Size Per Pixel</th><th>Notes                                                                                                                                                                 </th></tr>
+                    <tr><td>RGB32F               </td><td>16 bytes      </td><td>Overkill for colors, due to padding has the same size as RGBA32F                                                                                                      </td></tr>
+                    <tr><td>RGB16F               </td><td>8 bytes       </td><td>Good for colors, due to padding has the same size as RGBA16F                                                                                                          </td></tr>
+                    <tr><td>RGBA8 RGBE           </td><td>4 bytes       </td><td>Has linear interpolation problems due to exponential values                                                                                                           </td></tr>
+                    <tr><td>RGBA8 RGBM           </td><td>4 bytes       </td><td>Has precision or hue shifting problems due to fixed precision                                                                                                         </td></tr>
+                    <tr><td>DXT5 RGBE            </td><td>1 byte        </td><td>Same as RGBA8 RGBE but compressed in DXT5                                                                                                                             </td></tr>
+                    <tr><td>DXT5 RGBM            </td><td>1 byte        </td><td>Same as RGBA8 RGBM but compressed in DXT5                                                                                                                             </td></tr>
+                    <tr><td>BC6H                 </td><td>1 byte        </td><td>Modern texture compression for HDR Textures, may not work in older hardware tools or libraries for compression are more scarce, I recommend using NVIDIA Texture Tools</td></tr>
+                    <tr><td>DXT1 sRGB * Intensity</td><td>0.5 bytes     </td><td>Highly agressive compression, may have precision problems.                                                                                                            </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Tipo de Anti-Aliasing</th>
-                        <th>Descrição</th>
-                    </tr>
-                    <tr>
-                        <td>MSAA (Multi-Sample Anti-Aliasing)</td>
-                        <td>Reduz o serrilhado suavizando bordas de objetos, amostrando várias posições dentro de cada pixel.</td>
-                    </tr>
-                    <tr>
-                        <td>FXAA (Fast Approximate Anti-Aliasing)</td>
-                        <td>Aplica um filtro pós-processamento para suavizar bordas, menos intensivo em termos de recursos.</td>
-                    </tr>
-                    <tr>
-                        <td>TXAA (Temporal Anti-Aliasing)</td>
-                        <td>Combina MSAA com informações temporais para reduzir o serrilhado e preservar detalhes em movimento.</td>
-                    </tr>
-                    <tr>
-                        <td>SMAA (Subpixel Morphological Anti-Aliasing)</td>
-                        <td>Um método de AA baseado em shaders que pode oferecer resultados de alta qualidade com impacto moderado nos recursos.</td>
-                    </tr>
-                    <tr>
-                        <td>CSAA (Coverage Sample Anti-Aliasing)</td>
-                        <td>Uma versão melhorada do MSAA pela NVIDIA, utilizando amostragem de cobertura para melhorar a qualidade de imagem.</td>
-                    </tr>
+                    <tr><th>Tipo de Anti-Aliasing                      </th><th>Descrição                                                                                                           </th></tr>
+                    <tr><td>MSAA (Multi-Sample Anti-Aliasing)          </td><td>Reduz o serrilhado suavizando bordas de objetos, amostrando várias posições dentro de cada pixel.                   </td></tr>
+                    <tr><td>FXAA (Fast Approximate Anti-Aliasing)      </td><td>Aplica um filtro pós-processamento para suavizar bordas, menos intensivo em termos de recursos.                     </td></tr>
+                    <tr><td>TXAA (Temporal Anti-Aliasing)              </td><td>Combina MSAA com informações temporais para reduzir o serrilhado e preservar detalhes em movimento.                 </td></tr>
+                    <tr><td>SMAA (Subpixel Morphological Anti-Aliasing)</td><td>Um método de AA baseado em shaders que pode oferecer resultados de alta qualidade com impacto moderado nos recursos.</td></tr>
+                    <tr><td>CSAA (Coverage Sample Anti-Aliasing)       </td><td>Uma versão melhorada do MSAA pela NVIDIA, utilizando amostragem de cobertura para melhorar a qualidade de imagem.   </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Campo 0</th>
-                        <th>Campo 1</th>
-                        <th>Campo 2</th>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>10</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td>20</td>
-                        <td>20</td>
-                        <td>20</td>
-                    </tr>
-                    <tr>
-                        <td>30</td>
-                        <td>30</td>
-                        <td>30</td>
-                    </tr>
+                    <tr><th>Campo 0</th><th>Campo 1</th><th>Campo 2</th></tr>
+                    <tr><td>10     </td><td>10     </td><td>10     </td></tr>
+                    <tr><td>20     </td><td>20     </td><td>20     </td></tr>
+                    <tr><td>30     </td><td>30     </td><td>30     </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Nome</th>
-                        <th>Idade</th>
-                        <th>Cidade</th>
-                        <th>Email</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>30</td>
-                        <td>São Paulo</td>
-                        <td>joao.silva@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>25</td>
-                        <td>Rio de Janeiro</td>
-                        <td>maria.oliveira@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>28</td>
-                        <td>Belo Horizonte</td>
-                        <td>pedro.santos@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>35</td>
-                        <td>Porto Alegre</td>
-                        <td>ana.souza@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>22</td>
-                        <td>Brasília</td>
-                        <td>luiz.costa@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>31</td>
-                        <td>Salvador</td>
-                        <td>juliana.pereira@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>27</td>
-                        <td>Recife</td>
-                        <td>rafaela.lima@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>29</td>
-                        <td>Florianópolis</td>
-                        <td>marcos.almeida@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>26</td>
-                        <td>Manaus</td>
-                        <td>fernanda.martins@example.com</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>33</td>
-                        <td>Curitiba</td>
-                        <td>carlos.ferreira@example.com</td>
-                    </tr>
+                    <tr><th>Nome            </th><th>Idade</th><th>Cidade        </th><th>Email                       </th></tr>
+                    <tr><td>João da Silva   </td><td>30   </td><td>São Paulo     </td><td>joao.silva@example.com      </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>25   </td><td>Rio de Janeiro</td><td>maria.oliveira@example.com  </td></tr>
+                    <tr><td>Pedro Santos    </td><td>28   </td><td>Belo Horizonte</td><td>pedro.santos@example.com    </td></tr>
+                    <tr><td>Ana Souza       </td><td>35   </td><td>Porto Alegre  </td><td>ana.souza@example.com       </td></tr>
+                    <tr><td>Luiz Costa      </td><td>22   </td><td>Brasília      </td><td>luiz.costa@example.com      </td></tr>
+                    <tr><td>Juliana Pereira </td><td>31   </td><td>Salvador      </td><td>juliana.pereira@example.com </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>27   </td><td>Recife        </td><td>rafaela.lima@example.com    </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>29   </td><td>Florianópolis </td><td>marcos.almeida@example.com  </td></tr>
+                    <tr><td>Fernanda Martins</td><td>26   </td><td>Manaus        </td><td>fernanda.martins@example.com</td></tr>
+                    <tr><td>Carlos Ferreira </td><td>33   </td><td>Curitiba      </td><td>carlos.ferreira@example.com </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>nome</th>
-                        <th>idade</th>
-                        <th>profissao</th>
-                        <th>salario</th>
-                        <th>divida_total</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>30</td>
-                        <td>Engenheiro</td>
-                        <td>7500.50</td>
-                        <td>15000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>25</td>
-                        <td>Designer</td>
-                        <td>4500.00</td>
-                        <td>5000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>28</td>
-                        <td>Professor</td>
-                        <td>3200.75</td>
-                        <td>12000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>35</td>
-                        <td>Médica</td>
-                        <td>12000.00</td>
-                        <td>25000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>22</td>
-                        <td>Estagiário</td>
-                        <td>1800.00</td>
-                        <td>2000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>31</td>
-                        <td>Advogada</td>
-                        <td>9000.00</td>
-                        <td>8000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>27</td>
-                        <td>Arquiteta</td>
-                        <td>7000.50</td>
-                        <td>6000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>29</td>
-                        <td>Programador</td>
-                        <td>8500.00</td>
-                        <td>14000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>26</td>
-                        <td>Publicitária</td>
-                        <td>6200.00</td>
-                        <td>3000.00</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>33</td>
-                        <td>Administrador</td>
-                        <td>10000.00</td>
-                        <td>18000.00</td>
-                    </tr>
+                    <tr><th>nome            </th><th>idade</th><th>profissao    </th><th>salario </th><th>divida_total</th></tr>
+                    <tr><td>João da Silva   </td><td>30   </td><td>Engenheiro   </td><td>7500.50 </td><td>15000.00    </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>25   </td><td>Designer     </td><td>4500.00 </td><td>5000.00     </td></tr>
+                    <tr><td>Pedro Santos    </td><td>28   </td><td>Professor    </td><td>3200.75 </td><td>12000.00    </td></tr>
+                    <tr><td>Ana Souza       </td><td>35   </td><td>Médica       </td><td>12000.00</td><td>25000.00    </td></tr>
+                    <tr><td>Luiz Costa      </td><td>22   </td><td>Estagiário   </td><td>1800.00 </td><td>2000.00     </td></tr>
+                    <tr><td>Juliana Pereira </td><td>31   </td><td>Advogada     </td><td>9000.00 </td><td>8000.00     </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>27   </td><td>Arquiteta    </td><td>7000.50 </td><td>6000.00     </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>29   </td><td>Programador  </td><td>8500.00 </td><td>14000.00    </td></tr>
+                    <tr><td>Fernanda Martins</td><td>26   </td><td>Publicitária </td><td>6200.00 </td><td>3000.00     </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>33   </td><td>Administrador</td><td>10000.00</td><td>18000.00    </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>nome</th>
-                        <th>idade</th>
-                        <th>altura</th>
-                        <th>peso</th>
-                        <th>tipo_sanguineo</th>
-                        <th>pressao_arterial</th>
-                        <th>batimentos_cardiacos</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>30</td>
-                        <td>1.75</td>
-                        <td>80</td>
-                        <td>O+</td>
-                        <td>120/80</td>
-                        <td>72</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>25</td>
-                        <td>1.62</td>
-                        <td>55</td>
-                        <td>A-</td>
-                        <td>110/70</td>
-                        <td>75</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>28</td>
-                        <td>1.82</td>
-                        <td>85</td>
-                        <td>B+</td>
-                        <td>130/85</td>
-                        <td>70</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>35</td>
-                        <td>1.68</td>
-                        <td>60</td>
-                        <td>AB+</td>
-                        <td>115/75</td>
-                        <td>68</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>22</td>
-                        <td>1.78</td>
-                        <td>72</td>
-                        <td>O-</td>
-                        <td>125/80</td>
-                        <td>80</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>31</td>
-                        <td>1.70</td>
-                        <td>65</td>
-                        <td>A+</td>
-                        <td>120/80</td>
-                        <td>72</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>27</td>
-                        <td>1.60</td>
-                        <td>58</td>
-                        <td>B-</td>
-                        <td>110/70</td>
-                        <td>75</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>29</td>
-                        <td>1.85</td>
-                        <td>90</td>
-                        <td>O+</td>
-                        <td>130/85</td>
-                        <td>68</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>26</td>
-                        <td>1.66</td>
-                        <td>62</td>
-                        <td>AB-</td>
-                        <td>120/75</td>
-                        <td>72</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>33</td>
-                        <td>1.80</td>
-                        <td>78</td>
-                        <td>A-</td>
-                        <td>125/80</td>
-                        <td>74</td>
-                    </tr>
+                    <tr><th>nome            </th><th>idade</th><th>altura</th><th>peso</th><th>tipo_sanguineo</th><th>pressao_arterial</th><th>batimentos_cardiacos</th></tr>
+                    <tr><td>João da Silva   </td><td>30   </td><td>1.75  </td><td>80  </td><td>O+            </td><td>120/80          </td><td>72                  </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>25   </td><td>1.62  </td><td>55  </td><td>A-            </td><td>110/70          </td><td>75                  </td></tr>
+                    <tr><td>Pedro Santos    </td><td>28   </td><td>1.82  </td><td>85  </td><td>B+            </td><td>130/85          </td><td>70                  </td></tr>
+                    <tr><td>Ana Souza       </td><td>35   </td><td>1.68  </td><td>60  </td><td>AB+           </td><td>115/75          </td><td>68                  </td></tr>
+                    <tr><td>Luiz Costa      </td><td>22   </td><td>1.78  </td><td>72  </td><td>O-            </td><td>125/80          </td><td>80                  </td></tr>
+                    <tr><td>Juliana Pereira </td><td>31   </td><td>1.70  </td><td>65  </td><td>A+            </td><td>120/80          </td><td>72                  </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>27   </td><td>1.60  </td><td>58  </td><td>B-            </td><td>110/70          </td><td>75                  </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>29   </td><td>1.85  </td><td>90  </td><td>O+            </td><td>130/85          </td><td>68                  </td></tr>
+                    <tr><td>Fernanda Martins</td><td>26   </td><td>1.66  </td><td>62  </td><td>AB-           </td><td>120/75          </td><td>72                  </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>33   </td><td>1.80  </td><td>78  </td><td>A-            </td><td>125/80          </td><td>74                  </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>nome</th>
-                        <th>produto</th>
-                        <th>quantidade</th>
-                        <th>preco_unitario</th>
-                        <th>data_da_compra</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>Notebook</td>
-                        <td>1</td>
-                        <td>3500.00</td>
-                        <td>2024-05-12</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>Smartphone</td>
-                        <td>2</td>
-                        <td>1800.00</td>
-                        <td>2024-04-23</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>Fone de ouvido</td>
-                        <td>1</td>
-                        <td>150.00</td>
-                        <td>2024-06-10</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>Televisão</td>
-                        <td>1</td>
-                        <td>2500.00</td>
-                        <td>2024-05-19</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>Teclado mecânico</td>
-                        <td>1</td>
-                        <td>300.00</td>
-                        <td>2024-07-02</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>Mouse sem fio</td>
-                        <td>2</td>
-                        <td>120.00</td>
-                        <td>2024-03-15</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>Cadeira gamer</td>
-                        <td>1</td>
-                        <td>900.00</td>
-                        <td>2024-05-20</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>Monitor 4K</td>
-                        <td>1</td>
-                        <td>2800.00</td>
-                        <td>2024-06-08</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>HD externo</td>
-                        <td>1</td>
-                        <td>450.00</td>
-                        <td>2024-07-10</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>Impressora</td>
-                        <td>1</td>
-                        <td>700.00</td>
-                        <td>2024-06-25</td>
-                    </tr>
+                    <tr><th>nome            </th><th>produto         </th><th>quantidade</th><th>preco_unitario</th><th>data_da_compra</th></tr>
+                    <tr><td>João da Silva   </td><td>Notebook        </td><td>1         </td><td>3500.00       </td><td>2024-05-12    </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>Smartphone      </td><td>2         </td><td>1800.00       </td><td>2024-04-23    </td></tr>
+                    <tr><td>Pedro Santos    </td><td>Fone de ouvido  </td><td>1         </td><td>150.00        </td><td>2024-06-10    </td></tr>
+                    <tr><td>Ana Souza       </td><td>Televisão       </td><td>1         </td><td>2500.00       </td><td>2024-05-19    </td></tr>
+                    <tr><td>Luiz Costa      </td><td>Teclado mecânico</td><td>1         </td><td>300.00        </td><td>2024-07-02    </td></tr>
+                    <tr><td>Juliana Pereira </td><td>Mouse sem fio   </td><td>2         </td><td>120.00        </td><td>2024-03-15    </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>Cadeira gamer   </td><td>1         </td><td>900.00        </td><td>2024-05-20    </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>Monitor 4K      </td><td>1         </td><td>2800.00       </td><td>2024-06-08    </td></tr>
+                    <tr><td>Fernanda Martins</td><td>HD externo      </td><td>1         </td><td>450.00        </td><td>2024-07-10    </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>Impressora      </td><td>1         </td><td>700.00        </td><td>2024-06-25    </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>nome</th>
-                        <th>veiculo</th>
-                        <th>ano</th>
-                        <th>cor</th>
-                        <th>placa</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>Ford Focus</td>
-                        <td>2020</td>
-                        <td>Preto</td>
-                        <td>ABC-1234</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>Honda Civic</td>
-                        <td>2018</td>
-                        <td>Branco</td>
-                        <td>XYZ-5678</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>Chevrolet Onix</td>
-                        <td>2022</td>
-                        <td>Prata</td>
-                        <td>GHI-8765</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>Jeep Renegade</td>
-                        <td>2021</td>
-                        <td>Azul</td>
-                        <td>JKL-4321</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>Volkswagen Golf</td>
-                        <td>2019</td>
-                        <td>Vermelho</td>
-                        <td>MNO-9876</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>Fiat Argo</td>
-                        <td>2023</td>
-                        <td>Cinza</td>
-                        <td>STU-5432</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>Renault Sandero</td>
-                        <td>2017</td>
-                        <td>Verde</td>
-                        <td>PQR-6543</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>Toyota Corolla</td>
-                        <td>2020</td>
-                        <td>Preto</td>
-                        <td>VWX-3210</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>Nissan Kicks</td>
-                        <td>2019</td>
-                        <td>Branco</td>
-                        <td>YZA-7654</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>Hyundai HB20</td>
-                        <td>2021</td>
-                        <td>Azul</td>
-                        <td>BCD-8765</td>
-                    </tr>
+                    <tr><th>nome            </th><th>veiculo        </th><th>ano </th><th>cor     </th><th>placa   </th></tr>
+                    <tr><td>João da Silva   </td><td>Ford Focus     </td><td>2020</td><td>Preto   </td><td>ABC-1234</td></tr>
+                    <tr><td>Maria Oliveira  </td><td>Honda Civic    </td><td>2018</td><td>Branco  </td><td>XYZ-5678</td></tr>
+                    <tr><td>Pedro Santos    </td><td>Chevrolet Onix </td><td>2022</td><td>Prata   </td><td>GHI-8765</td></tr>
+                    <tr><td>Ana Souza       </td><td>Jeep Renegade  </td><td>2021</td><td>Azul    </td><td>JKL-4321</td></tr>
+                    <tr><td>Luiz Costa      </td><td>Volkswagen Golf</td><td>2019</td><td>Vermelho</td><td>MNO-9876</td></tr>
+                    <tr><td>Juliana Pereira </td><td>Fiat Argo      </td><td>2023</td><td>Cinza   </td><td>STU-5432</td></tr>
+                    <tr><td>Rafaela Lima    </td><td>Renault Sandero</td><td>2017</td><td>Verde   </td><td>PQR-6543</td></tr>
+                    <tr><td>Marcos Almeida  </td><td>Toyota Corolla </td><td>2020</td><td>Preto   </td><td>VWX-3210</td></tr>
+                    <tr><td>Fernanda Martins</td><td>Nissan Kicks   </td><td>2019</td><td>Branco  </td><td>YZA-7654</td></tr>
+                    <tr><td>Carlos Ferreira </td><td>Hyundai HB20   </td><td>2021</td><td>Azul    </td><td>BCD-8765</td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th></th>
-                    </tr>
+                    <tr><th></th></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Nome Completo</th>
-                        <th>Cargo</th>
-                        <th>Departamento</th>
-                        <th>Salário</th>
-                        <th>Data de Admissão</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>Engenheiro</td>
-                        <td>Engenharia</td>
-                        <td>7500.50</td>
-                        <td>2020-02-15</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>Designer</td>
-                        <td>Marketing</td>
-                        <td>4500.00</td>
-                        <td>2021-06-20</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>Professor</td>
-                        <td>Educação</td>
-                        <td>3200.75</td>
-                        <td>2018-09-10</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>Médica</td>
-                        <td>Saúde</td>
-                        <td>12000.00</td>
-                        <td>2019-03-05</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>Estagiário</td>
-                        <td>TI</td>
-                        <td>1800.00</td>
-                        <td>2023-01-12</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>Advogada</td>
-                        <td>Jurídico</td>
-                        <td>9000.00</td>
-                        <td>2020-07-22</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>Arquiteta</td>
-                        <td>Arquitetura</td>
-                        <td>7000.50</td>
-                        <td>2021-10-30</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>Programador</td>
-                        <td>TI</td>
-                        <td>8500.00</td>
-                        <td>2017-04-18</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>Publicitária</td>
-                        <td>Publicidade</td>
-                        <td>6200.00</td>
-                        <td>2019-11-25</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>Administrador</td>
-                        <td>Administração</td>
-                        <td>10000.00</td>
-                        <td>2016-08-12</td>
-                    </tr>
+                    <tr><th>Nome Completo   </th><th>Cargo        </th><th>Departamento </th><th>Salário </th><th>Data de Admissão</th></tr>
+                    <tr><td>João da Silva   </td><td>Engenheiro   </td><td>Engenharia   </td><td>7500.50 </td><td>2020-02-15      </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>Designer     </td><td>Marketing    </td><td>4500.00 </td><td>2021-06-20      </td></tr>
+                    <tr><td>Pedro Santos    </td><td>Professor    </td><td>Educação     </td><td>3200.75 </td><td>2018-09-10      </td></tr>
+                    <tr><td>Ana Souza       </td><td>Médica       </td><td>Saúde        </td><td>12000.00</td><td>2019-03-05      </td></tr>
+                    <tr><td>Luiz Costa      </td><td>Estagiário   </td><td>TI           </td><td>1800.00 </td><td>2023-01-12      </td></tr>
+                    <tr><td>Juliana Pereira </td><td>Advogada     </td><td>Jurídico     </td><td>9000.00 </td><td>2020-07-22      </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>Arquiteta    </td><td>Arquitetura  </td><td>7000.50 </td><td>2021-10-30      </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>Programador  </td><td>TI           </td><td>8500.00 </td><td>2017-04-18      </td></tr>
+                    <tr><td>Fernanda Martins</td><td>Publicitária </td><td>Publicidade  </td><td>6200.00 </td><td>2019-11-25      </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>Administrador</td><td>Administração</td><td>10000.00</td><td>2016-08-12      </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Nome Completo</th>
-                        <th>Produto Comprado</th>
-                        <th>Quantidade</th>
-                        <th>Preço Unitário</th>
-                        <th>Data da Compra</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>Notebook</td>
-                        <td>1</td>
-                        <td>3500.00</td>
-                        <td>2024-05-12</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>Smartphone</td>
-                        <td>2</td>
-                        <td>1800.00</td>
-                        <td>2024-04-23</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>Fone de Ouvido</td>
-                        <td>1</td>
-                        <td>150.00</td>
-                        <td>2024-06-10</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>Televisão</td>
-                        <td>1</td>
-                        <td>2500.00</td>
-                        <td>2024-05-19</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>Teclado Mecânico</td>
-                        <td>1</td>
-                        <td>300.00</td>
-                        <td>2024-07-02</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>Mouse sem Fio</td>
-                        <td>2</td>
-                        <td>120.00</td>
-                        <td>2024-03-15</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>Cadeira Gamer</td>
-                        <td>1</td>
-                        <td>900.00</td>
-                        <td>2024-05-20</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>Monitor 4K</td>
-                        <td>1</td>
-                        <td>2800.00</td>
-                        <td>2024-06-08</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>HD Externo</td>
-                        <td>1</td>
-                        <td>450.00</td>
-                        <td>2024-07-10</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>Impressora</td>
-                        <td>1</td>
-                        <td>700.00</td>
-                        <td>2024-06-25</td>
-                    </tr>
+                    <tr><th>Nome Completo   </th><th>Produto Comprado</th><th>Quantidade</th><th>Preço Unitário</th><th>Data da Compra</th></tr>
+                    <tr><td>João da Silva   </td><td>Notebook        </td><td>1         </td><td>3500.00       </td><td>2024-05-12    </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>Smartphone      </td><td>2         </td><td>1800.00       </td><td>2024-04-23    </td></tr>
+                    <tr><td>Pedro Santos    </td><td>Fone de Ouvido  </td><td>1         </td><td>150.00        </td><td>2024-06-10    </td></tr>
+                    <tr><td>Ana Souza       </td><td>Televisão       </td><td>1         </td><td>2500.00       </td><td>2024-05-19    </td></tr>
+                    <tr><td>Luiz Costa      </td><td>Teclado Mecânico</td><td>1         </td><td>300.00        </td><td>2024-07-02    </td></tr>
+                    <tr><td>Juliana Pereira </td><td>Mouse sem Fio   </td><td>2         </td><td>120.00        </td><td>2024-03-15    </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>Cadeira Gamer   </td><td>1         </td><td>900.00        </td><td>2024-05-20    </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>Monitor 4K      </td><td>1         </td><td>2800.00       </td><td>2024-06-08    </td></tr>
+                    <tr><td>Fernanda Martins</td><td>HD Externo      </td><td>1         </td><td>450.00        </td><td>2024-07-10    </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>Impressora      </td><td>1         </td><td>700.00        </td><td>2024-06-25    </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Nome Completo</th>
-                        <th>Idade</th>
-                        <th>Curso</th>
-                        <th>Ano de Ingresso</th>
-                        <th>Nota Final</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>30</td>
-                        <td>Engenharia</td>
-                        <td>2020</td>
-                        <td>8.5</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>25</td>
-                        <td>Design Gráfico</td>
-                        <td>2021</td>
-                        <td>9.0</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>28</td>
-                        <td>Pedagogia</td>
-                        <td>2018</td>
-                        <td>7.5</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>35</td>
-                        <td>Medicina</td>
-                        <td>2019</td>
-                        <td>9.2</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>22</td>
-                        <td>Ciência da Computação</td>
-                        <td>2023</td>
-                        <td>8.8</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>31</td>
-                        <td>Direito</td>
-                        <td>2020</td>
-                        <td>8.7</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>27</td>
-                        <td>Arquitetura</td>
-                        <td>2021</td>
-                        <td>9.1</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>29</td>
-                        <td>Sistemas de Informação</td>
-                        <td>2017</td>
-                        <td>8.4</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>26</td>
-                        <td>Publicidade</td>
-                        <td>2019</td>
-                        <td>8.9</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>33</td>
-                        <td>Administração</td>
-                        <td>2016</td>
-                        <td>8.6</td>
-                    </tr>
+                    <tr><th>Nome Completo   </th><th>Idade</th><th>Curso                 </th><th>Ano de Ingresso</th><th>Nota Final</th></tr>
+                    <tr><td>João da Silva   </td><td>30   </td><td>Engenharia            </td><td>2020           </td><td>8.5       </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>25   </td><td>Design Gráfico        </td><td>2021           </td><td>9.0       </td></tr>
+                    <tr><td>Pedro Santos    </td><td>28   </td><td>Pedagogia             </td><td>2018           </td><td>7.5       </td></tr>
+                    <tr><td>Ana Souza       </td><td>35   </td><td>Medicina              </td><td>2019           </td><td>9.2       </td></tr>
+                    <tr><td>Luiz Costa      </td><td>22   </td><td>Ciência da Computação </td><td>2023           </td><td>8.8       </td></tr>
+                    <tr><td>Juliana Pereira </td><td>31   </td><td>Direito               </td><td>2020           </td><td>8.7       </td></tr>
+                    <tr><td>Rafaela Lima    </td><td>27   </td><td>Arquitetura           </td><td>2021           </td><td>9.1       </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>29   </td><td>Sistemas de Informação</td><td>2017           </td><td>8.4       </td></tr>
+                    <tr><td>Fernanda Martins</td><td>26   </td><td>Publicidade           </td><td>2019           </td><td>8.9       </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>33   </td><td>Administração         </td><td>2016           </td><td>8.6       </td></tr>
                 </table>
                 <table class="table">
-                    <tr>
-                        <th>Nome Completo</th>
-                        <th>Endereço</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                    </tr>
-                    <tr>
-                        <td>João da Silva</td>
-                        <td>Rua das Flores, 123</td>
-                        <td>(11) 99999-1234</td>
-                        <td>joao.silva@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Maria Oliveira</td>
-                        <td>Av. Brasil, 456</td>
-                        <td>(21) 98888-5678</td>
-                        <td>maria.oliveira@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Pedro Santos</td>
-                        <td>Rua da Paz, 789</td>
-                        <td>(31) 97777-9101</td>
-                        <td>pedro.santos@example.com</td>
-                        <td>Inativo</td>
-                    </tr>
-                    <tr>
-                        <td>Ana Souza</td>
-                        <td>Av. Central, 321</td>
-                        <td>(51) 96666-4321</td>
-                        <td>ana.souza@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Luiz Costa</td>
-                        <td>Rua do Sol, 654</td>
-                        <td>(61) 95555-7890</td>
-                        <td>luiz.costa@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Juliana Pereira</td>
-                        <td>Av. Atlântica, 987</td>
-                        <td>(71) 94444-6543</td>
-                        <td>juliana.pereira@example.com</td>
-                        <td>Inativo</td>
-                    </tr>
-                    <tr>
-                        <td>Rafaela Lima</td>
-                        <td>Rua do Mar, 111</td>
-                        <td>(81) 93333-2101</td>
-                        <td>rafaela.lima@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Marcos Almeida</td>
-                        <td>Av. dos Anjos, 222</td>
-                        <td>(48) 92222-8765</td>
-                        <td>marcos.almeida@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Fernanda Martins</td>
-                        <td>Rua da Vitória, 333</td>
-                        <td>(92) 91111-5432</td>
-                        <td>fernanda.martins@example.com</td>
-                        <td>Ativo</td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Ferreira</td>
-                        <td>Rua São João, 444</td>
-                        <td>(41) 90000-6543</td>
-                        <td>carlos.ferreira@example.com</td>
-                        <td>Inativo</td>
-                    </tr>
+                    <tr><th>Nome Completo   </th><th>Endereço           </th><th>Telefone       </th><th>Email                       </th><th>Status </th></tr>
+                    <tr><td>João da Silva   </td><td>Rua das Flores, 123</td><td>(11) 99999-1234</td><td>joao.silva@example.com      </td><td>Ativo  </td></tr>
+                    <tr><td>Maria Oliveira  </td><td>Av. Brasil, 456    </td><td>(21) 98888-5678</td><td>maria.oliveira@example.com  </td><td>Ativo  </td></tr>
+                    <tr><td>Pedro Santos    </td><td>Rua da Paz, 789    </td><td>(31) 97777-9101</td><td>pedro.santos@example.com    </td><td>Inativo</td></tr>
+                    <tr><td>Ana Souza       </td><td>Av. Central, 321   </td><td>(51) 96666-4321</td><td>ana.souza@example.com       </td><td>Ativo  </td></tr>
+                    <tr><td>Luiz Costa      </td><td>Rua do Sol, 654    </td><td>(61) 95555-7890</td><td>luiz.costa@example.com      </td><td>Ativo  </td></tr>
+                    <tr><td>Juliana Pereira </td><td>Av. Atlântica, 987 </td><td>(71) 94444-6543</td><td>juliana.pereira@example.com </td><td>Inativo</td></tr>
+                    <tr><td>Rafaela Lima    </td><td>Rua do Mar, 111    </td><td>(81) 93333-2101</td><td>rafaela.lima@example.com    </td><td>Ativo  </td></tr>
+                    <tr><td>Marcos Almeida  </td><td>Av. dos Anjos, 222 </td><td>(48) 92222-8765</td><td>marcos.almeida@example.com  </td><td>Ativo  </td></tr>
+                    <tr><td>Fernanda Martins</td><td>Rua da Vitória, 333</td><td>(92) 91111-5432</td><td>fernanda.martins@example.com</td><td>Ativo  </td></tr>
+                    <tr><td>Carlos Ferreira </td><td>Rua São João, 444  </td><td>(41) 90000-6543</td><td>carlos.ferreira@example.com </td><td>Inativo</td></tr>
                 </table>
             </section>
         </main>

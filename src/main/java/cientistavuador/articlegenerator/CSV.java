@@ -199,7 +199,11 @@ public class CSV {
         Objects.checkIndex(record, this.numberOfRecords);
         return this.fields[(record * this.numberOfFields) + field];
     }
-
+    
+    public CSV copy() {
+        return new CSV(this.fields, this.numberOfFields, this.numberOfRecords);
+    }
+    
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();

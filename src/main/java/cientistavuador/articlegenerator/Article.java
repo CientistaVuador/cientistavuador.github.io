@@ -482,23 +482,39 @@ public class Article {
                 b.append(block.getCodeFormatted());
             }
             case "csv" -> {
-                CSV csv = block.getCSVFormatted();
+                CSV csv = block.getCSVFormatted().copy();
+                for (int record = 0; record < csv.getNumberOfRecords(); record++) {
+                    for (int field = 0; field < csv.getNumberOfFields(); field++) {
+                        csv.set(field, record, FontFormatting.escapeAndFormat(TextFormatting.getTitleFormatted(csv.get(field, record))));
+                    }
+                }
+                int[] maxFieldSize = new int[csv.getNumberOfFields()];
+                for (int record = 0; record < csv.getNumberOfRecords(); record++) {
+                    for (int field = 0; field < csv.getNumberOfFields(); field++) {
+                        maxFieldSize[field] = Math.max(maxFieldSize[field], csv.get(field, record).length());
+                    }
+                }
+                for (int record = 0; record < csv.getNumberOfRecords(); record++) {
+                    for (int field = 0; field < csv.getNumberOfFields(); field++) {
+                        String value = csv.get(field, record);
+                        csv.set(field, record, value.concat(" ".repeat(Math.max(maxFieldSize[field] - value.length(), 0))));
+                    }
+                }
+
                 b.append("<table class=\"table\">\n");
                 for (int record = 0; record < csv.getNumberOfRecords(); record++) {
-                    b.append(INDENT).append("<tr>\n");
+                    b.append(INDENT).append("<tr>");
                     for (int field = 0; field < csv.getNumberOfFields(); field++) {
                         b
-                                .append(INDENT)
-                                .append(INDENT)
                                 .append("<")
                                 .append((record == 0 ? "th" : "td"))
                                 .append(">")
-                                .append(FontFormatting.escapeAndFormat(TextFormatting.getTitleFormatted(csv.get(field, record))))
+                                .append(csv.get(field, record))
                                 .append("</")
                                 .append((record == 0 ? "th" : "td"))
-                                .append(">\n");
+                                .append(">");
                     }
-                    b.append(INDENT).append("</tr>\n");
+                    b.append("</tr>\n");
                 }
                 b.append("</table>");
             }
