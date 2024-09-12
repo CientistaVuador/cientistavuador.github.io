@@ -27,6 +27,7 @@
 package cientistavuador.articlegenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,7 +40,33 @@ public class CSV {
     private final String[] fields;
     private final int numberOfFields;
     private final int numberOfRecords;
-
+    
+    public CSV(String[] fields, int numberOfFields, int numberOfRecords) {
+        if (numberOfFields <= 0) {
+            throw new IllegalArgumentException("Number of fields <= 0: "+numberOfFields);
+        }
+        if (numberOfRecords <= 0) {
+            throw new IllegalArgumentException("Number of records <= 0: "+numberOfRecords);
+        }
+        this.numberOfFields = numberOfFields;
+        this.numberOfRecords = numberOfRecords;
+        if (fields == null) {
+            this.fields = new String[numberOfFields * numberOfRecords];
+            Arrays.fill(this.fields, "");
+            return;
+        }
+        int requiredNumberOfFields = this.numberOfFields * this.numberOfRecords;
+        if (fields.length != requiredNumberOfFields) {
+            throw new IllegalArgumentException("Fields length must be "+requiredNumberOfFields+" and not "+fields.length);
+        }
+        this.fields = fields.clone();
+        for (int i = 0; i < this.fields.length; i++) {
+            if (this.fields[i] == null) {
+                this.fields[i] = "";
+            }
+        }
+    }
+    
     public CSV(String csv) {
         if (csv == null || csv.isEmpty()) {
             this.fields = new String[]{""};
@@ -52,19 +79,19 @@ public class CSV {
         final List<String> fullData = new ArrayList<>();
         final List<String> recordData = new ArrayList<>();
         int fieldsCount = -1;
-        int quoteState = 0; //0 - not open, 1 - open, 2 - closed
+        int quoteState = 0;
         int currentLine = 1;
-
+        
         for (int i = 0; i < csv.length(); i++) {
             int unicode = csv.codePointAt(i);
-            boolean lastUnicode = (i == (csv.length() - 1));
+            boolean hasNext = (i != csv.length() - 1);
             if (unicode == '\n') {
                 currentLine++;
             }
-
+            
             if (quoteState == 1) {
                 if (unicode == '"') {
-                    if (!lastUnicode && csv.codePointAt(i + 1) == '"') {
+                    if (hasNext && csv.codePointAt(i + 1) == '"') {
                         i++;
                     } else {
                         quoteState++;
@@ -74,7 +101,7 @@ public class CSV {
                 b.appendCodePoint(unicode);
                 continue;
             }
-
+            
             switch (unicode) {
                 case '"' -> {
                     if (!b.isEmpty()) {
@@ -88,7 +115,7 @@ public class CSV {
                 }
                 case ',', '\n', '\r' -> {
                     if (unicode == '\r') {
-                        if (!lastUnicode && csv.codePointAt(i + 1) == '\n') {
+                        if (hasNext && csv.codePointAt(i + 1) == '\n') {
                             i++;
                             currentLine++;
                         } else {
@@ -116,18 +143,19 @@ public class CSV {
                     recordData.clear();
                     continue;
                 }
+
             }
 
             if (quoteState == 2) {
-                throw new IllegalArgumentException("Invalid character after quotes were closed at line " + currentLine +" expected ',' or 'LF' or 'CRLF'");
+                throw new IllegalArgumentException("Invalid character after quotes were closed at line " + currentLine + " expected ',' or 'LF' or 'CRLF'");
             }
             b.appendCodePoint(unicode);
         }
-        
+
         if (quoteState == 1) {
             throw new IllegalArgumentException("Unclosed quotes after end was reached");
         }
-        
+
         if (csv.codePointAt(csv.length() - 1) != '\n') {
             recordData.add(b.toString());
             b.setLength(0);
@@ -156,13 +184,22 @@ public class CSV {
     public int getNumberOfRecords() {
         return numberOfRecords;
     }
-
+    
+    public void set(int field, int record, String value) {
+        if (value == null) {
+            value = "";
+        }
+        Objects.checkIndex(field, this.numberOfFields);
+        Objects.checkIndex(record, this.numberOfRecords);
+        this.fields[(record * this.numberOfFields) + field] = value;
+    }
+    
     public String get(int field, int record) {
         Objects.checkIndex(field, this.numberOfFields);
         Objects.checkIndex(record, this.numberOfRecords);
         return this.fields[(record * this.numberOfFields) + field];
     }
-    
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();

@@ -168,7 +168,7 @@ For more information, please refer to <https://unlicense.org>
     height: auto;
 }
 .table {
-    max-width: 800px;
+    max-width: 90%;
     justify-content: center;
     margin: 0 auto;
     margin-top: 15px;
@@ -178,10 +178,16 @@ For more information, please refer to <https://unlicense.org>
 }
 .table th, .table td {
     border: 2px;
-    border-color: #aaaaaa;
+    border-color: #707070;
     border-style: solid;
-    padding: 6px;
+    padding: 5px;
     text-align: center;
+}
+.table th {
+    background-color: #202020;
+}
+.table tr:nth-child(odd) {
+    background-color: #404040;
 }
 .footer {
     font-family: monospace;
