@@ -241,12 +241,7 @@ public class Article {
                 value = Localization.get().localize(key, language);
                 if (value == null) {
                     throw new IllegalArgumentException("Invalid key " + key + " for language " + language);
-                } else {
-                    this.fields.put(keyA, value);
-                    this.fields.put(keyB, value);
                 }
-            } else {
-                this.fields.put(keyA, value);
             }
         }
         return value;

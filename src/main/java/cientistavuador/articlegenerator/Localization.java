@@ -175,15 +175,12 @@ public class Localization {
         String planB = key + "." + lang.getLanguage();
         String planBResult = this.formattedProperties.get(planB);
         if (planBResult != null) {
-            this.formattedProperties.put(planA, planBResult);
             return planBResult;
         }
-
+        
         String planC = key + ".";
         String planCResult = this.formattedProperties.get(planC);
         if (planCResult != null) {
-            this.formattedProperties.put(planA, planCResult);
-            this.formattedProperties.put(planB, planCResult);
             return planCResult;
         }
 
