@@ -110,10 +110,10 @@ public class Localization {
             FOOTER_RETURN, "<<< Return to Articles", (Function<String, String>) TextFormatting::getTitleFormatted,
             FOOTER_NOTICE, "All Rights Reserved", (Function<String, String>) TextFormatting::getTitleFormatted,
             ARTICLES, "Articles", (Function<String, String>) TextFormatting::getTitleFormatted,
-            ICON, "../data/icon.png", (Function<String, String>) TextFormatting::getTitleFormatted,
-            STYLESHEET, "../data/style.css", (Function<String, String>) TextFormatting::getTitleFormatted,
+            ICON, "/data/icon.png", (Function<String, String>) TextFormatting::getTitleFormatted,
+            STYLESHEET, "/data/style.css", (Function<String, String>) TextFormatting::getTitleFormatted,
             OPENGRAPH_TYPE, "article", (Function<String, String>) TextFormatting::getTitleFormatted,
-            OPENGRAPH_IMAGE, "", (Function<String, String>) TextFormatting::getTitleFormatted
+            OPENGRAPH_IMAGE, "/data/icon.png", (Function<String, String>) TextFormatting::getTitleFormatted
         };
         Map<String, Integer> keyMap = new HashMap<>();
         for (int i = 0; i < defaultKeys.length; i += 3) {

@@ -343,7 +343,7 @@ public class Article {
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"").append(icon).append("\"/>\n");
-        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append(stylesheet).append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("<link rel=\"stylesheet\" type=\"text/css\" href=\"").append(stylesheet).append("\"/>\n");
         b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");

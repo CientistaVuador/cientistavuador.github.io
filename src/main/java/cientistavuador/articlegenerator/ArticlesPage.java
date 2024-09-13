@@ -138,7 +138,7 @@ public class ArticlesPage {
         String headTitle = Localization.get().localize(Localization.ARTICLES, language);
         String headKeywords = getKeywords(language);
         String headDescription = headTitle;
-
+        
         String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, language));
         String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, language));
 
@@ -155,7 +155,7 @@ public class ArticlesPage {
         b.append(INDENT).append("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<link rel=\"icon\" type=\"image/x-icon\" href=\"").append(icon).append("\"/>\n");
-        b.append(INDENT).append("<link rel=\"stylesheet\" href=\"").append(stylesheet).append("\" type=\"text/css\"").append("/>\n");
+        b.append(INDENT).append("<link rel=\"stylesheet\" type=\"text/css\" href=\"").append(stylesheet).append("\"/>\n");
         b.append(INDENT).append("<!-- HTML Meta Tags -->\n");
         b.append(INDENT).append("\n");
         b.append(INDENT).append("<!-- OpenGraph -->\n");

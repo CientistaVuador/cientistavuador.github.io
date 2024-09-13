@@ -149,7 +149,7 @@ public class IndexRedirectPage {
         StringBuilder b = new StringBuilder();
         
         b.append("<!DOCTYPE html>\n");
-        b.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"").append(languages[0]).append("\">\n");
+        b.append("<html lang=\"").append(languages[0]).append("\">\n");
         b.append(writeHead(keywords, languages).indent(4));
         b.append(writeBody(keywords, languages).indent(4));
         b.append("</html>");
