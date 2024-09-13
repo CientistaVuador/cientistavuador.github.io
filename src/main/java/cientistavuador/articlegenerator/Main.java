@@ -57,8 +57,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        TextBlock2.parse("    \n\r\t /<- Comment! ->/ /<- Another Comment! ->");
-        
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         Files.createDirectories(articlesFolder);
