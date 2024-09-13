@@ -198,13 +198,14 @@ public class ArticlesPage {
         ISOLanguage articleLanguage = article.findBestAvailableLanguage(language);
 
         String articleLink = URLEncoder.encode(article.getId() + "_" + articleLanguage, StandardCharsets.UTF_8) + ".html";
-        String articleTitle = String.format("%04d", article.getId()) + " - " + FontFormatting.escapeAndFormat(article.getField(Localization.TITLE, articleLanguage));
+        String articleTitle = FontFormatting.escapeAndFormat(article.getField(Localization.TITLE, articleLanguage));
         String articleDescription = FontFormatting.escapeAndFormat(article.getField(Localization.DESCRIPTION, articleLanguage));
         String articleDate = FontFormatting.escapeAndFormat(article.getField(Localization.DATE, articleLanguage));
         
         b.append("<li>\n");
         b.append(INDENT.repeat(1)).append("<section>\n");
-        b.append(INDENT.repeat(2)).append("<h2>").append("<a href=\"").append(articleLink).append("\">").append(articleTitle).append("</a>").append("</h2>\n");
+        b.append(INDENT.repeat(2)).append("<h2>").append(String.format("%04d", article.getId())).append("</h2>\n");
+        b.append(INDENT.repeat(2)).append("<h3>").append("<a href=\"").append(articleLink).append("\">").append(articleTitle).append("</a>").append("</h2>\n");
         b.append(INDENT.repeat(2)).append("<p>").append(articleDescription).append("</p>\n");
         b.append(INDENT.repeat(2)).append("<p>").append(articleDate).append("</p>\n");
         b.append(INDENT.repeat(1)).append("</section>\n");

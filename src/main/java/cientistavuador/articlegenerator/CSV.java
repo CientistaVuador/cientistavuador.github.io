@@ -84,6 +84,9 @@ public class CSV {
         
         for (int i = 0; i < csv.length(); i++) {
             int unicode = csv.codePointAt(i);
+            if (Character.charCount(unicode) == 2) {
+                i++;
+            }
             boolean hasNext = (i != csv.length() - 1);
             if (unicode == '\n') {
                 currentLine++;
@@ -209,13 +212,16 @@ public class CSV {
         StringBuilder b = new StringBuilder();
         StringBuilder columnBuilder = new StringBuilder();
 
-        for (int row = 0; row < getNumberOfRecords(); row++) {
-            for (int column = 0; column < getNumberOfFields(); column++) {
-                String columnData = get(column, row);
-
+        for (int record = 0; record < getNumberOfRecords(); record++) {
+            for (int field = 0; field < getNumberOfFields(); field++) {
+                String value = get(field, record);
+                
                 boolean hasEspecialCharacters = false;
-                for (int i = 0; i < columnData.length(); i++) {
-                    int unicode = columnData.codePointAt(i);
+                for (int i = 0; i < value.length(); i++) {
+                    int unicode = value.codePointAt(i);
+                    if (Character.charCount(unicode) == 2) {
+                        i++;
+                    }
                     switch (unicode) {
                         case '"', ',', '\n' -> {
                             hasEspecialCharacters = true;
@@ -236,11 +242,11 @@ public class CSV {
                     b.append('"');
                 }
 
-                if (column != (getNumberOfFields() - 1)) {
+                if (field != (getNumberOfFields() - 1)) {
                     b.append(",");
                 }
             }
-            if (row != (getNumberOfRecords() - 1)) {
+            if (record != (getNumberOfRecords() - 1)) {
                 b.append("\n");
             }
         }

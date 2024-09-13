@@ -33,7 +33,7 @@ For more information, please refer to <https://unlicense.org>
 }
 .body {
     background-color: #303030;
-    color: #DDDDDD;
+    color: #EEEEEE;
     font-family: sans-serif;
     line-height: 1.65em;
 }
@@ -57,11 +57,12 @@ For more information, please refer to <https://unlicense.org>
     margin-bottom: 30px;
     margin-left: 4px;
     padding-left: 10px;
-    border-style: inset;
+    border-style: solid;
     border-right: none;
     border-top: none;
     border-bottom: none;
-    border-width: 4px;
+    border-color: #999999;
+    border-width: 3px;
 }
 .article h3 {
     line-height: 1.65em;
@@ -69,11 +70,12 @@ For more information, please refer to <https://unlicense.org>
     margin-bottom: 20px;
     margin-left: 15px;
     padding-left: 10px;
-    border-style: inset;
+    border-style: solid;
     border-right: none;
     border-top: none;
     border-bottom: none;
-    border-width: 4px;
+    border-color: #999999;
+    border-width: 3px;
 }
 .indices {
     margin: 0;
@@ -86,7 +88,7 @@ For more information, please refer to <https://unlicense.org>
     border-width: 2px;
     padding-bottom: 20px;
     padding-top: 20px;
-    border-color: gray;
+    border-color: #AAAAAA;
     font-size: 90%;
 }
 .indices a:link {
@@ -168,6 +170,8 @@ For more information, please refer to <https://unlicense.org>
     height: auto;
 }
 .table {
+    display: block;
+    width: fit-content;
     max-width: 90%;
     justify-content: center;
     margin: 0 auto;
@@ -175,16 +179,18 @@ For more information, please refer to <https://unlicense.org>
     margin-bottom: 15px;
     border: none;
     border-collapse: collapse;
+    overflow-x: auto;
 }
 .table th, .table td {
-    border: 2px;
-    border-color: #707070;
+    border: 1px;
+    border-color: #606060;
     border-style: solid;
-    padding: 5px;
+    padding: 4px;
     text-align: center;
 }
 .table th {
-    background-color: #202020;
+    background-color: #d0d0d0;
+    color: #202020;
 }
 .table tr:nth-child(odd) {
     background-color: #404040;
@@ -209,16 +215,14 @@ For more information, please refer to <https://unlicense.org>
 .articles section {
     border-style: solid;
     border-color: gray;
-    border-left: none;
-    border-right: none;
-    border-top: none;
+    border: none;
+    border-left: solid;
     border-radius: 3px;
     margin: 15px;
     padding: 10px;
     padding-top: 3px;
     padding-bottom: 3px;
     background-color: #272822;
-    box-shadow: 0px 0px 3px black;
 }
 .articles a:link {
     color: #DDDDDD;

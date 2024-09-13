@@ -50,12 +50,12 @@ public class TextFormatting {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
+            if (Character.charCount(unicode) == 2) {
+                i++;
+            }
+            boolean hasNext = (i < text.length() - 1);
             if (unicode == ',') {
-                int nextUnicode = 0;
-                if (i < (text.length() - 1)) {
-                    nextUnicode = text.codePointAt(i + 1);
-                }
-                if (nextUnicode == ',') {
+                if (hasNext && text.codePointAt(i + 1) == ',') {
                     i++;
                     b.append(',');
                     continue;
