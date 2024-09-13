@@ -598,7 +598,24 @@ public class Article {
 
     private String writeBody(Node root) {
         StringBuilder b = new StringBuilder();
+        
+        String titleText = FontFormatting.escapeComment(getField(Localization.TITLE, root.language));
+        String descriptionText = FontFormatting.escapeComment(getField(Localization.DESCRIPTION, root.language));
+        String dateText = FontFormatting.escapeComment(getField(Localization.DATE, root.language));
 
+        String licenseText = FontFormatting.escapeComment(getField(Localization.LICENSE, root.language));
+        b.append("<!--\n");
+        b.append("\n");
+        b.append(licenseText).append("\n");
+        b.append("\n");
+        b.append(root.language).append("\n");
+        b.append(INDENT).append(titleText).append("\n");
+        b.append(INDENT).append(descriptionText).append("\n");
+        b.append(INDENT).append(getId()).append("\n");
+        b.append(INDENT).append(dateText).append("\n");
+        b.append("\n");
+        b.append(new Date().toString()).append("\n");
+        b.append("-->\n");
         b.append("<body class=\"body\">\n");
         b.append(writeHeader(root).indent(4));
         b.append(writeArticle(root).indent(4));
@@ -616,31 +633,13 @@ public class Article {
         Node root = mapNode(language);
 
         StringBuilder b = new StringBuilder();
-
-        String titleText = FontFormatting.escapeComment(getField(Localization.TITLE, language));
-        String descriptionText = FontFormatting.escapeComment(getField(Localization.DESCRIPTION, language));
-        String dateText = FontFormatting.escapeComment(getField(Localization.DATE, language));
-
-        String licenseText = FontFormatting.escapeComment(getField(Localization.LICENSE, language));
-
+        
         b.append("<!DOCTYPE html>\n");
-        b.append("<!--\n");
-        b.append("\n");
-        b.append(licenseText).append("\n");
-        b.append("\n");
-        b.append(root.language).append("\n");
-        b.append(INDENT).append(titleText).append("\n");
-        b.append(INDENT).append(descriptionText).append("\n");
-        b.append(INDENT).append(getId()).append("\n");
-        b.append(INDENT).append(dateText).append("\n");
-        b.append("\n");
-        b.append(new Date().toString()).append("\n");
-        b.append("-->\n");
         b.append("<html lang=\"").append(root.language).append("\">\n");
         b.append(writeHead(root).indent(4));
         b.append(writeBody(root).indent(4));
         b.append("</html>");
-
+        
         return b.toString();
     }
 }

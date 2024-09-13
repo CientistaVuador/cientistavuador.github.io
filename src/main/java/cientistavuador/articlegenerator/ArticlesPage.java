@@ -270,26 +270,9 @@ public class ArticlesPage {
 
     private String writeBody(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-
-        b.append("<body class=\"body\">\n");
-        b.append(writeHeader(language).indent(4));
-        b.append(writeMain(language).indent(4));
-        b.append(writeFooter(language).indent(4));
-        b.append("</body>");
-
-        return b.toString();
-    }
-
-    public String toHTML(ISOLanguage language) {
-        if (!containsLanguage(language)) {
-            throw new IllegalArgumentException("Invalid language: "+language);
-        }
-        
-        StringBuilder b = new StringBuilder();
         
         String licenseText = FontFormatting.escapeComment(TextFormatting.getCodeFormatted(Localization.get().localize(Localization.LICENSE, language)));
-
-        b.append("<!DOCTYPE html>\n");
+        
         b.append("<!--\n");
         b.append("\n");
         b.append(licenseText).append("\n");
@@ -310,6 +293,23 @@ public class ArticlesPage {
         }
         b.append(new Date().toString()).append("\n");
         b.append("-->\n");
+        b.append("<body class=\"body\">\n");
+        b.append(writeHeader(language).indent(4));
+        b.append(writeMain(language).indent(4));
+        b.append(writeFooter(language).indent(4));
+        b.append("</body>");
+
+        return b.toString();
+    }
+
+    public String toHTML(ISOLanguage language) {
+        if (!containsLanguage(language)) {
+            throw new IllegalArgumentException("Invalid language: "+language);
+        }
+        
+        StringBuilder b = new StringBuilder();
+        
+        b.append("<!DOCTYPE html>\n");
         b.append("<html lang=\"").append(language).append("\">\n");
         b.append(writeHead(language).indent(4));
         b.append(writeBody(language).indent(4));

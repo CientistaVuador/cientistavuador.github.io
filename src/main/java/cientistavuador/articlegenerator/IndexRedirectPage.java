@@ -48,7 +48,6 @@ public class IndexRedirectPage {
         String headDescription = headTitle;
         
         String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, languages[0]));
-        String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, languages[0]));
         
         String openGraphType = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_TYPE, languages[0]));
         String openGraphImageURL = FontFormatting.escape(Localization.get().localize(Localization.OPENGRAPH_IMAGE, languages[0]));
@@ -111,6 +110,24 @@ public class IndexRedirectPage {
     private static String writeBody(String keywords, ISOLanguage[] languages) {
         StringBuilder b = new StringBuilder();
         
+        String licenseText = FontFormatting.escapeComment(TextFormatting.getCodeFormatted(Localization.get().localize(Localization.LICENSE, null)));
+        
+        b.append("<!--\n");
+        b.append("\n");
+        b.append(licenseText).append("\n");
+        b.append("\n");
+        b.append("Languages: ");
+        for (int i = 0; i < languages.length; i++) {
+            ISOLanguage language = languages[i];
+            b.append(language);
+            if (i != (languages.length - 1)) {
+                b.append(", ");
+            }
+        }
+        b.append("\n");
+        b.append("\n");
+        b.append(new Date().toString()).append("\n");
+        b.append("-->\n");
         b.append("<body>\n");
         b.append(INDENT).append("<ul>\n");
         for (ISOLanguage language:languages) {
@@ -131,26 +148,8 @@ public class IndexRedirectPage {
         
         StringBuilder b = new StringBuilder();
         
-        String licenseText = FontFormatting.escapeComment(TextFormatting.getCodeFormatted(Localization.get().localize(Localization.LICENSE, null)));
-        
         b.append("<!DOCTYPE html>\n");
-        b.append("<!--\n");
-        b.append("\n");
-        b.append(licenseText).append("\n");
-        b.append("\n");
-        b.append("Languages: ");
-        for (int i = 0; i < languages.length; i++) {
-            ISOLanguage language = languages[i];
-            b.append(language);
-            if (i != (languages.length - 1)) {
-                b.append(", ");
-            }
-        }
-        b.append("\n");
-        b.append("\n");
-        b.append(new Date().toString()).append("\n");
-        b.append("-->\n");
-        b.append("<html lang=\"").append(languages[0]).append("\">\n");
+        b.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"").append(languages[0]).append("\">\n");
         b.append(writeHead(keywords, languages).indent(4));
         b.append(writeBody(keywords, languages).indent(4));
         b.append("</html>");
