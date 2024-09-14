@@ -269,7 +269,7 @@ public class TextBlock {
                 if (stream.data.codePointAt(stream.index) == ';') {
                     stream.index++;
                     closedBlock = true;
-                    if (stream.index >= stream.data.length()) {
+                    if (readWhiteSpaces(stream)) {
                         throw new IllegalArgumentException("Unexpected end found after ';' in line " + stream.currentLine);
                     }
                 }
