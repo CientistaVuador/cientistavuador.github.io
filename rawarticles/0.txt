@@ -202,4 +202,4 @@ Carlos Ferreira,"Rua São João, 444", (41) 90000-6543, carlos.ferreira@example.
 
 [;<;>]
 
-[[TEXT]] This is a ___inline___ ***block!***
+[[text]] This is a ___inline___ ***block!***

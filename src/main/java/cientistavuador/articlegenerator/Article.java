@@ -414,10 +414,12 @@ public class Article {
 
     private String writeIndices(Node root) {
         StringBuilder b = new StringBuilder();
-
-        b.append("<ol class=\"indices\">\n");
-        b.append(writeNodeIndex(root, 0).indent(4));
-        b.append("</ol>");
+        
+        b.append("<nav class=\"indices\">\n");
+        b.append(INDENT).append("<ol>\n");
+        b.append(writeNodeIndex(root, 0).indent(8));
+        b.append(INDENT).append("</ol>\n");
+        b.append("</nav>");
 
         return b.toString();
     }
@@ -530,7 +532,7 @@ public class Article {
                 videoExtension = FontFormatting.escape(videoExtension);
                 videoUrl = FontFormatting.escape(videoUrl);
                 
-                b.append("<video class=\"video\" controls=\"controls\">\n");
+                b.append("<video class=\"video\" preload=\"metadata\" controls=\"\">\n");
                 b.append(INDENT).append("<source src=\"").append(videoUrl).append("\" type=\"video/").append(videoExtension).append("\"/>\n");
                 b.append(INDENT).append("<a href=\"").append(videoUrl).append("\" download=\"\">").append(videoName).append(".").append(videoExtension).append("</a>\n");
                 b.append("</video>");

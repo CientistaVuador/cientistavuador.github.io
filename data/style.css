@@ -78,10 +78,7 @@ For more information, please refer to <https://unlicense.org>
     border-width: 3px;
 }
 .indices {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-    border-style: inset;
+    border-style: solid;
     border-left: none;
     border-right: none;
     border-top: none;
@@ -91,14 +88,18 @@ For more information, please refer to <https://unlicense.org>
     border-color: #AAAAAA;
     font-size: 90%;
 }
+.indices ol {
+    list-style-type: none;
+}
+.indices > ol {
+    padding: 0;
+    margin: 0;
+}
 .indices a:link {
     color: #DDDDDD;
 }
 .indices a:visited {
     color: #DDDDDD;
-}
-.indices ol {
-    list-style-type: none;
 }
 .text {
     margin: 0;
