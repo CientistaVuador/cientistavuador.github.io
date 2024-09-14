@@ -5,7 +5,8 @@
 [;<;>]
 
 [[section]] CSV Hell
-[[ SECTION ]] CSV Hell
+
+[[video]] /resources/Edison.webm
 
 [csv]
     First Name,Last Name,Email,Phone Number

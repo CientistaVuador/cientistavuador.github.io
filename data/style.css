@@ -163,11 +163,13 @@ For more information, please refer to <https://unlicense.org>
 .code code {
     white-space: pre;
 }
-.image {
+.image, .video {
     display: block;
-    max-width: 800px;
-    width: 100%;
+    max-width: 95%;
+    width: fit-content;
     height: auto;
+    justify-content: center;
+    margin: 0 auto;
 }
 .table {
     display: block;

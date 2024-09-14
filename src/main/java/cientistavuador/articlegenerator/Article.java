@@ -303,7 +303,7 @@ public class Article {
                     section.children.add(subsection);
                     continue;
                 }
-                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html", "csv" -> {
+                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html", "csv", "video" -> {
                     Node toAdd = root;
                     if (section != null) {
                         toAdd = section;
@@ -512,6 +512,28 @@ public class Article {
                     b.append("</tr>\n");
                 }
                 b.append("</table>");
+            }
+            case "video" -> {
+                String videoUrl = block.getTitleFormatted();
+                
+                String videoName;
+                String videoExtension;
+                {
+                    String[] urlSplit = videoUrl.split("/");
+                    videoName = urlSplit[urlSplit.length - 1];
+                    String[] nameSplit = videoName.split(Pattern.quote("."));
+                    videoExtension = nameSplit[nameSplit.length - 1];
+                    videoName = videoName.substring(0, videoName.length() - (videoExtension.length() + 1));
+                }
+                
+                videoName = FontFormatting.escape(videoName);
+                videoExtension = FontFormatting.escape(videoExtension);
+                videoUrl = FontFormatting.escape(videoUrl);
+                
+                b.append("<video class=\"video\" controls=\"controls\">\n");
+                b.append(INDENT).append("<source src=\"").append(videoUrl).append("\" type=\"video/").append(videoExtension).append("\"/>\n");
+                b.append(INDENT).append("<a href=\"").append(videoUrl).append("\" download=\"\">").append(videoName).append(".").append(videoExtension).append("</a>\n");
+                b.append("</video>");
             }
             default ->
                 throw new IllegalArgumentException("Unknown resource " + block.getName() + " at line " + block.getLine());
