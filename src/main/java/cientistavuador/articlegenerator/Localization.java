@@ -49,6 +49,7 @@ public class Localization {
     public static final String UTTERANCES_ENABLED = "utterances-enabled";
     public static final String UTTERANCES_REPO = "utterances-repo";
     public static final String UTTERANCES_ISSUE_TERM_PREFIX = "utterances-issue-term-prefix";
+    public static final String UTTERANCES_ISSUE_TERM_MAIN_PAGE = "uterrances-issue-term-main-page";
     public static final String UTTERANCES_LABEL = "utterances-label";
     public static final String UTTERANCES_THEME = "utterances-theme";
 
@@ -100,6 +101,7 @@ public class Localization {
             UTTERANCES_ENABLED, "false", (Function<String, String>) s -> Boolean.toString(Boolean.parseBoolean(s)),
             UTTERANCES_REPO, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
             UTTERANCES_ISSUE_TERM_PREFIX, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
+            UTTERANCES_ISSUE_TERM_MAIN_PAGE, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
             UTTERANCES_LABEL, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
             UTTERANCES_THEME, "github-dark", (Function<String, String>) TextFormatting::getTitleFormatted,
             DEFAULT_LANG, "en-us", (Function<String, String>) s -> TextFormatting.getISOLanguageFormatted(s).toString(),

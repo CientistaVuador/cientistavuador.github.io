@@ -244,7 +244,7 @@ public class ArticlesPage {
         b.append("<footer class=\"footer\">\n");
         if (Boolean.parseBoolean(Localization.get().localize(Localization.UTTERANCES_ENABLED, language))) {
             String utterancesRepo = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_REPO, language));
-            String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_PREFIX, language));
+            String utterancesIssueTerm = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_ISSUE_TERM_MAIN_PAGE, language));
             String utterancesLabel = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_LABEL, language));
             String utterancesTheme = FontFormatting.escape(Localization.get().localize(Localization.UTTERANCES_THEME, language));
 

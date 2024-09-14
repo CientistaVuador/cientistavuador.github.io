@@ -4,7 +4,8 @@
     pt-BR
 [;<;>]
 
-[section] CSV Hell [;<;>]
+[[section]] CSV Hell
+[[ SECTION ]] CSV Hell
 
 [csv]
     First Name,Last Name,Email,Phone Number
@@ -199,3 +200,5 @@ Fernanda Martins,"Rua da Vitória, 333", (92) 91111-5432, fernanda.martins@examp
 Carlos Ferreira,"Rua São João, 444", (41) 90000-6543, carlos.ferreira@example.com, Inativo
 
 [;<;>]
+
+[[TEXT]] This is a ___inline___ ***block!***

@@ -171,8 +171,8 @@ or used as a fallback if it is a meta block. [;<;>]
 [;<;>]
 
 [subsection] Image [;<;>]
-[image] ../resources/bird.jpg [;<;>]
-[code] [image] ../resources/bird.jpg [;<;>]; [;<;>]
+[image] /resources/bird.jpg [;<;>]
+[code] [image] /resources/bird.jpg [;<;>]; [;<;>]
 
 [subsection] Raw HTML [;<;>]
 [html]
