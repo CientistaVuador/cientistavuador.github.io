@@ -395,7 +395,7 @@ public class Article {
             }
             return b.toString();
         }
-
+        
         String sectionLink = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
         String sectionIndex = FontFormatting.escapeAndFormat(node.fullName);
         b.append("<li><a href=\"#").append(sectionLink).append("\">").append(sectionIndex).append("</a></li>\n");
