@@ -25,32 +25,32 @@
 [;<;>]
 
 [csv]
-    Texture Format,Size Per Pixel,Notes
-    RGB32F,16 bytes,"
-    Overkill for colors, due to padding has the same size as RGBA32F
-    "
-    RGB16F,8 bytes,"
-    Good for colors, due to padding has the same size as RGBA16F
-    "
-    RGBA8 RGBE,4 bytes,"
-    Has linear interpolation problems due to exponential values
-    "
-    RGBA8 RGBM,4 bytes,"
-    Has precision or hue shifting problems due to fixed precision
-    "
-    DXT5 RGBE,1 byte,"
-    Same as RGBA8 RGBE but compressed in DXT5
-    "
-    DXT5 RGBM,1 byte,"
-    Same as RGBA8 RGBM but compressed in DXT5
-    "
-    BC6H,1 byte,"
-    Modern texture compression for HDR Textures, may not work in older hardware
-    tools or libraries for compression are more scarce, I recommend using NVIDIA Texture Tools
-    "
-    DXT1 sRGB * Intensity,0.5 bytes,"
-    Highly agressive compression, may have precision problems.
-    "
+Texture Format,Size Per Pixel,Notes
+RGB32F,16 bytes,"
+Overkill for colors, due to padding has the same size as RGBA32F
+"
+RGB16F,8 bytes,"
+Good for colors, due to padding has the same size as RGBA16F
+"
+RGBA8 RGBE,4 bytes,"
+Has linear interpolation problems due to exponential values
+"
+RGBA8 RGBM,4 bytes,"
+Has precision or hue shifting problems due to fixed precision
+"
+DXT5 RGBE,1 byte,"
+Same as RGBA8 RGBE but compressed in DXT5
+"
+DXT5 RGBM,1 byte,"
+Same as RGBA8 RGBM but compressed in DXT5
+"
+BC6H,1 byte,"
+Modern texture compression for HDR Textures, may not work in older hardware
+tools or libraries for compression are more scarce, I recommend using NVIDIA Texture Tools
+"
+DXT1 sRGB * Intensity,0.5 bytes,"
+Highly agressive compression, may have precision problems.
+"
 [;<;>]
 
 [csv]

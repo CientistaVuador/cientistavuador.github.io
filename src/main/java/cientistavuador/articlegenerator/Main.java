@@ -27,6 +27,7 @@
 package cientistavuador.articlegenerator;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -35,8 +36,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  *
@@ -88,35 +87,35 @@ public class Main {
                 throw t;
             }
         }
-        
+
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
                 ISOLanguage language = c.getLanguage(i);
                 Files.writeString(articlesFolder.resolve(URLEncoder.encode(c.getId() + "_" + language, StandardCharsets.UTF_8) + ".html"), c.toHTML(language));
-                System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId()+", Language: "+language);
+                System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId() + ", Language: " + language);
             }
         }
-        
+
         System.out.println("Generating main articles pages.");
-        
+
         ArticlesPage mainArticlesPage = new ArticlesPage(articles);
         for (int i = 0; i < mainArticlesPage.getNumberOfLanguages(); i++) {
-            String fileName = URLEncoder.encode("articles_"+mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8)+".html";
+            String fileName = URLEncoder.encode("articles_" + mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8) + ".html";
             Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)));
-            System.out.println("Written main articles page of language "+mainArticlesPage.getLanguage(i));
+            System.out.println("Written main articles page of language " + mainArticlesPage.getLanguage(i));
         }
-        
+
         Path indexFile = Path.of("index.html");
         if (Files.exists(indexFile)) {
             System.out.println("Deleted index.html");
             Files.delete(indexFile);
         }
-        
+
         ISOLanguage[] languages = new ISOLanguage[mainArticlesPage.getNumberOfLanguages()];
         for (int i = 0; i < languages.length; i++) {
             languages[i] = mainArticlesPage.getLanguage(i);
         }
-        
+
         Files.writeString(
                 indexFile,
                 IndexRedirectPage.generate(

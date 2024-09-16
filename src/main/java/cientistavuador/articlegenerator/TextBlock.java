@@ -411,7 +411,7 @@ public class TextBlock {
     public CSV getCSVFormatted() {
         if (this.csvFormatted == null) {
             try {
-                this.csvFormatted = new CSV(getCodeFormatted());
+                this.csvFormatted = CSV.parse(getCodeFormatted());
             } catch (IllegalArgumentException ex) {
                 throw new IllegalArgumentException("Invalid CSV in block line "+this.line, ex);
             }

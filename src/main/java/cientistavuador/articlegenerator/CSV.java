@@ -26,6 +26,10 @@
  */
 package cientistavuador.articlegenerator;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,17 +40,25 @@ import java.util.Objects;
  * @author Cien
  */
 public class CSV {
-
+    
+    public static CSV parse(String text) {
+        try {
+            return new CSV((text == null || text.isEmpty() ? null : new StringReader(text)));
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+    
     private final String[] fields;
     private final int numberOfFields;
     private final int numberOfRecords;
-    
+
     public CSV(String[] fields, int numberOfFields, int numberOfRecords) {
         if (numberOfFields <= 0) {
-            throw new IllegalArgumentException("Number of fields <= 0: "+numberOfFields);
+            throw new IllegalArgumentException("Number of fields <= 0: " + numberOfFields);
         }
         if (numberOfRecords <= 0) {
-            throw new IllegalArgumentException("Number of records <= 0: "+numberOfRecords);
+            throw new IllegalArgumentException("Number of records <= 0: " + numberOfRecords);
         }
         this.numberOfFields = numberOfFields;
         this.numberOfRecords = numberOfRecords;
@@ -57,7 +69,7 @@ public class CSV {
         }
         int requiredNumberOfFields = this.numberOfFields * this.numberOfRecords;
         if (fields.length != requiredNumberOfFields) {
-            throw new IllegalArgumentException("Fields length must be "+requiredNumberOfFields+" and not "+fields.length);
+            throw new IllegalArgumentException("Fields length must be " + requiredNumberOfFields + " and not " + fields.length);
         }
         this.fields = fields.clone();
         for (int i = 0; i < this.fields.length; i++) {
@@ -66,120 +78,146 @@ public class CSV {
             }
         }
     }
-    
-    public CSV(String csv) {
-        if (csv == null || csv.isEmpty()) {
-            this.fields = new String[]{""};
+
+    private static int readCodepoint(Reader reader) throws IOException {
+        int cA = reader.read();
+        if (cA == -1) {
+            return -1;
+        }
+        char aChar = (char) cA;
+        if (Character.isHighSurrogate(aChar)) {
+            int cB = reader.read();
+            if (cB == -1) {
+                return cA;
+            }
+            char bChar = (char) cB;
+            if (Character.isLowSurrogate(bChar)) {
+                return Character.toCodePoint(aChar, bChar);
+            }
+        }
+        return cA;
+    }
+
+    public CSV(Reader reader) throws IOException {
+        int bcp = (reader != null ? readCodepoint(reader) : -1);
+        if (bcp == -1) {
+            this.fields = new String[] {""};
             this.numberOfFields = 1;
             this.numberOfRecords = 1;
             return;
         }
-
-        final StringBuilder b = new StringBuilder();
-        final List<String> fullData = new ArrayList<>();
-        final List<String> recordData = new ArrayList<>();
-        int fieldsCount = -1;
-        int quoteState = 0;
-        int currentLine = 1;
         
-        for (int i = 0; i < csv.length(); i++) {
-            int unicode = csv.codePointAt(i);
-            if (Character.charCount(unicode) == 2) {
-                i++;
-            }
-            boolean hasNext = (i != csv.length() - 1);
-            if (unicode == '\n') {
-                currentLine++;
-            }
-            
-            if (quoteState == 1) {
-                if (unicode == '"') {
-                    if (hasNext && csv.codePointAt(i + 1) == '"') {
-                        i++;
-                    } else {
-                        quoteState++;
+        StringBuilder b = new StringBuilder();
+        List<String> currentRecord = new ArrayList<>();
+        List<String> fullData = new ArrayList<>();
+        int currentLine = 1;
+        int expectedSize = -1;
+
+        record:
+        for (;;) {
+            //read field
+            b.setLength(0);
+            boolean quoted = false;
+            field:
+            for (;;) {
+                int cp;
+                if (bcp != -1) {
+                    cp = bcp;
+                    bcp = -1;
+                } else {
+                    cp = readCodepoint(reader);
+                }
+                switch (cp) {
+                    case -1 -> {
+                        break field;
+                    }
+                    case '"' -> {
+                        if (quoted) {
+                            bcp = readCodepoint(reader);
+                            if (bcp == cp) {
+                                bcp = -1;
+                                break;
+                            }
+                            quoted = false;
+                            break field;
+                        }
+                        if (!b.isEmpty()) {
+                            throw new IllegalArgumentException("Double quotes must be placed only at the start and end of the field at line " + currentLine);
+                        }
+                        quoted = true;
                         continue;
                     }
+                    case '\n', '\r', ',' -> {
+                        if (quoted) {
+                            break;
+                        }
+                        if (cp == '\r') {
+                            bcp = readCodepoint(reader);
+                            if (bcp != '\n') {
+                                break;
+                            }
+                            cp = bcp;
+                        }
+                        bcp = cp;
+                        break field;
+                    }
                 }
-                b.appendCodePoint(unicode);
-                continue;
+                if (cp == '\n') {
+                    currentLine++;
+                }
+                b.appendCodePoint(cp);
             }
+            if (quoted) {
+                throw new IllegalArgumentException("Unclosed double quotes after end was reached.");
+            }
+            currentRecord.add(b.toString());
             
-            switch (unicode) {
-                case '"' -> {
-                    if (!b.isEmpty()) {
-                        throw new IllegalArgumentException("Quotes must be the first character in a field at line " + currentLine);
-                    }
-                    if (quoteState == 2) {
-                        throw new IllegalArgumentException("Quotes already closed at line " + currentLine);
-                    }
-                    quoteState++;
+            //read next field
+            int cp;
+            if (bcp != -1) {
+                cp = bcp;
+                bcp = -1;
+            } else {
+                cp = readCodepoint(reader);
+            }
+
+            switch (cp) {
+                case ',' -> {
                     continue;
                 }
-                case ',', '\n', '\r' -> {
-                    if (unicode == '\r') {
-                        if (hasNext && csv.codePointAt(i + 1) == '\n') {
-                            i++;
-                            currentLine++;
+                case -1, '\n', '\r' -> {
+                    if (cp == '\r') {
+                        if (readCodepoint(reader) == '\n') {
+                            cp = '\n';
                         } else {
                             break;
                         }
                     }
-
-                    recordData.add(b.toString());
-                    b.setLength(0);
-                    quoteState = 0;
-
-                    if (unicode == ',') {
-                        continue;
+                    if (expectedSize != -1 && currentRecord.size() != expectedSize) {
+                        throw new IllegalArgumentException("Invalid number of fields at line " + currentLine + " expected " + expectedSize + " field(s), found " + currentRecord.size() + " field(s).");
                     }
-
-                    if (fieldsCount == -1) {
-                        fieldsCount = recordData.size();
+                    expectedSize = currentRecord.size();
+                    fullData.addAll(currentRecord);
+                    currentRecord.clear();
+                    if (cp == -1) {
+                        break record;
                     }
-
-                    if (fieldsCount != recordData.size()) {
-                        throw new IllegalArgumentException("Invalid amount of fields in line " + currentLine + ", expected " + fieldsCount + ", found " + recordData.size());
+                    currentLine++;
+                    bcp = readCodepoint(reader);
+                    if (bcp == -1) {
+                        break record;
                     }
-
-                    fullData.addAll(recordData);
-                    recordData.clear();
                     continue;
                 }
-
             }
-
-            if (quoteState == 2) {
-                throw new IllegalArgumentException("Invalid character after quotes were closed at line " + currentLine + " expected ',' or 'LF' or 'CRLF'");
-            }
-            b.appendCodePoint(unicode);
-        }
-
-        if (quoteState == 1) {
-            throw new IllegalArgumentException("Unclosed quotes after end was reached");
-        }
-
-        if (csv.codePointAt(csv.length() - 1) != '\n') {
-            recordData.add(b.toString());
-            b.setLength(0);
-
-            if (fieldsCount == -1) {
-                fieldsCount = recordData.size();
-            }
-
-            if (fieldsCount != recordData.size()) {
-                throw new IllegalArgumentException("Invalid amount of fields after end was reached, expected " + fieldsCount + ", found " + recordData.size());
-            }
-
-            fullData.addAll(recordData);
-            recordData.clear();
+            throw new IllegalArgumentException("Illegal character '" + (Character.isWhitespace(cp) ? Character.getName(cp) : Character.toString(cp)) + "', expected ',' or 'LF' or 'CRLF' at line " + currentLine);
         }
 
         this.fields = fullData.toArray(String[]::new);
-        this.numberOfFields = fieldsCount;
-        this.numberOfRecords = fullData.size() / this.numberOfFields;
+        this.numberOfFields = expectedSize;
+        this.numberOfRecords = this.fields.length / expectedSize;
     }
-
+    
     public int getNumberOfFields() {
         return numberOfFields;
     }
@@ -187,7 +225,7 @@ public class CSV {
     public int getNumberOfRecords() {
         return numberOfRecords;
     }
-    
+
     public void set(int field, int record, String value) {
         if (value == null) {
             value = "";
@@ -196,17 +234,17 @@ public class CSV {
         Objects.checkIndex(record, this.numberOfRecords);
         this.fields[(record * this.numberOfFields) + field] = value;
     }
-    
+
     public String get(int field, int record) {
         Objects.checkIndex(field, this.numberOfFields);
         Objects.checkIndex(record, this.numberOfRecords);
         return this.fields[(record * this.numberOfFields) + field];
     }
-    
+
     public CSV copy() {
         return new CSV(this.fields, this.numberOfFields, this.numberOfRecords);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
@@ -215,7 +253,7 @@ public class CSV {
         for (int record = 0; record < getNumberOfRecords(); record++) {
             for (int field = 0; field < getNumberOfFields(); field++) {
                 String value = get(field, record);
-                
+
                 boolean hasEspecialCharacters = false;
                 for (int i = 0; i < value.length(); i++) {
                     int unicode = value.codePointAt(i);
@@ -223,7 +261,7 @@ public class CSV {
                         i++;
                     }
                     switch (unicode) {
-                        case '"', ',', '\n' -> {
+                        case '"', ',', '\n', '\r' -> {
                             hasEspecialCharacters = true;
                         }
                     }
@@ -247,7 +285,7 @@ public class CSV {
                 }
             }
             if (record != (getNumberOfRecords() - 1)) {
-                b.append("\n");
+                b.append("\r\n");
             }
         }
         return b.toString();
