@@ -27,7 +27,6 @@
 package cientistavuador.articlegenerator;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -56,7 +55,7 @@ public class Main {
         Files.delete(path);
         System.out.println("Deleted " + path.toString());
     }
-
+    
     public static void main(String[] args) throws IOException {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);

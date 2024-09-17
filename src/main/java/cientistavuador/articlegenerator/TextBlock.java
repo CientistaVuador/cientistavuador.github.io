@@ -43,12 +43,16 @@ public class TextBlock {
         final StringBuilder builder = new StringBuilder();
     }
 
+    private static boolean isLineTerminator(int unicode, CharStream stream) {
+        return unicode == '\n' || (unicode == '\r' && ((stream.index + 1) >= stream.data.length() || stream.data.codePointAt(stream.index + 1) != '\n'));
+    }
+
     private static boolean readWhiteSpaces(CharStream stream) {
         boolean readingComment = false;
 
         for (; stream.index < stream.data.length();) {
             int unicode = stream.data.codePointAt(stream.index);
-            if (unicode == '\n') {
+            if (isLineTerminator(unicode, stream)) {
                 stream.currentLine++;
             }
             if (readingComment) {
@@ -89,7 +93,7 @@ public class TextBlock {
 
         for (; stream.index < stream.data.length();) {
             int unicode = stream.data.codePointAt(stream.index);
-            if (unicode == '\n') {
+            if (isLineTerminator(unicode, stream)) {
                 stream.currentLine++;
             }
             boolean specialCharFound = false;
@@ -111,13 +115,13 @@ public class TextBlock {
 
         throw new IllegalArgumentException("Unexpected end found after reading block name at line " + stream.currentLine);
     }
-    
+
     private static String readAttribute(CharStream stream) {
         stream.builder.setLength(0);
 
         for (; stream.index < stream.data.length();) {
             int unicode = stream.data.codePointAt(stream.index);
-            if (unicode == '\n') {
+            if (isLineTerminator(unicode, stream)) {
                 stream.currentLine++;
             }
             switch (unicode) {
@@ -151,7 +155,7 @@ public class TextBlock {
 
         for (; stream.index < stream.data.length();) {
             int unicode = stream.data.codePointAt(stream.index);
-            if (unicode == '\n') {
+            if (isLineTerminator(unicode, stream)) {
                 stream.currentLine++;
             }
             if (unicode == sequenceChars[sequenceCounter]) {
@@ -177,15 +181,15 @@ public class TextBlock {
 
         throw new IllegalArgumentException("Unexpected end found, expected '[;<;>]' at line " + stream.currentLine);
     }
-    
+
     private static String readInlineRawText(CharStream stream) {
         stream.builder.setLength(0);
-        
+
         int sequenceCounter = 0;
 
         for (; stream.index < stream.data.length();) {
             int unicode = stream.data.codePointAt(stream.index);
-            
+
             if (unicode == sequenceChars[sequenceCounter]) {
                 sequenceCounter++;
                 if (sequenceCounter == sequenceChars.length) {
@@ -201,23 +205,22 @@ public class TextBlock {
             } else {
                 sequenceCounter = 0;
             }
-            
-            if (unicode == '\n' || (
-                    unicode == '\r' 
-                    && stream.index < stream.data.length() - 1 
-                    && stream.data.codePointAt(stream.index + 1) == '\n')) {
-                stream.currentLine++;
-                stream.index++;
-                if (unicode == '\r') {
+
+            if (unicode == '\n' || unicode == '\r') {
+                if (unicode == '\r'
+                        && (stream.index + 1) < stream.data.length()
+                        && stream.data.codePointAt(stream.index + 1) == '\n') {
                     stream.index++;
                 }
+                stream.currentLine++;
+                stream.index++;
                 break;
             }
-            
+
             stream.builder.appendCodePoint(unicode);
             stream.index += Character.charCount(unicode);
         }
-        
+
         return stream.builder.toString();
     }
 
@@ -239,23 +242,23 @@ public class TextBlock {
 
             if (stream.data.codePointAt(stream.index) == '[') {
                 int blockLine = stream.currentLine;
-                
+
                 boolean inlineBlock = false;
                 if (stream.index < stream.data.length() - 1 && stream.data.codePointAt(stream.index + 1) == '[') {
                     inlineBlock = true;
                     stream.index++;
                 }
-                
+
                 stream.index++;
                 if (readWhiteSpaces(stream)) {
                     throw new IllegalArgumentException("Unexpected end found after block was open at line " + stream.currentLine);
                 }
-                
+
                 String blockName = readBlockName(stream);
                 if (readWhiteSpaces(stream)) {
                     throw new IllegalArgumentException("Unexpected end found after reading block name at line " + stream.currentLine);
                 }
-                
+
                 String blockAttribute = "";
                 if (stream.data.codePointAt(stream.index) == '<') {
                     stream.index++;
@@ -264,7 +267,7 @@ public class TextBlock {
                         throw new IllegalArgumentException("Unexpected end found after reading attribute at line " + stream.currentLine);
                     }
                 }
-                
+
                 boolean closedBlock = false;
                 if (stream.data.codePointAt(stream.index) == ';') {
                     stream.index++;
@@ -273,9 +276,11 @@ public class TextBlock {
                         throw new IllegalArgumentException("Unexpected end found after ';' in line " + stream.currentLine);
                     }
                 }
-                
+
                 if (stream.data.codePointAt(stream.index) != ']') {
-                    throw new IllegalArgumentException("Illegal character '"+Character.toString(stream.data.codePointAt(stream.index))+"' found, expected a ']' at line " + stream.currentLine);
+                    int code = stream.data.codePointAt(stream.index);
+                    String codeName = (Character.isWhitespace(code) ? Character.getName(code) : Character.toString(code));
+                    throw new IllegalArgumentException("Illegal character '" + codeName + "' found, expected a ']' at line " + stream.currentLine);
                 }
                 stream.index++;
                 if (inlineBlock) {
@@ -283,11 +288,13 @@ public class TextBlock {
                         throw new IllegalArgumentException("Unexpected end found after ']' expected another ']' due to inline block in line " + stream.currentLine);
                     }
                     if (stream.data.codePointAt(stream.index) != ']') {
-                        throw new IllegalArgumentException("Illegal character '"+Character.toString(stream.data.codePointAt(stream.index))+"' found, expected a ']' due to inline block at line " + stream.currentLine);
+                        int code = stream.data.codePointAt(stream.index);
+                        String codeName = (Character.isWhitespace(code) ? Character.getName(code) : Character.toString(code));
+                        throw new IllegalArgumentException("Illegal character '" + codeName + "' found, expected a ']' due to inline block at line " + stream.currentLine);
                     }
                     stream.index++;
                 }
-                
+
                 String rawText = "";
                 if (!closedBlock) {
                     if (inlineBlock) {
@@ -296,20 +303,22 @@ public class TextBlock {
                         rawText = readRawText(stream);
                     }
                 }
-                
+
                 blocks.add(new TextBlock(blockLine, blockName, blockAttribute, rawText));
             } else {
-                throw new IllegalArgumentException("Illegal character '"+Character.toString(stream.data.codePointAt(stream.index))+"' found, expected a '[' at line " + stream.currentLine);
+                int code = stream.data.codePointAt(stream.index);
+                String codeName = (Character.isWhitespace(code) ? Character.getName(code) : Character.toString(code));
+                throw new IllegalArgumentException("Illegal character '" + codeName + "' found, expected a '[' at line " + stream.currentLine);
             }
         }
         return blocks;
     }
-    
+
     private final int line;
     private final String name;
     private final String attribute;
     private final String rawText;
-    
+
     private String titleFormatted = null;
     private Integer integerFormatted = null;
     private String paragraphFormatted = null;
@@ -317,7 +326,7 @@ public class TextBlock {
     private String[] listFormatted = null;
     private ISOLanguage[] languageListFormatted = null;
     private CSV csvFormatted = null;
-    
+
     private ISOLanguage attributeLanguage;
 
     private TextBlock(int line, String name, String attribute, String rawText) {
@@ -338,17 +347,17 @@ public class TextBlock {
     public String getAttribute() {
         return attribute;
     }
-    
+
     public boolean hasAttribute() {
         return !getAttribute().isEmpty();
     }
-    
+
     public ISOLanguage getAttributeLanguage() {
         if (this.attributeLanguage == null) {
             try {
                 this.attributeLanguage = TextFormatting.getISOLanguageFormatted(getAttribute());
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("Invalid ISO Language in line "+this.line, ex);
+                throw new IllegalArgumentException("Invalid ISO Language in line " + this.line, ex);
             }
         }
         return this.attributeLanguage;
@@ -357,7 +366,7 @@ public class TextBlock {
     public String getRawText() {
         return rawText;
     }
-    
+
     public String getTitleFormatted() {
         if (this.titleFormatted == null) {
             this.titleFormatted = TextFormatting.getTitleFormatted(this.rawText);
@@ -402,21 +411,21 @@ public class TextBlock {
             try {
                 this.languageListFormatted = TextFormatting.getISOLanguagesFormatted(this.rawText);
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("Invalid ISO Language in block line "+this.line, ex);
+                throw new IllegalArgumentException("Invalid ISO Language in block line " + this.line, ex);
             }
         }
         return this.languageListFormatted.clone();
     }
-    
+
     public CSV getCSVFormatted() {
         if (this.csvFormatted == null) {
             try {
-                this.csvFormatted = CSV.parse(getCodeFormatted());
+                this.csvFormatted = CSV.read(getCodeFormatted());
             } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("Invalid CSV in block line "+this.line, ex);
+                throw new IllegalArgumentException("Invalid CSV in block line " + this.line, ex);
             }
         }
         return this.csvFormatted;
     }
-    
+
 }

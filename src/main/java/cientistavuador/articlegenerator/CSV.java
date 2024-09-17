@@ -26,10 +26,6 @@
  */
 package cientistavuador.articlegenerator;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,15 +36,90 @@ import java.util.Objects;
  * @author Cien
  */
 public class CSV {
-    
-    public static CSV parse(String text) {
-        try {
-            return new CSV((text == null || text.isEmpty() ? null : new StringReader(text)));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
+
+    public static CSV read(String text) {
+        if (text == null || text.isEmpty()) {
+            return new CSV(null, 1, 1);
         }
+
+        List<String> currentRecord = new ArrayList<>();
+        List<String> allFields = new ArrayList<>();
+        StringBuilder b = new StringBuilder();
+
+        int expectedRecordSize = -1;
+        int currentLine = 1;
+        boolean quoted = false;
+        boolean fieldDone = false;
+        boolean finishedWithNoCRLF = true;
+        int unicode;
+        for (int i = 0; i < text.length(); i += Character.charCount(unicode)) {
+            unicode = text.codePointAt(i);
+            switch (unicode) {
+                case '"' -> {
+                    if (quoted) {
+                        if ((i + 1) < text.length() && text.codePointAt(i + 1) == '"') {
+                            i++;
+                            break;
+                        }
+                        quoted = false;
+                        fieldDone = true;
+                        continue;
+                    }
+                    if (!b.isEmpty()) {
+                        throw new IllegalArgumentException("Double quotes must only be placed at the start and end of a field at line " + currentLine);
+                    }
+                    quoted = true;
+                    continue;
+                }
+                case ',', '\r', '\n' -> {
+                    if (quoted) {
+                        if (unicode == '\n' || unicode == '\r' && ((i + 1) >= text.length()) || text.codePointAt(i + 1) != '\n') {
+                            currentLine++;
+                        }
+                        break;
+                    }
+                    fieldDone = false;
+                    currentRecord.add(b.toString());
+                    b.setLength(0);
+                    if (unicode == '\r' || unicode == '\n') {
+                        currentLine++;
+                        if (unicode == '\r' && (i + 1) < text.length() && text.codePointAt(i + 1) == '\n') {
+                            i++;
+                        }
+                        if (expectedRecordSize != -1 && currentRecord.size() != expectedRecordSize) {
+                            throw new IllegalArgumentException("Invalid record size at line " + (currentLine - 1) + ", expected " + expectedRecordSize + " fields(s) but found " + currentRecord.size() + " field(s).");
+                        }
+                        expectedRecordSize = currentRecord.size();
+                        allFields.addAll(currentRecord);
+                        currentRecord.clear();
+                        if (i == text.length() - 1) {
+                            finishedWithNoCRLF = false;
+                        }
+                    }
+                    continue;
+                }
+            }
+            if (fieldDone) {
+                throw new IllegalArgumentException("Illegal character '" + (Character.isWhitespace(unicode) ? Character.getName(unicode) : Character.toString(unicode)) + "', expected ',' or 'CRLF' or 'LF' at line " + currentLine);
+            } else {
+                b.appendCodePoint(unicode);
+            }
+        }
+        if (quoted) {
+            throw new IllegalArgumentException("Unclosed double quotes after end of text was reached.");
+        }
+        if (finishedWithNoCRLF) {
+            currentRecord.add(b.toString());
+            if (expectedRecordSize != -1 && currentRecord.size() != expectedRecordSize) {
+                throw new IllegalArgumentException("Invalid record size at end of text, expected " + expectedRecordSize + " fields(s) but found " + currentRecord.size() + " field(s).");
+            }
+            expectedRecordSize = currentRecord.size();
+            allFields.addAll(currentRecord);
+            currentRecord.clear();
+        }
+        return new CSV(allFields.toArray(String[]::new), expectedRecordSize, allFields.size() / expectedRecordSize);
     }
-    
+
     private final String[] fields;
     private final int numberOfFields;
     private final int numberOfRecords;
@@ -79,145 +150,6 @@ public class CSV {
         }
     }
 
-    private static int readCodepoint(Reader reader) throws IOException {
-        int cA = reader.read();
-        if (cA == -1) {
-            return -1;
-        }
-        char aChar = (char) cA;
-        if (Character.isHighSurrogate(aChar)) {
-            int cB = reader.read();
-            if (cB == -1) {
-                return cA;
-            }
-            char bChar = (char) cB;
-            if (Character.isLowSurrogate(bChar)) {
-                return Character.toCodePoint(aChar, bChar);
-            }
-        }
-        return cA;
-    }
-
-    public CSV(Reader reader) throws IOException {
-        int bcp = (reader != null ? readCodepoint(reader) : -1);
-        if (bcp == -1) {
-            this.fields = new String[] {""};
-            this.numberOfFields = 1;
-            this.numberOfRecords = 1;
-            return;
-        }
-        
-        StringBuilder b = new StringBuilder();
-        List<String> currentRecord = new ArrayList<>();
-        List<String> fullData = new ArrayList<>();
-        int currentLine = 1;
-        int expectedSize = -1;
-
-        record:
-        for (;;) {
-            //read field
-            b.setLength(0);
-            boolean quoted = false;
-            field:
-            for (;;) {
-                int cp;
-                if (bcp != -1) {
-                    cp = bcp;
-                    bcp = -1;
-                } else {
-                    cp = readCodepoint(reader);
-                }
-                switch (cp) {
-                    case -1 -> {
-                        break field;
-                    }
-                    case '"' -> {
-                        if (quoted) {
-                            bcp = readCodepoint(reader);
-                            if (bcp == cp) {
-                                bcp = -1;
-                                break;
-                            }
-                            quoted = false;
-                            break field;
-                        }
-                        if (!b.isEmpty()) {
-                            throw new IllegalArgumentException("Double quotes must be placed only at the start and end of the field at line " + currentLine);
-                        }
-                        quoted = true;
-                        continue;
-                    }
-                    case '\n', '\r', ',' -> {
-                        if (quoted) {
-                            break;
-                        }
-                        if (cp == '\r') {
-                            bcp = readCodepoint(reader);
-                            if (bcp != '\n') {
-                                break;
-                            }
-                            cp = bcp;
-                        }
-                        bcp = cp;
-                        break field;
-                    }
-                }
-                if (cp == '\n') {
-                    currentLine++;
-                }
-                b.appendCodePoint(cp);
-            }
-            if (quoted) {
-                throw new IllegalArgumentException("Unclosed double quotes after end was reached.");
-            }
-            currentRecord.add(b.toString());
-            
-            //read next field
-            int cp;
-            if (bcp != -1) {
-                cp = bcp;
-                bcp = -1;
-            } else {
-                cp = readCodepoint(reader);
-            }
-
-            switch (cp) {
-                case ',' -> {
-                    continue;
-                }
-                case -1, '\n', '\r' -> {
-                    if (cp == '\r') {
-                        if (readCodepoint(reader) == '\n') {
-                            cp = '\n';
-                        } else {
-                            break;
-                        }
-                    }
-                    if (expectedSize != -1 && currentRecord.size() != expectedSize) {
-                        throw new IllegalArgumentException("Invalid number of fields at line " + currentLine + " expected " + expectedSize + " field(s), found " + currentRecord.size() + " field(s).");
-                    }
-                    expectedSize = currentRecord.size();
-                    fullData.addAll(currentRecord);
-                    currentRecord.clear();
-                    if (cp == -1) {
-                        break record;
-                    }
-                    currentLine++;
-                    bcp = readCodepoint(reader);
-                    if (bcp == -1) {
-                        break record;
-                    }
-                    continue;
-                }
-            }
-            throw new IllegalArgumentException("Illegal character '" + (Character.isWhitespace(cp) ? Character.getName(cp) : Character.toString(cp)) + "', expected ',' or 'LF' or 'CRLF' at line " + currentLine);
-        }
-
-        this.fields = fullData.toArray(String[]::new);
-        this.numberOfFields = expectedSize;
-        this.numberOfRecords = this.fields.length / expectedSize;
-    }
-    
     public int getNumberOfFields() {
         return numberOfFields;
     }
