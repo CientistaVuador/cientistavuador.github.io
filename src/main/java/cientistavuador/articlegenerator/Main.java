@@ -59,8 +59,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
-        Files.createDirectories(articlesFolder);
-
+        
+        Path indexFile = Path.of("index.html");
+        if (Files.exists(indexFile)) {
+            System.out.println("Deleted index.html");
+            Files.delete(indexFile);
+        }
+        
         List<Article> articles = new ArrayList<>();
 
         Path rawArticlesFolder = Path.of("rawarticles");
@@ -86,7 +91,14 @@ public class Main {
                 throw t;
             }
         }
-
+        
+        if (articles.isEmpty()) {
+            System.out.println("No articles to compile.");
+            return;
+        }
+        
+        Files.createDirectories(articlesFolder);
+        
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
                 ISOLanguage language = c.getLanguage(i);
@@ -102,12 +114,6 @@ public class Main {
             String fileName = URLEncoder.encode("articles_" + mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8) + ".html";
             Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)));
             System.out.println("Written main articles page of language " + mainArticlesPage.getLanguage(i));
-        }
-
-        Path indexFile = Path.of("index.html");
-        if (Files.exists(indexFile)) {
-            System.out.println("Deleted index.html");
-            Files.delete(indexFile);
         }
 
         ISOLanguage[] languages = new ISOLanguage[mainArticlesPage.getNumberOfLanguages()];
