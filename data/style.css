@@ -51,6 +51,11 @@ For more information, please refer to <https://unlicense.org>
     justify-content: center;
     margin: 0 auto;
 }
+.articles ol li h2, .articles ol li h3, .articles ol li p  {
+    padding: 0px;
+    margin: 8px;
+    margin-left: 4px;
+}
 .article h2 {
     line-height: 1.65em;
     margin-top: 30px;
@@ -87,6 +92,9 @@ For more information, please refer to <https://unlicense.org>
     padding-top: 20px;
     border-color: #AAAAAA;
     font-size: 90%;
+}
+.indices {
+    line-height: 1.45em;
 }
 .indices ol {
     list-style-type: none;

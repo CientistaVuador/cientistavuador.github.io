@@ -397,7 +397,7 @@ public class Article {
         }
         
         String sectionLink = URLEncoder.encode(FontFormatting.escapeAndFormat(node.fullName, true), StandardCharsets.UTF_8);
-        String sectionIndex = FontFormatting.escapeAndFormat(node.fullName);
+        String sectionIndex = FontFormatting.escapeAndFormat(node.fullName, true);
         b.append("<li><a href=\"#").append(sectionLink).append("\">").append(sectionIndex).append("</a></li>\n");
         if (!node.children.isEmpty()) {
             b.append("<li>\n");

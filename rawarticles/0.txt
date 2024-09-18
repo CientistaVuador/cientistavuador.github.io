@@ -1,0 +1,97 @@
+[[id]] 0
+[[languages]] pt-br, en-us
+[[date]] 2024/09/18 13:10
+
+[[title<pt-br>]] Sobre
+[[title<en-us>]] About
+
+[[description<en-us>]] About me, contact and projects.
+[[description<pt-br>]] Sobre mim, contato e projetos.
+
+[[section<en-us>]] About Me
+[[section<pt-br>]] Sobre Mim
+
+[text<en-us>]
+Hi, my name is Mateus Geraldini, brazilian, 21 years old, born in 2003 and
+I've been learning and programming in java since I was 12, I also
+know the basics of other languages such as Pascal, C, Javascript and Lua.
+[;<;>]
+
+[text<en-us>]
+The areas of programming that I mostly like are computer graphics and
+game development but I also know about network protocols, 
+cryptography and web development.
+[;<;>]
+
+[text<pt-br>]
+Oi, meu nome é Mateus Geraldini, brasileiro, 21 anos, nascido em 2003 e
+eu estive aprendendo e programando em java desde que tinha 12 anos, eu também
+sei os básicos de outras linguagens como Pascal, C, Javascript e Lua.
+[;<;>]
+
+[text<pt-br>]
+As áreas da programação de que eu mais gosto são computação gráfica e
+desenvolvimento de jogos mas eu também sei sobre protocolos de rede,
+criptografia e desenvolvimento web.
+[;<;>]
+
+[[section<en-us>]] Contact
+[[section<pt-br>]] Contato
+[warning<en-us>]
+If you are going to contact me through discord or steam, don't just say "Hi", instead say that
+you have come from this page otherwise I might think that you are a scammer and block you.
+[;<;>]
+
+[[subsection]] Github
+[[text<en-us>]] My [[[https://github.com/CientistaVuador:::Github]]] is CientistaVuador.
+[[text<pt-br>]] Meu [[[https://github.com/CientistaVuador:::Github]]] é CientistaVuador.
+
+[[subsection]] Discord
+[[text<en-us>]] My Discord is "cien." (without double quotes and with the dot).
+[[text<pt-br>]] Meu Discord é "cien." (sem aspas e com o ponto).
+
+[[subsection]] Reddit
+[[text<en-us>]] My [[[https://www.reddit.com/user/Cienn017/:::Reddit]]] is Cienn017.
+[[text<pt-br>]] Meu [[[https://www.reddit.com/user/Cienn017/:::Reddit]]] é Cienn017.
+
+[[subsection]] Steam
+[[text<en-us>]] My [[[https://steamcommunity.com/id/cientistavuador/:::Steam]]] is CientistaVuador.
+[[text<pt-br>]] Minha [[[https://steamcommunity.com/id/cientistavuador/:::Steam]]] é CientistaVuador.
+
+[[subsection]] Email
+[warning<en-us>] I usually don't check my email very often, don't expect a fast response. [;<;>]
+[warning<pt-br>] Eu normalmente não checo meu email, não espere uma resposta rápida. [;<;>]
+[[text]] mateusgeraldini8@gmail.com
+
+[[section<en-us>]] Projects
+[[section<pt-br>]] Projetos
+[[text<en-us>]] Those are some projects that I consider relevant.
+[[text<pt-br>]] Esses são alguns projetos que eu considero relevantes.
+
+[[subsection]] [[[https://github.com/CientistaVuador/NewRenderingPipeline:::NewRenderingPipeline]]]
+[[text<en-us>]] In this project I created a rendering pipeline with parallax corrected cubemaps, lightmaps, skeletal animations and physics.
+[[text<pt-br>]] Nesse projeto eu criei uma rendering pipeline com cubemaps corrigidos por parallax, lightmaps, animações esqueléticas e física.
+
+[[subsection]] [[[https://github.com/CientistaVuador/PhysicsExperiment:::PhysicsExperiment]]]
+[[text<en-us>]] I was testing the [[[https://pybullet.org/wordpress/:::Bullet Physics Engine]]] in this project, it worked well.
+[[text<pt-br>]] Eu estava testando a [[[https://pybullet.org/wordpress/:::Bullet Physics Engine]]] nesse projeto, funcionou bem.
+
+[[subsection]] [[[https://github.com/CientistaVuador/BakedRaytracingLighting:::BakedRaytracingLighting]]]
+[[text<en-us>]] In this project, I made my own lightmapper and lightmap uv generator.
+[[text<pt-br>]] Nesse projeto, eu fiz meu próprio lightmapper e gerador de uvs de lightmap.
+
+[[subsection]] [[[https://github.com/CientistaVuador/AsteroidShooter:::AsteroidShooter]]]
+[[text<en-us>]] This is a small, functional game about shooting asteroids.
+[[text<pt-br>]] Esse é um pequeno e funcional jogo sobre atirar em asteróides.
+
+[[subsection]] [[[https://github.com/CientistaVuador/SoftwareRenderer:::SoftwareRenderer]]]
+[[text<en-us>]] In this project, I made my own 3D software renderer using java swing.
+[[text<pt-br>]] Nesse projeto, eu fiz meu próprio renderizador 3D de software usando java swing.
+
+[[subsection]] [[[https://github.com/CientistaVuador/LeiteCraft:::LeiteCraft]]]
+[[text<en-us>]] This is a simple voxel game inspired by minecraft, it uses OpenGL 2.1 instead of 3.3.
+[[text<pt-br>]] Isso é um jogo simples de voxels inspirado por minecraft, ele usa OpenGL 2.1 ao invés de 3.3.
+
+[[subsection]] [[[https://github.com/CientistaVuador/CienCraftAgoraEhReal:::CienCraftAgoraEhReal]]]
+[[text<en-us>]] This was one of my first 3D projects, it is also a voxel game, almost all of my later 3D projects are modifications of it.
+[[text<pt-br>]] Esse foi um dos meus primeiros projetos 3D, também é um jogo de voxels, quase todos os meus projetos 3D depois desse são modificações dele.
