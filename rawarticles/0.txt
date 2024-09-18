@@ -43,20 +43,20 @@ you have come from this page otherwise I might think that you are a scammer and 
 [;<;>]
 
 [[subsection]] Github
-[[text<en-us>]] My [[[https://github.com/CientistaVuador:::Github]]] is CientistaVuador.
-[[text<pt-br>]] Meu [[[https://github.com/CientistaVuador:::Github]]] é CientistaVuador.
+[[text<en-us>]] My Github is [[[https://github.com/CientistaVuador:::CientistaVuador]]].
+[[text<pt-br>]] Meu Github é [[[https://github.com/CientistaVuador:::CientistaVuador]]].
 
 [[subsection]] Discord
 [[text<en-us>]] My Discord is "cien." (without double quotes and with the dot).
 [[text<pt-br>]] Meu Discord é "cien." (sem aspas e com o ponto).
 
 [[subsection]] Reddit
-[[text<en-us>]] My [[[https://www.reddit.com/user/Cienn017/:::Reddit]]] is Cienn017.
-[[text<pt-br>]] Meu [[[https://www.reddit.com/user/Cienn017/:::Reddit]]] é Cienn017.
+[[text<en-us>]] My Reddit is [[[https://www.reddit.com/user/Cienn017/:::Cienn017]]].
+[[text<pt-br>]] Meu Reddit é [[[https://www.reddit.com/user/Cienn017/:::Cienn017]]].
 
 [[subsection]] Steam
-[[text<en-us>]] My [[[https://steamcommunity.com/id/cientistavuador/:::Steam]]] is CientistaVuador.
-[[text<pt-br>]] Minha [[[https://steamcommunity.com/id/cientistavuador/:::Steam]]] é CientistaVuador.
+[[text<en-us>]] My Steam is [[[https://steamcommunity.com/id/cientistavuador/:::CientistaVuador]]].
+[[text<pt-br>]] Minha Steam é [[[https://steamcommunity.com/id/cientistavuador/:::CientistaVuador]]].
 
 [[subsection]] Email
 [warning<en-us>] I usually don't check my email very often, don't expect a fast response. [;<;>]
