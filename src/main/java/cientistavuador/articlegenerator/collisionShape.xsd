@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<!--
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <https://unlicense.org>
+-->
+
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <!-- Simple types for attributes -->
+    <xs:simpleType name="positiveDecimal">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="axisIndex">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Complex types for elements -->
+    <xs:complexType name="vec3">
+        <xs:attribute name="x" type="xs:decimal" default="1"/>
+        <xs:attribute name="y" type="xs:decimal" default="1"/>
+        <xs:attribute name="z" type="xs:decimal" default="1"/>
+    </xs:complexType>
+    
+    <xs:complexType name="boxShape">
+        <xs:attribute name="halfWidth" type="positiveDecimal" default="1"/>
+        <xs:attribute name="halfHeight" type="positiveDecimal" default="1"/>
+        <xs:attribute name="halfDepth" type="positiveDecimal" default="1"/>
+    </xs:complexType>
+    
+    <xs:complexType name="conicalShape">
+        <xs:attribute name="radius" type="positiveDecimal" default="1"/>
+        <xs:attribute name="height" type="positiveDecimal" default="1.5"/>
+        <xs:attribute name="axis" type="axisIndex" default="1"/>
+    </xs:complexType>
+    
+    <xs:complexType name="sphereShape">
+        <xs:attribute name="radius" type="positiveDecimal" default="1"/>
+    </xs:complexType>
+    
+    <xs:complexType name="hullShape">
+        <xs:sequence>
+            <xs:element name="vertex" type="vec3" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="eulerAngles">
+        <xs:attribute name="pitch" type="xs:decimal" default="0"/>
+        <xs:attribute name="yaw" type="xs:decimal" default="0"/>
+        <xs:attribute name="roll" type="xs:decimal" default="0"/>
+    </xs:complexType>
+    
+    <xs:complexType name="quaternionRotation">
+        <xs:attribute name="x" type="xs:decimal" default="0"/>
+        <xs:attribute name="y" type="xs:decimal" default="0"/>
+        <xs:attribute name="z" type="xs:decimal" default="0"/>
+        <xs:attribute name="w" type="xs:decimal" default="1"/>
+    </xs:complexType>
+    
+    <!-- Collision Shapes -->
+    <xs:group name="collisionShapes">
+        <xs:choice>
+            <xs:element name="box" type="boxShape"/>
+            <xs:element name="capsule" type="conicalShape"/>
+            <xs:element name="cone" type="conicalShape"/>
+            <xs:element name="cylinder" type="conicalShape"/>
+            <xs:element name="sphere" type="sphereShape"/>
+            <xs:element name="hull" type="hullShape"/>
+            <xs:element name="empty"/>
+        </xs:choice>
+    </xs:group>
+    
+    <!-- Root -->
+    <xs:element name="collisionShape">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="meta" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="property" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" default=""/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="collisionType">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="compound" minOccurs="1" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="child" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element name="transform" minOccurs="0" maxOccurs="1">
+                                                        <xs:complexType>
+                                                            <xs:all>
+                                                                <xs:element name="position" type="vec3" minOccurs="0" maxOccurs="1"/>
+                                                                <xs:element name="rotation" minOccurs="0" maxOccurs="1">
+                                                                    <xs:complexType>
+                                                                        <xs:choice>
+                                                                            <xs:element name="euler" type="eulerAngles"/>
+                                                                            <xs:element name="quaternion" type="quaternionRotation"/>
+                                                                        </xs:choice>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                                <xs:element name="scale" type="vec3" minOccurs="0" maxOccurs="1"/>
+                                                            </xs:all>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="shape" minOccurs="1" maxOccurs="1">
+                                                        <xs:complexType>
+                                                            <xs:choice>
+                                                                <xs:group ref="collisionShapes"/>
+                                                                <xs:sequence>
+                                                                    <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
+                                                                        <xs:complexType>
+                                                                            <xs:sequence>
+                                                                                <xs:any minOccurs="1" maxOccurs="1" processContents="lax"/>
+                                                                            </xs:sequence>
+                                                                            <xs:attribute name="name" type="xs:string" use="required"/>
+                                                                        </xs:complexType>
+                                                                    </xs:element>
+                                                                    <xs:element name="fallback" minOccurs="1" maxOccurs="1">
+                                                                        <xs:complexType>
+                                                                            <xs:choice>
+                                                                                <xs:group ref="collisionShapes"/>
+                                                                            </xs:choice>
+                                                                        </xs:complexType>
+                                                                    </xs:element>
+                                                                </xs:sequence>
+                                                            </xs:choice>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:group ref="collisionShapes"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
