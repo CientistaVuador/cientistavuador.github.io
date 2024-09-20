@@ -83,8 +83,8 @@ For more information, please refer to <https://unlicense.org>
         <xs:attribute name="w" type="xs:decimal" default="1"/>
     </xs:complexType>
     
-    <!-- Collision Shapes -->
-    <xs:group name="collisionShapes">
+    <!-- Primitive Collision Shapes -->
+    <xs:group name="primitiveShapes">
         <xs:choice>
             <xs:element name="box" type="boxShape"/>
             <xs:element name="capsule" type="conicalShape"/>
@@ -93,6 +93,33 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="sphere" type="sphereShape"/>
             <xs:element name="hull" type="hullShape"/>
             <xs:element name="empty"/>
+        </xs:choice>
+    </xs:group>
+    
+    <!-- Extension Collision Shape -->
+    <xs:group name="extendedShape">
+        <xs:choice>
+            <xs:element name="extensionShape">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:any minOccurs="1" maxOccurs="1" processContents="lax"/>
+                                </xs:sequence>
+                                <xs:attribute name="name" type="xs:string" use="required"/>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="fallback" minOccurs="1" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:choice>
+                                    <xs:group ref="primitiveShapes"/>
+                                </xs:choice>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:choice>
     </xs:group>
     
@@ -140,24 +167,8 @@ For more information, please refer to <https://unlicense.org>
                                                     <xs:element name="shape" minOccurs="1" maxOccurs="1">
                                                         <xs:complexType>
                                                             <xs:choice>
-                                                                <xs:group ref="collisionShapes"/>
-                                                                <xs:sequence>
-                                                                    <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
-                                                                        <xs:complexType>
-                                                                            <xs:sequence>
-                                                                                <xs:any minOccurs="1" maxOccurs="1" processContents="lax"/>
-                                                                            </xs:sequence>
-                                                                            <xs:attribute name="name" type="xs:string" use="required"/>
-                                                                        </xs:complexType>
-                                                                    </xs:element>
-                                                                    <xs:element name="fallback" minOccurs="1" maxOccurs="1">
-                                                                        <xs:complexType>
-                                                                            <xs:choice>
-                                                                                <xs:group ref="collisionShapes"/>
-                                                                            </xs:choice>
-                                                                        </xs:complexType>
-                                                                    </xs:element>
-                                                                </xs:sequence>
+                                                                <xs:group ref="primitiveShapes"/>
+                                                                <xs:group ref="extendedShape"/>
                                                             </xs:choice>
                                                         </xs:complexType>
                                                     </xs:element>
@@ -167,7 +178,8 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:group ref="collisionShapes"/>
+                            <xs:group ref="primitiveShapes"/>
+                            <xs:group ref="extendedShape"/>
                         </xs:choice>
                     </xs:complexType>
                 </xs:element>
