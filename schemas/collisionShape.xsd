@@ -52,21 +52,21 @@ For more information, please refer to <https://unlicense.org>
         <xs:attribute name="x" type="xs:decimal" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The x coordinate
+                    The x coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="y" type="xs:decimal" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The y coordinate
+                    The y coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="z" type="xs:decimal" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The z coordinate
+                    The z coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

@@ -1,0 +1,221 @@
+<?xml version="1.0"?>
+<!--
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <https://unlicense.org>
+-->
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="https://cientistavuador.github.io/schemas/extraShapes.xsd"
+           targetNamespace="https://cientistavuador.github.io/schemas/extraShapes.xsd"
+           elementFormDefault="qualified"
+>
+    <!-- A positive decimal -->
+    <xs:simpleType name="positiveDecimalType">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A xyz vector -->
+    <xs:complexType name="vector3Type">
+        <xs:attribute name="x" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The x coordinate.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="y" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The y coordinate.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="z" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The z coordinate.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A File -->
+    <xs:complexType name="fileType">
+        <xs:attribute name="file" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The file (application defined).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The type of the file (application defined).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="conicalFrustum">
+        <xs:annotation>
+            <xs:documentation>
+                A conical frustum.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="a" type="positiveDecimalType" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The radius of the A base, must be positive.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="b" type="positiveDecimalType" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The radius of the B base, must be positive.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="height" type="positiveDecimalType" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The height, must be positive.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="multiSphere">
+        <xs:annotation>
+            <xs:documentation>
+                A multi sphere.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sphere" minOccurs="1" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="vector3Type">
+                                <xs:attribute name="radius" type="positiveDecimalType" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            The radius of the sphere, must be positive.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="plane">
+        <xs:annotation>
+            <xs:documentation>
+                A plane.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="normal" type="vector3Type" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The normal of the plane.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="position" type="vector3Type" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The position of the plane.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="sphericalSegment">
+        <xs:annotation>
+            <xs:documentation>
+                A spherical segment.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="radius" type="positiveDecimalType" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The radius of the spherical segment, must be positive.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="yMax" type="xs:decimal" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The max Y of the spherical segment. 
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="yMin" type="xs:decimal" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The min Y of the spherical segment.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="gimpact" type="fileType">
+        <xs:annotation>
+            <xs:documentation>
+                A gimpact shape.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="heightfield" type="fileType">
+        <xs:annotation>
+            <xs:documentation>
+                A heightfield shape.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="mesh" type="fileType">
+        <xs:annotation>
+            <xs:documentation>
+                A mesh shape.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>
