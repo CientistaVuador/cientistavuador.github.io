@@ -25,7 +25,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <https://unlicense.org>
 -->
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+<xs:schema 
+    version="1.0" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://cientistavuador.github.io/schemas/collisionShape.xsd"
+    xmlns="https://cientistavuador.github.io/schemas/collisionShape.xsd"
+    elementFormDefault="qualified"
+>
     <!-- A positive decimal -->
     <xs:simpleType name="positiveDecimalType">
         <xs:restriction base="xs:decimal">
@@ -319,7 +325,7 @@ For more information, please refer to <https://unlicense.org>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded" namespace="##other">
+                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:documentation>
                                     The extension element.
@@ -327,7 +333,7 @@ For more information, please refer to <https://unlicense.org>
                             </xs:annotation>
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:any minOccurs="1" maxOccurs="1" processContents="lax"/>
+                                    <xs:any minOccurs="1" maxOccurs="1" processContents="lax" namespace="##other"/>
                                 </xs:sequence>
                             </xs:complexType>
                         </xs:element>
