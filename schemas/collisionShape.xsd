@@ -1,0 +1,444 @@
+<?xml version="1.0"?>
+<!--
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <https://unlicense.org>
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <!-- A positive decimal -->
+    <xs:simpleType name="positiveDecimalType">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A integer representing a axis -->
+    <xs:simpleType name="axisIndexType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- A xyz vector -->
+    <xs:complexType name="vector3Type">
+        <xs:attribute name="x" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The x coordinate
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="y" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The y coordinate
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="z" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The z coordinate
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- Euler angles in degrees -->
+    <xs:complexType name="eulerAnglesType">
+        <xs:attribute name="pitch" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The pitch in euler angles, in degrees.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="yaw" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The yaw in euler angles, in degrees.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="roll" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The roll in euler angles, in degrees.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A quaternion -->
+    <xs:complexType name="quaternionType">
+        <xs:attribute name="x" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The x of the quaternion.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="y" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The y of the quaternion.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="z" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The z of the quaternion.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="w" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The w of the quaternion.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A transform (translation and rotation) -->
+    <xs:complexType name="transformType">
+        <xs:all>
+            <xs:element name="translation" type="vector3Type" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The translation of this transform.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="rotation" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The rotation of this transform, can have a euler rotation or a quaternion rotation elements.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="euler" type="eulerAnglesType">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The rotation of this transform in euler (pitch, yaw, roll) defined in degrees.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="quaternion" type="quaternionType">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The rotation of this transform in a quaternion.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+    
+    <!-- A property -->
+    <xs:complexType name="propertyType">
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="value" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The value of the property.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A box shape -->
+    <xs:complexType name="boxType">
+        <xs:attribute name="width" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The width of the box, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="height" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The height of the box, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="depth" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The depth of the box, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A conical shape (cylinder, cone, capsule) -->
+    <xs:complexType name="conicalType">
+        <xs:attribute name="radius" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The radius of the shape, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="height" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The height of the shape, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="axis" type="axisIndexType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The axis of the shape, must be 0 for X, 1 for Y or 2 for Z.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A sphere shape -->
+    <xs:complexType name="sphereType">
+        <xs:attribute name="radius" type="positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The radius of the sphere, not negative.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A convex hull shape -->
+    <xs:complexType name="hullType">
+        <xs:sequence>
+            <xs:element name="vertex" type="vector3Type" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        A vertex of the hull.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Primitive collision shapes -->
+    <xs:group name="primitiveShapesGroup">
+        <xs:choice>
+            <xs:element name="box" type="boxType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive box collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="capsule" type="conicalType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive capsule collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cone" type="conicalType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive cone collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cylinder" type="conicalType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive cylinder collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="sphere" type="sphereType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive sphere collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="hull" type="hullType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive hull collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="empty">
+                <xs:annotation>
+                    <xs:documentation>
+                        A primitive empty collision shape.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    
+    <!-- A extension collision shape -->
+    <xs:group name="extensionShapeGroup">
+        <xs:choice>
+            <xs:element name="extensionShape">
+                <xs:annotation>
+                    <xs:documentation>
+                        A collision shape from a extension, must have at least one extension element and one fallback element with a primitive shape.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The extension element.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:any minOccurs="1" maxOccurs="1" processContents="lax"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="fallback" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The fallback element, must contain a primitive shape.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:choice>
+                                    <xs:group ref="primitiveShapesGroup"/>
+                                </xs:choice>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    
+    <!-- A compound collision shape -->
+    <xs:group name="compoundShapeGroup">
+        <xs:choice>
+            <xs:element name="compound" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        A compound shape, can contain multiple children.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="child" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    A compound child element, must have one shape element and a optional transform element.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:all>
+                                    <xs:element name="transform" type="transformType" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                The transform of this child element, can contain a translation and/or a rotation element.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="shape" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                The shape of this child element, must not be a compound.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:choice>
+                                                <xs:group ref="primitiveShapesGroup"/>
+                                                <xs:group ref="extensionShapeGroup"/>
+                                            </xs:choice>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:all>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    
+    <!-- Root -->
+    <xs:element name="collisionShape">
+        <xs:annotation>
+            <xs:documentation>
+                The root element of the collision shape, must have a collisionType element and a optional meta element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="meta" minOccurs="0" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The meta element for arbitrary user defined properties, can contain multiple property elements.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The property element, must have a name and a value attribute.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="shape">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The shape of this collision shape, must be one of any of the primitive types, a compound or a extension shape.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:group ref="compoundShapeGroup"/>
+                            <xs:group ref="primitiveShapesGroup"/>
+                            <xs:group ref="extensionShapeGroup"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
