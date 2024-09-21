@@ -319,7 +319,7 @@ For more information, please refer to <https://unlicense.org>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded" namespace="##other">
                             <xs:annotation>
                                 <xs:documentation>
                                     The extension element.
