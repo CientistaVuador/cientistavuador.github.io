@@ -25,12 +25,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <https://unlicense.org>
 -->
-
-<xs:schema version="1.0"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="https://cientistavuador.github.io/schemas/extraShapes.xsd"
-           targetNamespace="https://cientistavuador.github.io/schemas/extraShapes.xsd"
-           elementFormDefault="qualified"
+<xs:schema 
+    version="1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://cientistavuador.github.io/schemas/extraShapes.xsd"
+    elementFormDefault="qualified"
 >
     <!-- A positive decimal -->
     <xs:simpleType name="positiveDecimalType">
