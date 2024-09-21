@@ -27,6 +27,7 @@ For more information, please refer to <https://unlicense.org>
 -->
 <xs:schema 
     version="1.0"
+    xmlns="https://cientistavuador.github.io/schemas/extraShapes.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="https://cientistavuador.github.io/schemas/extraShapes.xsd"
     elementFormDefault="qualified"
