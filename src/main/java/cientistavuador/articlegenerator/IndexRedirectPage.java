@@ -29,7 +29,6 @@ package cientistavuador.articlegenerator;
 import static cientistavuador.articlegenerator.Article.INDENT;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -126,7 +125,6 @@ public class IndexRedirectPage {
         }
         b.append("\n");
         b.append("\n");
-        b.append(new Date().toString()).append("\n");
         b.append("-->\n");
         b.append("<body>\n");
         b.append(INDENT).append("<ul>\n");

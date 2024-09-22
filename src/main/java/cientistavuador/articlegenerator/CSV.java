@@ -36,12 +36,12 @@ import java.util.Objects;
  * @author Cien
  */
 public class CSV {
-
+    
     public static CSV read(String text) {
         if (text == null || text.isEmpty()) {
             return new CSV(null, 1, 1);
         }
-
+        
         List<String> currentRecord = new ArrayList<>();
         List<String> allFields = new ArrayList<>();
         StringBuilder b = new StringBuilder();

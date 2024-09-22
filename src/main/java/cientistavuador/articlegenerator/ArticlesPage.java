@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -291,7 +290,6 @@ public class ArticlesPage {
             b.append(INDENT).append(id).append("\n");
             b.append(INDENT).append(dateText).append("\n\n");
         }
-        b.append(new Date().toString()).append("\n");
         b.append("-->\n");
         b.append("<body class=\"body\">\n");
         b.append(writeHeader(language).indent(4));

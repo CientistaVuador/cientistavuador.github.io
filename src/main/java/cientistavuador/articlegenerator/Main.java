@@ -55,8 +55,8 @@ public class Main {
         Files.delete(path);
         System.out.println("Deleted " + path.toString());
     }
-    
-    public static void main(String[] args) throws IOException {
+
+    public static void main(String[] args) throws Exception {
         Path articlesFolder = Path.of("articles");
         delete(articlesFolder);
         
@@ -67,7 +67,7 @@ public class Main {
         }
         
         List<Article> articles = new ArrayList<>();
-
+        
         Path rawArticlesFolder = Path.of("rawarticles");
         Set<Integer> ids = new HashSet<>();
         for (Path articleFile : Files.list(rawArticlesFolder).toList()) {
@@ -91,14 +91,14 @@ public class Main {
                 throw t;
             }
         }
-        
+
         if (articles.isEmpty()) {
             System.out.println("No articles to compile.");
             return;
         }
-        
+
         Files.createDirectories(articlesFolder);
-        
+
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
                 ISOLanguage language = c.getLanguage(i);

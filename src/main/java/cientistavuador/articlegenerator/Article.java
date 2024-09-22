@@ -32,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -303,7 +302,7 @@ public class Article {
                     section.children.add(subsection);
                     continue;
                 }
-                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html", "csv", "video" -> {
+                case "text", "fine", "warning", "severe", "code", "image", "olist", "ulist", "html", "csv", "video", "csv-2d" -> {
                     Node toAdd = root;
                     if (section != null) {
                         toAdd = section;
@@ -478,7 +477,7 @@ public class Article {
             case "html" -> {
                 b.append(block.getCodeFormatted());
             }
-            case "csv" -> {
+            case "csv", "csv-2d" -> {
                 CSV csv = block.getCSVFormatted().copy();
                 for (int record = 0; record < csv.getNumberOfRecords(); record++) {
                     for (int field = 0; field < csv.getNumberOfFields(); field++) {
@@ -497,18 +496,21 @@ public class Article {
                         csv.set(field, record, value.concat(" ".repeat(Math.max(maxFieldSize[field] - value.length(), 0))));
                     }
                 }
-
+                
+                boolean is2D = block.getName().equals("csv-2d");
+                
                 b.append("<table class=\"table\">\n");
                 for (int record = 0; record < csv.getNumberOfRecords(); record++) {
                     b.append(INDENT).append("<tr>");
                     for (int field = 0; field < csv.getNumberOfFields(); field++) {
+                        boolean isHeader = (record == 0) || (is2D && field == 0);
                         b
                                 .append("<")
-                                .append((record == 0 ? "th" : "td"))
+                                .append((isHeader ? "th" : "td"))
                                 .append(">")
                                 .append(csv.get(field, record))
                                 .append("</")
-                                .append((record == 0 ? "th" : "td"))
+                                .append((isHeader ? "th" : "td"))
                                 .append(">");
                     }
                     b.append("</tr>\n");
@@ -638,7 +640,6 @@ public class Article {
         b.append(INDENT).append(getId()).append("\n");
         b.append(INDENT).append(dateText).append("\n");
         b.append("\n");
-        b.append(new Date().toString()).append("\n");
         b.append("-->\n");
         b.append("<body class=\"body\">\n");
         b.append(writeHeader(root).indent(4));
