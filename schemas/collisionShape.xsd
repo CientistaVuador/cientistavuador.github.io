@@ -187,24 +187,24 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A box shape -->
     <xs:complexType name="boxType">
-        <xs:attribute name="width" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfWidth" type="positiveDecimalType" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The width of the box, not negative.
+                    The half width (half extent in the x axis) of the box, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="height" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfHeight" type="positiveDecimalType" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The height of the box, not negative.
+                    The half height (half extent in the y axis) of the box, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="depth" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfDepth" type="positiveDecimalType" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The depth of the box, not negative.
+                    The half depth (half extent in the z axis) of the box, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -249,7 +249,7 @@ For more information, please refer to <https://unlicense.org>
     <!-- A convex hull shape -->
     <xs:complexType name="hullType">
         <xs:sequence>
-            <xs:element name="vertex" type="vector3Type" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="vertex" type="vector3Type" minOccurs="1" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
                         A vertex of the hull.
@@ -272,7 +272,7 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="capsule" type="conicalType">
                 <xs:annotation>
                     <xs:documentation>
-                        A primitive capsule collision shape.
+                        A primitive capsule collision shape, the radius represents the spherical part of the capsule and the height represents the cylindrical part of the capsule so the total height of the capsule is (radius * 2) + height.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -300,14 +300,14 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="hull" type="hullType">
                 <xs:annotation>
                     <xs:documentation>
-                        A primitive hull collision shape.
+                        A primitive hull collision shape, must have at least one vertex.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="empty">
                 <xs:annotation>
                     <xs:documentation>
-                        A primitive empty collision shape.
+                        A primitive empty collision shape, does nothing.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -320,7 +320,7 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="extensionShape">
                 <xs:annotation>
                     <xs:documentation>
-                        A collision shape from a extension, must have at least one extension element and one fallback element with a primitive shape.
+                        A collision shape from a extension, must have at least one extension element and one fallback element with a primitive shape or a error.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -340,12 +340,19 @@ For more information, please refer to <https://unlicense.org>
                         <xs:element name="fallback" minOccurs="1" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The fallback element, must contain a primitive shape.
+                                    The fallback element, must contain a primitive shape or a error.
                                 </xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
                                 <xs:choice>
                                     <xs:group ref="primitiveShapesGroup"/>
+                                    <xs:element name="error">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                Throws a error if no extension could be found and stops the loading process.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
                                 </xs:choice>
                             </xs:complexType>
                         </xs:element>
@@ -361,12 +368,12 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="compound" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        A compound shape, can contain multiple children.
+                        A compound shape, must contain one or more children.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="child" minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:documentation>
                                     A compound child element, must have one shape element and a optional transform element.
@@ -415,7 +422,7 @@ For more information, please refer to <https://unlicense.org>
                 <xs:element name="meta" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            The meta element for arbitrary user defined properties, can contain multiple property elements.
+                            The meta element for arbitrary user defined properties, can contain zero or more property elements.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>

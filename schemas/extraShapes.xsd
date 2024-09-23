@@ -39,6 +39,13 @@ For more information, please refer to <https://unlicense.org>
         </xs:restriction>
     </xs:simpleType>
     
+    <!-- A positive non zero decimal -->
+    <xs:simpleType name="positiveNonZeroDecimalType">
+        <xs:restriction base="xs:decimal">
+            <xs:minExclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
     <!-- A xyz vector -->
     <xs:complexType name="vector3Type">
         <xs:attribute name="x" type="xs:decimal" use="required">
@@ -69,14 +76,14 @@ For more information, please refer to <https://unlicense.org>
         <xs:attribute name="file" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The file (application defined).
+                    The file, application specific attribute.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="type" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The type of the file (application defined).
+                    The type of the file, application specific attribute.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
@@ -89,24 +96,24 @@ For more information, please refer to <https://unlicense.org>
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="a" type="positiveDecimalType" use="required">
+            <xs:attribute name="a" type="positiveNonZeroDecimalType" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The radius of the A base, must be positive.
+                        The radius of the A base, must be positive and not zero.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="b" type="positiveDecimalType" use="required">
+            <xs:attribute name="b" type="positiveNonZeroDecimalType" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The radius of the B base, must be positive.
+                        The radius of the B base, must be positive and not zero.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="height" type="positiveDecimalType" use="required">
+            <xs:attribute name="height" type="positiveNonZeroDecimalType" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The height, must be positive.
+                        The height, must be positive and not zero.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -173,24 +180,28 @@ For more information, please refer to <https://unlicense.org>
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="radius" type="positiveDecimalType" use="required">
+            <xs:attribute name="radius" type="positiveNonZeroDecimalType" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The radius of the spherical segment, must be positive.
+                        The radius of the spherical segment, must be positive and not zero.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="yMax" type="xs:decimal" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The max Y of the spherical segment. 
+                        <![CDATA[
+                        The max Y of the spherical segment, must be >= to yMin and <= to radius.
+                        ]]>
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute name="yMin" type="xs:decimal" use="required">
                 <xs:annotation>
                     <xs:documentation>
-                        The min Y of the spherical segment.
+                        <![CDATA[
+                        The min Y of the spherical segment, must be >= to -radius and <= to yMax.
+                        ]]>
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
