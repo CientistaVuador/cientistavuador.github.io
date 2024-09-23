@@ -169,14 +169,14 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A property -->
     <xs:complexType name="propertyType">
-        <xs:attribute name="name" type="xs:string" use="required">
+        <xs:attribute name="name" type="xs:ID" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The name of the property.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="value" type="xs:string" use="required">
+        <xs:attribute name="value" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
                     The value of the property.
