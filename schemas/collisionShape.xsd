@@ -346,13 +346,6 @@ For more information, please refer to <https://unlicense.org>
                             <xs:complexType>
                                 <xs:choice>
                                     <xs:group ref="primitiveShapesGroup"/>
-                                    <xs:element name="error">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                Throws a error if no extension could be found and stops the loading process.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:element>
                                 </xs:choice>
                             </xs:complexType>
                         </xs:element>
@@ -430,7 +423,7 @@ For more information, please refer to <https://unlicense.org>
                             <xs:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The property element, must have a name and a value attribute.
+                                        A property with a name and value attribute, must have a name.
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:element>
