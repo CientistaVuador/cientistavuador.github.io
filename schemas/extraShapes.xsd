@@ -87,6 +87,13 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="embedded" type="xs:boolean" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    True if the file name represents a property with base64 data, the default is false.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:complexType>
     
     <xs:element name="conicalFrustum">

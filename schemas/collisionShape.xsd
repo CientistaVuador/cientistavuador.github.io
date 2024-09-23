@@ -176,10 +176,10 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="value" type="xs:string">
+        <xs:attribute name="value" type="xs:string" default="">
             <xs:annotation>
                 <xs:documentation>
-                    The value of the property.
+                    The value of the property, the default is a empty string.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
