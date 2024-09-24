@@ -28,16 +28,15 @@ For more information, please refer to <https://unlicense.org>
 <xs:schema 
     version="1.0"
     xmlns="https://cientistavuador.github.io/schemas/extraShapes.xsd"
+    xmlns:collisionShape="https://cientistavuador.github.io/schemas/collisionShape.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     targetNamespace="https://cientistavuador.github.io/schemas/extraShapes.xsd"
     elementFormDefault="qualified"
 >
-    <!-- A positive decimal -->
-    <xs:simpleType name="positiveDecimalType">
-        <xs:restriction base="xs:decimal">
-            <xs:minInclusive value="0"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:import 
+        namespace="https://cientistavuador.github.io/schemas/collisionShape.xsd" 
+        schemaLocation="https://cientistavuador.github.io/schemas/collisionShape.xsd"
+    />
     
     <!-- A positive non zero decimal -->
     <xs:simpleType name="positiveNonZeroDecimalType">
@@ -46,173 +45,161 @@ For more information, please refer to <https://unlicense.org>
         </xs:restriction>
     </xs:simpleType>
     
-    <!-- A xyz vector -->
-    <xs:complexType name="vector3Type">
-        <xs:attribute name="x" type="xs:decimal" use="required">
-            <xs:annotation>
-                <xs:documentation>
-                    The x coordinate.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="y" type="xs:decimal" use="required">
-            <xs:annotation>
-                <xs:documentation>
-                    The y coordinate.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="z" type="xs:decimal" use="required">
-            <xs:annotation>
-                <xs:documentation>
-                    The z coordinate.
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-    </xs:complexType>
-    
     <!-- A File -->
     <xs:complexType name="fileType">
         <xs:attribute name="file" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The file, application specific attribute.
+                    The file.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="type" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The type of the file, application specific attribute.
+                    The type of the file.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="embedded" type="xs:boolean" default="false">
             <xs:annotation>
                 <xs:documentation>
-                    True if the file name represents a property with base64 data, the default is false.
+                    true if the file represents a meta element from a child element or from the main head element, with base64 content, the default is false.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
     
-    <xs:element name="conicalFrustum">
+    <xs:complexType name="conicalFrustumType">
+        <xs:attribute name="a" type="positiveNonZeroDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The radius of the A base, must be positive and not zero.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="b" type="positiveNonZeroDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The radius of the B base, must be positive and not zero.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="height" type="positiveNonZeroDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The height, must be positive and not zero.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="conicalFrustum" type="conicalFrustumType">
         <xs:annotation>
             <xs:documentation>
                 A conical frustum.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:attribute name="a" type="positiveNonZeroDecimalType" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The radius of the A base, must be positive and not zero.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="b" type="positiveNonZeroDecimalType" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The radius of the B base, must be positive and not zero.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="height" type="positiveNonZeroDecimalType" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The height, must be positive and not zero.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-        </xs:complexType>
     </xs:element>
     
-    <xs:element name="multiSphere">
+    <xs:complexType name="multiSphereType">
+        <xs:sequence>
+            <xs:element name="sphere" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="collisionShape:vector3Type">
+                            <xs:attribute name="radius" type="collisionShape:positiveDecimalType" use="required">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The radius of the sphere, must be positive.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="multiSphere" type="multiSphereType">
         <xs:annotation>
             <xs:documentation>
                 A multi sphere.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="sphere" minOccurs="1" maxOccurs="unbounded">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="vector3Type">
-                                <xs:attribute name="radius" type="positiveDecimalType" use="required">
-                                    <xs:annotation>
-                                        <xs:documentation>
-                                            The radius of the sphere, must be positive.
-                                        </xs:documentation>
-                                    </xs:annotation>
-                                </xs:attribute>
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
     </xs:element>
     
-    <xs:element name="plane">
+    <xs:complexType name="planeType">
+        <xs:complexContent>
+            <xs:extension base="collisionShape:vector3Type">
+                <xs:attribute name="normalX" type="xs:decimal" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The normal x.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="normalY" type="xs:decimal" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The normal y.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="normalZ" type="xs:decimal" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            The normal z.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:element name="plane" type="planeType">
         <xs:annotation>
             <xs:documentation>
                 A plane.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:all>
-                <xs:element name="normal" type="vector3Type" minOccurs="1" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>
-                            The normal of the plane.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="position" type="vector3Type" minOccurs="1" maxOccurs="1">
-                    <xs:annotation>
-                        <xs:documentation>
-                            The position of the plane.
-                        </xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:all>
-        </xs:complexType>
     </xs:element>
     
-    <xs:element name="sphericalSegment">
+    <xs:complexType name="sphericalSegmentType">
+        <xs:attribute name="radius" type="positiveNonZeroDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The radius of the spherical segment, must be positive and not zero.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="yMax" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                        <![CDATA[
+                        The max Y of the spherical segment, must be >= to yMin and <= to radius.
+                        ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="yMin" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                        <![CDATA[
+                        The min Y of the spherical segment, must be >= to -radius and <= to yMax.
+                        ]]>
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    
+    <xs:element name="sphericalSegment" type="sphericalSegmentType">
         <xs:annotation>
             <xs:documentation>
                 A spherical segment.
             </xs:documentation>
         </xs:annotation>
-        <xs:complexType>
-            <xs:attribute name="radius" type="positiveNonZeroDecimalType" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        The radius of the spherical segment, must be positive and not zero.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="yMax" type="xs:decimal" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        <![CDATA[
-                        The max Y of the spherical segment, must be >= to yMin and <= to radius.
-                        ]]>
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute name="yMin" type="xs:decimal" use="required">
-                <xs:annotation>
-                    <xs:documentation>
-                        <![CDATA[
-                        The min Y of the spherical segment, must be >= to -radius and <= to yMax.
-                        ]]>
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-        </xs:complexType>
     </xs:element>
     
     <xs:element name="gimpact" type="fileType">

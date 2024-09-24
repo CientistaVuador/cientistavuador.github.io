@@ -135,14 +135,14 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="translation" type="vector3Type" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        The translation of this transform.
+                        The position.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
             <xs:element name="rotation" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        The rotation of this transform, can have a euler rotation or a quaternion rotation elements.
+                        The rotation, must have a euler rotation or a quaternion rotation.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -150,14 +150,14 @@ For more information, please refer to <https://unlicense.org>
                         <xs:element name="euler" type="eulerAnglesType">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The rotation of this transform in euler (pitch, yaw, roll) defined in degrees.
+                                    The rotation in euler angles (pitch, yaw, roll) defined in degrees.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
                         <xs:element name="quaternion" type="quaternionType">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The rotation of this transform in a quaternion.
+                                    The rotation in a quaternion.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:element>
@@ -167,23 +167,36 @@ For more information, please refer to <https://unlicense.org>
         </xs:all>
     </xs:complexType>
     
-    <!-- A property -->
-    <xs:complexType name="propertyType">
-        <xs:attribute name="name" type="xs:ID" use="required">
+    <!-- A meta data -->
+    <xs:complexType name="metaType">
+        <xs:attribute name="name" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The name of the property.
+                    The name of the meta.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="value" type="xs:string" default="">
+        <xs:attribute name="content" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
-                    The value of the property, the default is a empty string.
+                    The content of the meta.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
     </xs:complexType>
+    
+    <!-- A meta element -->
+    <xs:group name="metaGroup">
+        <xs:sequence>
+            <xs:element name="meta" type="metaType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        The meta element of this head, must contain a name and a content.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:group>
     
     <!-- A box shape -->
     <xs:complexType name="boxType">
@@ -314,43 +327,46 @@ For more information, please refer to <https://unlicense.org>
         </xs:choice>
     </xs:group>
     
-    <!-- A extension collision shape -->
-    <xs:group name="extensionShapeGroup">
-        <xs:choice>
-            <xs:element name="extensionShape">
+    <!-- A extension type -->
+    <xs:complexType name="extensionType">
+        <xs:sequence>
+            <xs:element name="if" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        A collision shape from a extension, must have at least one extension element and one fallback element with a primitive shape or a error.
+                        The if element, must contain a shape from a extension.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="extension" minOccurs="1" maxOccurs="unbounded">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    The extension element.
-                                </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:any minOccurs="1" maxOccurs="1" processContents="lax" namespace="##other"/>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                        <xs:element name="fallback" minOccurs="1" maxOccurs="1">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    The fallback element, must contain a primitive shape or a error.
-                                </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:choice>
-                                    <xs:group ref="primitiveShapesGroup"/>
-                                </xs:choice>
-                            </xs:complexType>
-                        </xs:element>
+                        <xs:any minOccurs="1" maxOccurs="1" processContents="lax" namespace="##other"/>
                     </xs:sequence>
                 </xs:complexType>
+            </xs:element>
+            <xs:element name="else" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The else element, must contain a primitive shape or another extension shape.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:group ref="primitiveShapesGroup"/>
+                        <xs:element name="extension" type="extensionType"/>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- A extension collision shape -->
+    <xs:group name="extensionGroup">
+        <xs:choice>
+            <xs:element name="extension" type="extensionType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A collision shape from a extension, must have one try element and one catch element.
+                    </xs:documentation>
+                </xs:annotation>
             </xs:element>
         </xs:choice>
     </xs:group>
@@ -369,32 +385,44 @@ For more information, please refer to <https://unlicense.org>
                         <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
                             <xs:annotation>
                                 <xs:documentation>
-                                    A compound child element, must have one shape element and a optional transform element.
+                                    A compound child element, must start with a optional head, a mandatory body and a optional foot element.
                                 </xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
-                                <xs:all>
-                                    <xs:element name="transform" type="transformType" minOccurs="0" maxOccurs="1">
+                                <xs:sequence>
+                                    <xs:element name="head" minOccurs="0" maxOccurs="1">
                                         <xs:annotation>
                                             <xs:documentation>
-                                                The transform of this child element, can contain a translation and/or a rotation element.
+                                                The head element of this child, must contain zero or more meta elements.
                                             </xs:documentation>
                                         </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:group ref="metaGroup"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
                                     </xs:element>
-                                    <xs:element name="shape" minOccurs="1" maxOccurs="1">
+                                    <xs:element name="body" minOccurs="1" maxOccurs="1">
                                         <xs:annotation>
                                             <xs:documentation>
-                                                The shape of this child element, must not be a compound.
+                                                The body element of this child, must contain a primitive shape or a extension, must not be a compound.
                                             </xs:documentation>
                                         </xs:annotation>
                                         <xs:complexType>
                                             <xs:choice>
                                                 <xs:group ref="primitiveShapesGroup"/>
-                                                <xs:group ref="extensionShapeGroup"/>
+                                                <xs:group ref="extensionGroup"/>
                                             </xs:choice>
                                         </xs:complexType>
                                     </xs:element>
-                                </xs:all>
+                                    <xs:element name="foot" type="transformType" minOccurs="0" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>
+                                                The foot of this child element, can contain a translation and/or a rotation element, in any order.
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -407,44 +435,38 @@ For more information, please refer to <https://unlicense.org>
     <xs:element name="collisionShape">
         <xs:annotation>
             <xs:documentation>
-                The root element of the collision shape, must have a collisionType element and a optional meta element.
+                The root element of the collision shape, must start with a optional head element and a mandatory body element.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
-            <xs:all>
-                <xs:element name="meta" minOccurs="0" maxOccurs="1">
+            <xs:sequence>
+                <xs:element name="head" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            The meta element for arbitrary user defined properties, can contain zero or more property elements.
+                            The head element, can contain zero or more meta elements.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="property" type="propertyType" minOccurs="0" maxOccurs="unbounded">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        A property with a name and value attribute, must have a name.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
+                            <xs:group ref="metaGroup"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="shape">
+                <xs:element name="body" minOccurs="1" maxOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            The shape of this collision shape, must be one of any of the primitive types, a compound or a extension shape.
+                            The body of this collision shape, must be a primitive shape, a compound shape or a extension shape.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:choice>
                             <xs:group ref="compoundShapeGroup"/>
                             <xs:group ref="primitiveShapesGroup"/>
-                            <xs:group ref="extensionShapeGroup"/>
+                            <xs:group ref="extensionGroup"/>
                         </xs:choice>
                     </xs:complexType>
                 </xs:element>
-            </xs:all>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 </xs:schema>
