@@ -45,67 +45,144 @@ For more information, please refer to <https://unlicense.org>
         schemaLocation="https://cientistavuador.github.io/schemas/extraShapes.xsd"
     />
     
+    <!-- Scale attribute groups -->
+    <xs:attributeGroup name="axis3Scale">
+        <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the X axis.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the Y axis.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the Z axis.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
+    <xs:attributeGroup name="uniformScale">
+        <xs:attribute name="scale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The uniform scale on all axis.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
+    <xs:attributeGroup name="cylinderScale">
+        <xs:attribute name="radiusScale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the radius of the shape.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="heightScale" type="collisionShape:positiveDecimalType" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the height of the shape.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
     <!-- Scaled primitives -->
     <xs:element name="box">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled box.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="collisionShape:boxType">
-                    <xs:attribute name="widthScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="heightScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="depthScale" type="collisionShape:positiveDecimalType" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="capsule">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="collisionShape:conicalType">
-                    <xs:attribute name="scale" type="collisionShape:positiveDecimalType" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="cone">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="collisionShape:conicalType">
-                    <xs:attribute name="scale" type="collisionShape:positiveDecimalType" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="cylinder">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="collisionShape:conicalType">
-                    <xs:attribute name="radiusScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="heightScale" type="collisionShape:positiveDecimalType" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="sphere">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="collisionShape:sphereType">
-                    <xs:attribute name="scale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="axis3Scale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="hull">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled hull.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="collisionShape:hullType">
-                    <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="axis3Scale"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="capsule">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled capsule.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="collisionShape:conicalType">
+                    <xs:attributeGroup ref="uniformScale"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="cone">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled cone.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="collisionShape:conicalType">
+                    <xs:attributeGroup ref="uniformScale"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="sphere">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled sphere.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="collisionShape:sphereType">
+                    <xs:attributeGroup ref="uniformScale"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="cylinder">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled cylinder.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="collisionShape:conicalType">
+                    <xs:attributeGroup ref="cylinderScale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
@@ -113,69 +190,90 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- Scaled extra primitives -->
     <xs:element name="conicalFrustum">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled conical frustum.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="extraShapes:conicalFrustumType">
-                    <xs:attribute name="radiusScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="heightScale" type="collisionShape:positiveDecimalType" use="required"/>
-                </xs:extension>
-            </xs:complexContent>
-        </xs:complexType>
-    </xs:element>
-    
-    <xs:element name="multiSphere">
-        <xs:complexType>
-            <xs:complexContent>
-                <xs:extension base="extraShapes:multiSphereType">
-                    <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="cylinderScale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="sphericalSegment">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled spherical segment.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="extraShapes:sphericalSegmentType">
-                    <xs:attribute name="scale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="uniformScale"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="multiSphere">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled multi sphere.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="extraShapes:multiSphereType">
+                    <xs:attributeGroup ref="axis3Scale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="gimpact">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled gimpact.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="extraShapes:fileType">
-                    <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="axis3Scale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="heightfield">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled heightfield.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="extraShapes:fileType">
-                    <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="axis3Scale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     
     <xs:element name="mesh">
+        <xs:annotation>
+            <xs:documentation>
+                A scaled mesh.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="extraShapes:fileType">
-                    <xs:attribute name="xScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="yScale" type="collisionShape:positiveDecimalType" use="required"/>
-                    <xs:attribute name="zScale" type="collisionShape:positiveDecimalType" use="required"/>
+                    <xs:attributeGroup ref="axis3Scale"/>
                 </xs:extension>
             </xs:complexContent>
         </xs:complexType>
