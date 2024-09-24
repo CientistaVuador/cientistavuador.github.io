@@ -372,61 +372,62 @@ For more information, please refer to <https://unlicense.org>
     </xs:group>
     
     <!-- A compound collision shape -->
+    <xs:complexType name="compoundType">
+        <xs:sequence>
+            <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        A compound child element, must start with a optional head, a mandatory body and a optional foot element.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="head" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The head element of this child, must contain zero or more meta elements.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:group ref="metaGroup"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="body" minOccurs="1" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The body element of this child, must contain a primitive shape or a extension, must not be a compound.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:choice>
+                                    <xs:group ref="primitiveShapesGroup"/>
+                                    <xs:group ref="extensionGroup"/>
+                                </xs:choice>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="foot" type="transformType" minOccurs="0" maxOccurs="1">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The foot of this child element, can contain a translation and/or a rotation element, in any order.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
     <xs:group name="compoundShapeGroup">
         <xs:choice>
-            <xs:element name="compound" minOccurs="1" maxOccurs="1">
+            <xs:element name="compound" minOccurs="1" maxOccurs="1" type="compoundType">
                 <xs:annotation>
                     <xs:documentation>
                         A compound shape, must contain one or more children.
                     </xs:documentation>
                 </xs:annotation>
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    A compound child element, must start with a optional head, a mandatory body and a optional foot element.
-                                </xs:documentation>
-                            </xs:annotation>
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:element name="head" minOccurs="0" maxOccurs="1">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                The head element of this child, must contain zero or more meta elements.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:group ref="metaGroup"/>
-                                            </xs:sequence>
-                                        </xs:complexType>
-                                    </xs:element>
-                                    <xs:element name="body" minOccurs="1" maxOccurs="1">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                The body element of this child, must contain a primitive shape or a extension, must not be a compound.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                        <xs:complexType>
-                                            <xs:choice>
-                                                <xs:group ref="primitiveShapesGroup"/>
-                                                <xs:group ref="extensionGroup"/>
-                                            </xs:choice>
-                                        </xs:complexType>
-                                    </xs:element>
-                                    <xs:element name="foot" type="transformType" minOccurs="0" maxOccurs="1">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                The foot of this child element, can contain a translation and/or a rotation element, in any order.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:element>
-                                </xs:sequence>
-                            </xs:complexType>
-                        </xs:element>
-                    </xs:sequence>
-                </xs:complexType>
             </xs:element>
         </xs:choice>
     </xs:group>
