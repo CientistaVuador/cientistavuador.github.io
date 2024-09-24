@@ -364,7 +364,7 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="extension" type="extensionType">
                 <xs:annotation>
                     <xs:documentation>
-                        A collision shape from a extension, must have one try element and one catch element.
+                        A collision shape from a extension, must have one if element and one else element.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
