@@ -48,7 +48,6 @@ For more information, please refer to <https://unlicense.org>
 }
 .article, .articles {
     max-width: 800px;
-    justify-content: center;
     margin: 0 auto;
 }
 .articles ol li h2, .articles ol li h3, .articles ol li p  {
