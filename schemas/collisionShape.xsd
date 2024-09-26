@@ -32,6 +32,8 @@ For more information, please refer to <https://unlicense.org>
     targetNamespace="https://cientistavuador.github.io/schemas/collisionShape.xsd"
     elementFormDefault="qualified"
 >
+    <!-- General purpose types start -->
+    
     <!-- A positive decimal -->
     <xs:simpleType name="positiveDecimalType">
         <xs:restriction base="xs:decimal">
@@ -40,10 +42,11 @@ For more information, please refer to <https://unlicense.org>
     </xs:simpleType>
     
     <!-- A integer representing a axis -->
-    <xs:simpleType name="axisIndexType">
-        <xs:restriction base="xs:integer">
-            <xs:minInclusive value="0"/>
-            <xs:maxExclusive value="3"/>
+    <xs:simpleType name="axisType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x"/>
+            <xs:enumeration value="y"/>
+            <xs:enumeration value="z"/>
         </xs:restriction>
     </xs:simpleType>
     
@@ -131,14 +134,7 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A transform (translation and rotation) -->
     <xs:complexType name="transformType">
-        <xs:all>
-            <xs:element name="translation" type="vector3Type" minOccurs="0" maxOccurs="1">
-                <xs:annotation>
-                    <xs:documentation>
-                        The position.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
+        <xs:sequence>
             <xs:element name="rotation" minOccurs="0" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
@@ -164,8 +160,77 @@ For more information, please refer to <https://unlicense.org>
                     </xs:choice>
                 </xs:complexType>
             </xs:element>
-        </xs:all>
+            <xs:element name="translation" type="vector3Type" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The position.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
     </xs:complexType>
+    
+    <!-- General purpose types end -->
+    
+    <!-- Scale attribute groups start -->
+    
+    <!-- a scale on the xyz axis -->
+    <xs:attributeGroup name="xyzScale">
+        <xs:attribute name="xScale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the X axis, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="yScale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the Y axis, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="zScale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the Z axis, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
+    <!-- a scale only on the radius and height of the shape -->
+    <xs:attributeGroup name="limitedScale">
+        <xs:attribute name="radiusScale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the radius of the shape, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="heightScale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The scale on the height of the shape, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
+    <!-- a uniform scale -->
+    <xs:attributeGroup name="uniformScale">
+        <xs:attribute name="scale" type="positiveDecimalType" default="1" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The uniform scale on all axis, the default is 1.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    
+    <!-- Scale attribute groups end -->
+    
+    <!-- meta content start -->
     
     <!-- A meta data -->
     <xs:complexType name="metaType">
@@ -198,6 +263,10 @@ For more information, please refer to <https://unlicense.org>
         </xs:sequence>
     </xs:group>
     
+    <!-- meta content end -->
+    
+    <!-- Primitive shapes type start -->
+    
     <!-- A box shape -->
     <xs:complexType name="boxType">
         <xs:attribute name="halfWidth" type="positiveDecimalType" use="required">
@@ -221,6 +290,7 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="xyzScale"/>
     </xs:complexType>
     
     <!-- A conical shape (cylinder, cone, capsule) -->
@@ -239,13 +309,31 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="axis" type="axisIndexType" use="required">
+        <xs:attribute name="axis" type="axisType" default="y" use="optional">
             <xs:annotation>
                 <xs:documentation>
-                    The axis of the shape, must be 0 for X, 1 for Y or 2 for Z.
+                    The axis of the shape, must be x, y or z, the default is y.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+    </xs:complexType>
+    
+    <!-- A capsule shape -->
+    <xs:complexType name="capsuleType">
+        <xs:complexContent>
+            <xs:extension base="conicalType">
+                <xs:attributeGroup ref="uniformScale"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <!-- A cylinder shape -->
+    <xs:complexType name="cylinderType">
+        <xs:complexContent>
+            <xs:extension base="conicalType">
+                <xs:attributeGroup ref="limitedScale"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <!-- A sphere shape -->
@@ -257,6 +345,7 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="uniformScale"/>
     </xs:complexType>
     
     <!-- A convex hull shape -->
@@ -270,9 +359,17 @@ For more information, please refer to <https://unlicense.org>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
+        <xs:attributeGroup ref="xyzScale"/>
     </xs:complexType>
     
-    <!-- Primitive collision shapes -->
+    <!-- A empty shape -->
+    <xs:complexType name="emptyType">
+        <xs:attributeGroup ref="xyzScale"/>
+    </xs:complexType>
+    
+    <!-- Primitive shapes type end -->
+    
+    <!-- Primitive collision shapes group -->
     <xs:group name="primitiveShapesGroup">
         <xs:choice>
             <xs:element name="box" type="boxType">
@@ -282,21 +379,14 @@ For more information, please refer to <https://unlicense.org>
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="capsule" type="conicalType">
+            <xs:element name="capsule" type="capsuleType">
                 <xs:annotation>
                     <xs:documentation>
                         A primitive capsule collision shape, the radius represents the spherical part of the capsule and the height represents the cylindrical part of the capsule so the total height of the capsule is (radius * 2) + height.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="cone" type="conicalType">
-                <xs:annotation>
-                    <xs:documentation>
-                        A primitive cone collision shape.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="cylinder" type="conicalType">
+            <xs:element name="cylinder" type="cylinderType">
                 <xs:annotation>
                     <xs:documentation>
                         A primitive cylinder collision shape.
@@ -317,7 +407,7 @@ For more information, please refer to <https://unlicense.org>
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="empty">
+            <xs:element name="empty" type="emptyType">
                 <xs:annotation>
                     <xs:documentation>
                         A primitive empty collision shape, does nothing.
@@ -330,10 +420,10 @@ For more information, please refer to <https://unlicense.org>
     <!-- A extension type -->
     <xs:complexType name="extensionType">
         <xs:sequence>
-            <xs:element name="if" minOccurs="1" maxOccurs="1">
+            <xs:element name="try" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        The if element, must contain a shape from a extension.
+                        The try element, must contain a shape from a extension.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -342,10 +432,10 @@ For more information, please refer to <https://unlicense.org>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="else" minOccurs="1" maxOccurs="1">
+            <xs:element name="or" minOccurs="1" maxOccurs="1">
                 <xs:annotation>
                     <xs:documentation>
-                        The else element, must contain a primitive shape or another extension shape.
+                        The or element, must contain a primitive shape or another extension shape.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -358,13 +448,13 @@ For more information, please refer to <https://unlicense.org>
         </xs:sequence>
     </xs:complexType>
     
-    <!-- A extension collision shape -->
+    <!-- A extension collision shape group -->
     <xs:group name="extensionGroup">
         <xs:choice>
             <xs:element name="extension" type="extensionType">
                 <xs:annotation>
                     <xs:documentation>
-                        A collision shape from a extension, must have one if element and one else element.
+                        A collision shape from a extension, must have one "try" element and one "or" element, in sequence.
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
@@ -377,27 +467,22 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
-                        A compound child element, must start with a optional head, a mandatory body and a optional foot element.
+                        A compound child element with a optional id attribute, must start with a optional transform element and a mandatory shape element.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="head" minOccurs="0" maxOccurs="1">
+                        <xs:element name="transform" type="transformType" minOccurs="0" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The head element of this child, must contain zero or more meta elements.
+                                    The transform of this child element, can contain a rotation and/or a translation element, in sequence.
                                 </xs:documentation>
                             </xs:annotation>
-                            <xs:complexType>
-                                <xs:sequence>
-                                    <xs:group ref="metaGroup"/>
-                                </xs:sequence>
-                            </xs:complexType>
                         </xs:element>
-                        <xs:element name="body" minOccurs="1" maxOccurs="1">
+                        <xs:element name="shape" minOccurs="1" maxOccurs="1">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The body element of this child, must contain a primitive shape or a extension, must not be a compound.
+                                    The shape element of this child, must contain a primitive shape or a extension, must not be a compound.
                                 </xs:documentation>
                             </xs:annotation>
                             <xs:complexType>
@@ -407,19 +492,20 @@ For more information, please refer to <https://unlicense.org>
                                 </xs:choice>
                             </xs:complexType>
                         </xs:element>
-                        <xs:element name="foot" type="transformType" minOccurs="0" maxOccurs="1">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    The foot of this child element, can contain a translation and/or a rotation element, in any order.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:element>
                     </xs:sequence>
+                    <xs:attribute name="name" type="xs:string" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The optional name of this child.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
     
+    <!-- A compound shape group -->
     <xs:group name="compoundShapeGroup">
         <xs:choice>
             <xs:element name="compound" minOccurs="1" maxOccurs="1" type="compoundType">
