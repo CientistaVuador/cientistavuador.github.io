@@ -24,6 +24,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <https://unlicense.org>
+
+Warning: 
+    The schema cannot fully validate the following shapes:
+        gimpact
+        heightfield
+        mesh
+        sphericalSegment
 -->
 <xs:schema 
     version="1.0"
@@ -64,10 +71,19 @@ For more information, please refer to <https://unlicense.org>
         <xs:attribute name="embedded" type="xs:boolean" default="false">
             <xs:annotation>
                 <xs:documentation>
-                    true if the file represents a meta element from a child element or from the main head element, with base64 content, the default is false.
+                    true if the file represents a meta element with base64 content, the default is false.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+    </xs:complexType>
+    
+    <!-- Type definitions -->
+    <xs:complexType name="coneType">
+        <xs:complexContent>
+            <xs:extension base="collisionShape:conicalType">
+                <xs:attributeGroup ref="collisionShape:uniformScale"/>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     
     <xs:complexType name="conicalFrustumType">
@@ -92,15 +108,8 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="collisionShape:limitedScale"/>
     </xs:complexType>
-    
-    <xs:element name="conicalFrustum" type="conicalFrustumType">
-        <xs:annotation>
-            <xs:documentation>
-                A conical frustum.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:element>
     
     <xs:complexType name="multiSphereType">
         <xs:sequence>
@@ -120,15 +129,8 @@ For more information, please refer to <https://unlicense.org>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
+        <xs:attributeGroup ref="collisionShape:xyzScale"/>
     </xs:complexType>
-    
-    <xs:element name="multiSphere" type="multiSphereType">
-        <xs:annotation>
-            <xs:documentation>
-                A multi sphere.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:element>
     
     <xs:complexType name="planeType">
         <xs:complexContent>
@@ -154,17 +156,10 @@ For more information, please refer to <https://unlicense.org>
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
+                <xs:attributeGroup ref="collisionShape:xyzScale"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    
-    <xs:element name="plane" type="planeType">
-        <xs:annotation>
-            <xs:documentation>
-                A plane.
-            </xs:documentation>
-        </xs:annotation>
-    </xs:element>
     
     <xs:complexType name="sphericalSegmentType">
         <xs:attribute name="radius" type="positiveNonZeroDecimalType" use="required">
@@ -192,7 +187,66 @@ For more information, please refer to <https://unlicense.org>
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attributeGroup ref="collisionShape:uniformScale"/>
     </xs:complexType>
+    
+    <xs:complexType name="dynamicMeshType">
+        <xs:complexContent>
+            <xs:extension base="fileType">
+                <xs:attributeGroup ref="collisionShape:xyzScale"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="heightfieldType">
+        <xs:complexContent>
+            <xs:extension base="fileType">
+                <xs:attributeGroup ref="collisionShape:xyzScale"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="staticMeshType">
+        <xs:complexContent>
+            <xs:extension base="fileType">
+                <xs:attributeGroup ref="collisionShape:xyzScale"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- End type definitions -->
+    
+    <!-- Extra shapes -->
+    <xs:element name="cone" type="coneType">
+        <xs:annotation>
+            <xs:documentation>
+                A cone.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="conicalFrustum" type="conicalFrustumType">
+        <xs:annotation>
+            <xs:documentation>
+                A conical frustum.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="multiSphere" type="multiSphereType">
+        <xs:annotation>
+            <xs:documentation>
+                A multi sphere.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    
+    <xs:element name="plane" type="planeType">
+        <xs:annotation>
+            <xs:documentation>
+                A plane.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     
     <xs:element name="sphericalSegment" type="sphericalSegmentType">
         <xs:annotation>
@@ -202,25 +256,28 @@ For more information, please refer to <https://unlicense.org>
         </xs:annotation>
     </xs:element>
     
-    <xs:element name="gimpact" type="fileType">
+    <xs:element name="dynamicMesh" type="dynamicMeshType">
         <xs:annotation>
             <xs:documentation>
-                A gimpact shape.
+                A dynamic mesh. (gimpact)
             </xs:documentation>
         </xs:annotation>
     </xs:element>
-    <xs:element name="heightfield" type="fileType">
+    
+    <xs:element name="heightfield" type="heightfieldType">
         <xs:annotation>
             <xs:documentation>
-                A heightfield shape.
+                A heightfield.
             </xs:documentation>
         </xs:annotation>
     </xs:element>
-    <xs:element name="mesh" type="fileType">
+    
+    <xs:element name="staticMesh" type="staticMeshType">
         <xs:annotation>
             <xs:documentation>
-                A mesh shape.
+                A static mesh.
             </xs:documentation>
         </xs:annotation>
     </xs:element>
+    <!-- End extra shapes -->
 </xs:schema>
