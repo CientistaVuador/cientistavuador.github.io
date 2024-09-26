@@ -467,7 +467,7 @@ For more information, please refer to <https://unlicense.org>
             <xs:element name="child" minOccurs="1" maxOccurs="unbounded">
                 <xs:annotation>
                     <xs:documentation>
-                        A compound child element with a optional id attribute, must start with a optional transform element and a mandatory shape element.
+                        A compound child element, must start with a optional transform element and a mandatory shape element.
                     </xs:documentation>
                 </xs:annotation>
                 <xs:complexType>
@@ -493,13 +493,6 @@ For more information, please refer to <https://unlicense.org>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
-                    <xs:attribute name="name" type="xs:string" use="optional">
-                        <xs:annotation>
-                            <xs:documentation>
-                                The optional name of this child.
-                            </xs:documentation>
-                        </xs:annotation>
-                    </xs:attribute>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
