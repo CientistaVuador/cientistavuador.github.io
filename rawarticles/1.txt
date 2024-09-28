@@ -1,7 +1,11 @@
 [[id]] 1
 [[languages]] en-us
 
+
 [[title]] Blinn Phong with Roughness Textures
+[[description]] This article explains a method for using roughness textures with blinn phong.
+[[date]] 2024/09/28 15:33
+
 
 [[section]] Introduction
 [text]
@@ -30,6 +34,7 @@ that was made in the 70s.
 [;<;>]
 [[text]] This was based on this very old article: [[[https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/:::Energy Conservation In Games]]]
 
+
 [[section]] "Fixing" Blinn Phong Specular
 [text]
 One of the things you may or may not have noticed is that when using
@@ -47,6 +52,7 @@ float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
 float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor;
 [;<;>]
 [[image]] /resources/1/Fixed cone shaped specular.png
+
 
 [[section]] A Directional Light
 [code]
@@ -78,6 +84,7 @@ constrained by distance and a spot light is a point light constrained by a angle
 [[text]] This is how it looks on this [[[https://cc0-textures.com/t/th-brown-leather:::leather texture]]] only with color and normal textures, with 64.0 of shininess.
 [[image]] /resources/1/Directional light on leather.png
 
+
 [[section]] Shininess value from a roughness value
 [text]
 Calculating a shininess value from a roughness value is very easy, we can use a pow function
@@ -92,6 +99,7 @@ float shininess = pow(MAX_SHININESS, 1.0 - roughness);
 [[text]] And now it looks worse than before
 [[image]] /resources/1/Worse than before.png
 [[text]] This is because we also need the specular intensity to vary with the shininess.
+
 
 [[section]] Specular intensity from a shininess value
 [text]
@@ -112,6 +120,7 @@ And this is how it looks now.
 [text]
 It still looks kind of bad, this is because we need to do one more thing.
 [;<;>]
+
 
 [[section]] Specular and diffuse material colors must sum to 1
 [text]
@@ -166,6 +175,7 @@ And this is how it looks now, with a very faint specular, it is much better now.
 If you are rendering multiple lights on the same shader, it is better to
 calculate the shininess and normalization once and pass them as function arguments.
 [;<;>]
+
 
 [[section]] Results
 [[text]] Those are the final results, all of these textures come from [[[https://cc0-textures.com/:::CC0 Textures]]]
