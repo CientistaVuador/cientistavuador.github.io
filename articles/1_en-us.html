@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Blinn Phong with Roughness Textures</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="bad, vary, adaptation, these, fix, calculate, height, pass, remain, expected, them, easy, something, looking, must, ambient, sum, diffusecolor, remember, same, pow, wikipedia, vice, configuring, cg, learn, noticed, such, th, complicated, maximum, thing, open, de, do, view, wasn, details, generate, those, faint, doesn, test, adapt, en, check, brown, look, worse, whatever, multiplying, once, 4k, know, 70s, pbr, fg, distance, shaped, show, description, back, simplicity, anything"/>
+        <meta name="description" content="No Description"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
+        <link rel="stylesheet" type="text/css" href="/data/style.css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Blinn Phong with Roughness Textures"/>
+        <meta name="og:description" content="No Description"/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <!--
+    
+    This is free and unencumbered software released into the public domain.
+    
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.
+    
+    In jurisdictions that recognize copyright laws, the author or authors
+    of this software dedicate any and all copyright interest in the
+    software to the public domain. We make this dedication for the benefit
+    of the public at large and to the detriment of our heirs and
+    successors. We intend this dedication to be an overt act of
+    relinquishment in perpetuity of all present and future rights to this
+    software under copyright law.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+    OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+    For more information, please refer to <http://unlicense.org/>
+    
+    en-us
+        Blinn Phong with Roughness Textures
+        No Description
+        1
+        No Date
+    
+    -->
+    <body class="body">
+        <header class="header">
+            <h1>Blinn Phong with Roughness Textures</h1>
+            <h2>No Description</h2>
+            <h3>0001</h3>
+            <h3>No Date</h3>
+            <h4><a href="1_en-us.html">EN-US</a></h4>
+        </header>
+        <main class="article">
+            <nav class="indices">
+                <ol>
+                    <li><a href="#1+Introduction">1 Introduction</a></li>
+                    <li><a href="#2+%26quot%3BFixing%26quot%3B+Blinn+Phong+Specular">2 &quot;Fixing&quot; Blinn Phong Specular</a></li>
+                    <li><a href="#3+A+Directional+Light">3 A Directional Light</a></li>
+                    <li><a href="#4+Shininess+value+from+a+roughness+value">4 Shininess value from a roughness value</a></li>
+                    <li><a href="#5+Specular+intensity+from+a+shininess+value">5 Specular intensity from a shininess value</a></li>
+                    <li><a href="#6+Specular+and+diffuse+material+colors+must+sum+to+1">6 Specular and diffuse material colors must sum to 1</a></li>
+                    <li><a href="#7+Results">7 Results</a></li>
+                </ol>
+            </nav>
+            <section id="1+Introduction">
+                <h2>1 Introduction</h2>
+                <p class="text">
+                    So, you finished your OpenGL blinn phong tutorial and now you rush
+                    to google (or whatever search engine you are using) in search of
+                    good looking 4K textures to test it, you end up in websites such as
+                    <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a> and <a target="_blank" href="https://ambientcg.com/">Ambient CG</a>
+                    you find a good texture and download it, you look at the textures and find what
+                    you expected: a color, a normal, a height but there&#39;s one you don&#39;t know exactly
+                    what it is, a texture called roughness, you open it up and it looks like a specular
+                    texture, so you load it as a specular, but wait, what shininess value should I use?
+                    there&#39;s nothing on the description of the texture or anything, so you try a random
+                    shininess based on the texture type (high for tiles, low for rocks...) and it doesn&#39;t work
+                    well, you now go back to google and find out that for more than a decade everyone
+                    was now using <a target="_blank" href="https://en.wikipedia.org/wiki/Physically_based_rendering">PBR</a>
+                    textures and that you may need to learn a much more complicated
+                    way to render things and you end up getting frustated as what you have learned
+                    may have become worthless today.
+                </p>
+                <p class="text">
+                    This is why this article was made, to show you how to adapt a old
+                    blinn phong rendering system to a roughness texture, without the
+                    need to change material properties (I won&#39;t be using materials at all),
+                    the adaptation is very simple and the results are very good for something
+                    that was made in the 70s.
+                </p>
+                <p class="text">
+                    This was based on this very old article: <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a>
+                </p>
+            </section>
+            <section id="2+%26quot%3BFixing%26quot%3B+Blinn+Phong+Specular">
+                <h2>2 &quot;Fixing&quot; Blinn Phong Specular</h2>
+                <p class="text">
+                    One of the things you may or may not have noticed is that when using
+                    low shininess values, blinn phong may generate a cone shaped specular
+                    at the dark side of a mesh, this is a not a problem with blinn phong itself
+                    but most tutorials don&#39;t talk about it.
+                </p>
+                <img class="image" src="/resources/1/Cone shaped specular.png" alt="Cone shaped specular"/>
+                <p class="text">
+                    To fix it simply multiply the specular factor by the diffuse factor.
+                </p>
+                <ol class="code">
+                    <li><code>vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                    <li><code>float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                    <li><code>float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor;</code></li>
+                </ol>
+                <img class="image" src="/resources/1/Fixed cone shaped specular.png" alt="Fixed cone shaped specular"/>
+            </section>
+            <section id="3+A+Directional+Light">
+                <h2>3 A Directional Light</h2>
+                <ol class="code">
+                    <li><code>vec3 directionalLight(</code></li>
+                    <li><code>    vec3 lightDirection, vec3 viewDirection, vec3 normal,</code></li>
+                    <li><code>    vec3 diffuseColor, vec3 specularColor, float shininess</code></li>
+                    <li><code>) {</code></li>
+                    <li><code>    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                    <li><code>    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                    <li><code>    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor;</code></li>
+                    <li><code></code></li>
+                    <li><code>    vec3 diffuse = diffuseFactor * diffuseColor;</code></li>
+                    <li><code>    vec3 specular = specularFactor * specularColor;</code></li>
+                    <li><code>    vec3 ambient = 0.10 * diffuseColor;</code></li>
+                    <li><code></code></li>
+                    <li><code>    return diffuse + specular + ambient;</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="text">
+                    This is how a basic directional light usually looks like, we have the light direction,
+                    the view direction (the direction from the camera <strong>to the</strong> fragment <code>normalize(position - camera)</code>)
+                    the normal of the surface and the diffuseColor and specularColor from materials/textures and a shininess value
+                    from the material, for simplicity I removed the light colors vectors.
+                </p>
+                <p class="fine">
+                    I won&#39;t talk about point lights or spot lights here, as a point light is a directional light
+                    constrained by distance and a spot light is a point light constrained by a angle.
+                </p>
+                <p class="text">
+                    This is how it looks on this <a target="_blank" href="https://cc0-textures.com/t/th-brown-leather">leather texture</a> only with color and normal textures, with 64.0 of shininess.
+                </p>
+                <img class="image" src="/resources/1/Directional light on leather.png" alt="Directional light on leather"/>
+            </section>
+            <section id="4+Shininess+value+from+a+roughness+value">
+                <h2>4 Shininess value from a roughness value</h2>
+                <p class="text">
+                    Calculating a shininess value from a roughness value is very easy, we can use a pow function
+                    and a maximum shininess value, 2048 is good for most purposes, you can put it in your
+                    material if you want too.
+                </p>
+                <ol class="code">
+                    <li><code>#define MAX_SHININESS 2048.0</code></li>
+                    <li><code></code></li>
+                    <li><code>float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
+                </ol>
+                <p class="text">
+                    And now it looks worse than before
+                </p>
+                <img class="image" src="/resources/1/Worse than before.png" alt="Worse than before"/>
+                <p class="text">
+                    This is because we also need the specular intensity to vary with the shininess.
+                </p>
+            </section>
+            <section id="5+Specular+intensity+from+a+shininess+value">
+                <h2>5 Specular intensity from a shininess value</h2>
+                <p class="text">
+                    This wasn&#39;t made by me, you should check this <a target="_blank" href="https://www.farbrausch.de/~fg/articles/phong.pdf">pdf</a> for further details.
+                </p>
+                <ol class="code">
+                    <li><code>#define PI 3.14159265359</code></li>
+                    <li><code></code></li>
+                    <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                    <li><code>//and multiply the specular factor by it.</code></li>
+                    <li><code>...</code></li>
+                    <li><code>float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;</code></li>
+                </ol>
+                <p class="text">
+                    And this is how it looks now.
+                </p>
+                <img class="image" src="/resources/1/Still looks bad.png" alt="Still looks bad"/>
+                <p class="text">
+                    It still looks kind of bad, this is because we need to do one more thing.
+                </p>
+            </section>
+            <section id="6+Specular+and+diffuse+material+colors+must+sum+to+1">
+                <h2>6 Specular and diffuse material colors must sum to 1</h2>
+                <p class="text">
+                    This is to remain &quot;energy conserving&quot;, it can easily be done on the shader by
+                    multiplying the light&#39;s diffuse and specular factors by a constant, if
+                    you want more specular, you will need to decrease the diffuse and vice versa,
+                    I usually use a very low specular value of 5%, but you can increase if you want (remember
+                    to decrease the diffuse!), if you need more control you can place it in your material too.
+                </p>
+                <ol class="code">
+                    <li><code>#define DIFFUSE_INTENSITY 0.95</code></li>
+                    <li><code>#define SPECULAR_INTENSITY 0.05</code></li>
+                    <li><code></code></li>
+                    <li><code>float diffuseFactor = ...</code></li>
+                    <li><code>float specularFactor = ...</code></li>
+                    <li><code>diffuseFactor *= DIFFUSE_INTENSITY;</code></li>
+                    <li><code>specularFactor *= SPECULAR_INTENSITY;</code></li>
+                </ol>
+                <p class="text">
+                    And this is how it looks now, with a very faint specular, it is much better now.
+                </p>
+                <img class="image" src="/resources/1/Final result.png" alt="Final result"/>
+                <p class="text">
+                    This is the final code.
+                </p>
+                <ol class="code">
+                    <li><code>#define PI 3.14159265359</code></li>
+                    <li><code>#define MAX_SHININESS 2048.0</code></li>
+                    <li><code>#define DIFFUSE_INTENSITY 0.95</code></li>
+                    <li><code>#define SPECULAR_INTENSITY 0.05</code></li>
+                    <li><code></code></li>
+                    <li><code>vec3 directionalLight(</code></li>
+                    <li><code>    vec3 lightDirection, vec3 viewDirection, vec3 normal,</code></li>
+                    <li><code>    vec3 diffuseColor, vec3 specularColor, float roughness</code></li>
+                    <li><code>) {</code></li>
+                    <li><code>    float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
+                    <li><code>    float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                    <li><code></code></li>
+                    <li><code>    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                    <li><code>    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                    <li><code>    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;</code></li>
+                    <li><code></code></li>
+                    <li><code>    diffuseFactor *= DIFFUSE_INTENSITY;</code></li>
+                    <li><code>    specularFactor *= SPECULAR_INTENSITY;</code></li>
+                    <li><code></code></li>
+                    <li><code>    vec3 diffuse = diffuseFactor * diffuseColor;</code></li>
+                    <li><code>    vec3 specular = specularFactor * specularColor;</code></li>
+                    <li><code>    vec3 ambient = 0.10 * diffuseColor;</code></li>
+                    <li><code></code></li>
+                    <li><code>    return diffuse + specular + ambient;</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="fine">
+                    If you are rendering multiple lights on the same shader, it is better to
+                    calculate the shininess and normalization once and pass them as function arguments.
+                </p>
+            </section>
+            <section id="7+Results">
+                <h2>7 Results</h2>
+                <p class="text">
+                    Those are the final results, all of these textures come from <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a>
+                </p>
+                <img class="image" src="/resources/1/final bricks.png" alt="final bricks"/>
+                <img class="image" src="/resources/1/final leather.png" alt="final leather"/>
+                <img class="image" src="/resources/1/final rock.png" alt="final rock"/>
+                <img class="image" src="/resources/1/final stone tiles.png" alt="final stone tiles"/>
+                <img class="image" src="/resources/1/final tiles.png" alt="final tiles"/>
+                <img class="image" src="/resources/1/final wood.png" alt="final wood"/>
+                <p class="text">
+                    And without configuring any material!
+                    using only three textures (color, normal and roughness).
+                </p>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 1"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+        </footer>
+    </body>
+</html>

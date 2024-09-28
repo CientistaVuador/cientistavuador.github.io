@@ -35,7 +35,7 @@ For more information, please refer to <https://unlicense.org>
     background-color: #303030;
     color: #EEEEEE;
     font-family: sans-serif;
-    line-height: 1.3em;
+    line-height: 1.4em;
 }
 .header {
     text-align: center;
@@ -176,6 +176,8 @@ For more information, please refer to <https://unlicense.org>
     height: auto;
     justify-content: center;
     margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 .table {
     display: block;

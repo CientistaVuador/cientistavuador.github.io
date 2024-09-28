@@ -93,9 +93,8 @@ public class KeywordMapper {
         }
 
         Map.Entry<String, Integer>[] set = wordCount.entrySet().toArray(Map.Entry[]::new);
-        Comparator<Map.Entry<String, Integer>> comparator = (a, b) -> Integer.compare(a.getValue(), b.getValue());
-        Arrays.sort(set, comparator.reversed());
-
+        Arrays.sort(set, (a, b) -> Integer.compare(a.getValue(), b.getValue()));
+        
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 64; i++) {
             if (i >= set.length) {

@@ -1,0 +1,181 @@
+[[id]] 1
+[[languages]] en-us
+
+[[title]] Blinn Phong with Roughness Textures
+
+[[section]] Introduction
+[text]
+So, you finished your OpenGL blinn phong tutorial and now you rush
+to google (or whatever search engine you are using) in search of
+good looking 4K textures to test it, you end up in websites such as
+[[[https://cc0-textures.com/:::CC0 Textures]]] and [[[https://ambientcg.com/:::Ambient CG]]]
+you find a good texture and download it, you look at the textures and find what
+you expected: a color, a normal, a height but there's one you don't know exactly 
+what it is, a texture called roughness, you open it up and it looks like a specular
+texture, so you load it as a specular, but wait, what shininess value should I use?
+there's nothing on the description of the texture or anything, so you try a random
+shininess based on the texture type (high for tiles, low for rocks...) and it doesn't work
+well, you now go back to google and find out that for more than a decade everyone
+was now using [[[https://en.wikipedia.org/wiki/Physically_based_rendering:::PBR]]]
+textures and that you may need to learn a much more complicated
+way to render things and you end up getting frustated as what you have learned
+may have become worthless today.
+[;<;>]
+[text]
+This is why this article was made, to show you how to adapt a old
+blinn phong rendering system to a roughness texture, without the
+need to change material properties (I won't be using materials at all),
+the adaptation is very simple and the results are very good for something
+that was made in the 70s.
+[;<;>]
+[[text]] This was based on this very old article: [[[https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/:::Energy Conservation In Games]]]
+
+[[section]] "Fixing" Blinn Phong Specular
+[text]
+One of the things you may or may not have noticed is that when using
+low shininess values, blinn phong may generate a cone shaped specular
+at the dark side of a mesh, this is a not a problem with blinn phong itself
+but most tutorials don't talk about it.
+[;<;>]
+[[image]] /resources/1/Cone shaped specular.png
+[text]
+To fix it simply multiply the specular factor by the diffuse factor.
+[;<;>]
+[code]
+vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor;
+[;<;>]
+[[image]] /resources/1/Fixed cone shaped specular.png
+
+[[section]] A Directional Light
+[code]
+            vec3 directionalLight(
+                vec3 lightDirection, vec3 viewDirection, vec3 normal,
+                vec3 diffuseColor, vec3 specularColor, float shininess
+            ) {
+                vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+                float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+                float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor;
+                
+                vec3 diffuse = diffuseFactor * diffuseColor;
+                vec3 specular = specularFactor * specularColor;
+                vec3 ambient = 0.10 * diffuseColor;
+                
+                return diffuse + specular + ambient;
+            }
+[;<;>]
+[text]
+This is how a basic directional light usually looks like, we have the light direction,
+the view direction (the direction from the camera ***to the*** fragment ```normalize(position - camera)```)
+the normal of the surface and the diffuseColor and specularColor from materials/textures and a shininess value
+from the material, for simplicity I removed the light colors vectors.
+[;<;>]
+[fine]
+I won't talk about point lights or spot lights here, as a point light is a directional light
+constrained by distance and a spot light is a point light constrained by a angle.
+[;<;>]
+[[text]] This is how it looks on this [[[https://cc0-textures.com/t/th-brown-leather:::leather texture]]] only with color and normal textures, with 64.0 of shininess.
+[[image]] /resources/1/Directional light on leather.png
+
+[[section]] Shininess value from a roughness value
+[text]
+Calculating a shininess value from a roughness value is very easy, we can use a pow function
+and a maximum shininess value, 2048 is good for most purposes, you can put it in your
+material if you want too.
+[;<;>]
+[code]
+#define MAX_SHININESS 2048.0
+
+float shininess = pow(MAX_SHININESS, 1.0 - roughness);
+[;<;>]
+[[text]] And now it looks worse than before
+[[image]] /resources/1/Worse than before.png
+[[text]] This is because we also need the specular intensity to vary with the shininess.
+
+[[section]] Specular intensity from a shininess value
+[text]
+This wasn't made by me, you should check this [[[https://www.farbrausch.de/~fg/articles/phong.pdf:::pdf]]] for further details.
+[;<;>]
+[code]
+#define PI 3.14159265359
+
+float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+//and multiply the specular factor by it.
+...
+float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;
+[;<;>]
+[text]
+And this is how it looks now.
+[;<;>]
+[[image]] /resources/1/Still looks bad.png
+[text]
+It still looks kind of bad, this is because we need to do one more thing.
+[;<;>]
+
+[[section]] Specular and diffuse material colors must sum to 1
+[text]
+This is to remain "energy conserving", it can easily be done on the shader by
+multiplying the light's diffuse and specular factors by a constant, if
+you want more specular, you will need to decrease the diffuse and vice versa,
+I usually use a very low specular value of 5%, but you can increase if you want (remember
+to decrease the diffuse!), if you need more control you can place it in your material too.
+[;<;>]
+[code]
+#define DIFFUSE_INTENSITY 0.95
+#define SPECULAR_INTENSITY 0.05
+
+float diffuseFactor = ...
+float specularFactor = ...
+diffuseFactor *= DIFFUSE_INTENSITY;
+specularFactor *= SPECULAR_INTENSITY;
+[;<;>]
+[text]
+And this is how it looks now, with a very faint specular, it is much better now.
+[;<;>]
+[[image]] /resources/1/Final result.png
+[[text]] This is the final code.
+[code]
+            #define PI 3.14159265359
+            #define MAX_SHININESS 2048.0
+            #define DIFFUSE_INTENSITY 0.95
+            #define SPECULAR_INTENSITY 0.05
+            
+            vec3 directionalLight(
+                vec3 lightDirection, vec3 viewDirection, vec3 normal,
+                vec3 diffuseColor, vec3 specularColor, float roughness
+            ) {
+                float shininess = pow(MAX_SHININESS, 1.0 - roughness);
+                float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+                
+                vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+                float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+                float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;
+                
+                diffuseFactor *= DIFFUSE_INTENSITY;
+                specularFactor *= SPECULAR_INTENSITY;
+                
+                vec3 diffuse = diffuseFactor * diffuseColor;
+                vec3 specular = specularFactor * specularColor;
+                vec3 ambient = 0.10 * diffuseColor;
+                
+                return diffuse + specular + ambient;
+            }
+[;<;>]
+[fine]
+If you are rendering multiple lights on the same shader, it is better to
+calculate the shininess and normalization once and pass them as function arguments.
+[;<;>]
+
+[[section]] Results
+[[text]] Those are the final results, all of these textures come from [[[https://cc0-textures.com/:::CC0 Textures]]]
+[[image]] /resources/1/final bricks.png
+[[image]] /resources/1/final leather.png
+[[image]] /resources/1/final rock.png
+[[image]] /resources/1/final stone tiles.png
+[[image]] /resources/1/final tiles.png
+[[image]] /resources/1/final wood.png
+[text]
+And without configuring any material!
+using only three textures (color, normal and roughness).
+[;<;>]
