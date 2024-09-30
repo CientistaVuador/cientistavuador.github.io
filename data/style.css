@@ -35,7 +35,10 @@ For more information, please refer to <https://unlicense.org>
     background-color: #303030;
     color: #EEEEEE;
     font-family: sans-serif;
-    line-height: 1.4em;
+    line-height: 1.70em;
+}
+.body h1 {
+    line-height: 1.90em;
 }
 .header {
     text-align: center;
