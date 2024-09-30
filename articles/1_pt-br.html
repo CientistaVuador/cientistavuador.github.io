@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="pt-br">
     <head>
-        <title>Blinn Phong with Roughness Textures</title>
+        <title>Blinn Phong com Texturas de Roughness</title>
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="bad, vary, adaptation, these, fix, calculate, height, pass, remain, expected, them, easy, something, looking, must, ambient, sum, diffusecolor, remember, same, pow, wikipedia, vice, configuring, cg, learn, noticed, such, th, complicated, thing, open, de, do, view, wasn, details, generate, those, faint, doesn, test, adapt, en, check, brown, look, worse, whatever, multiplying, once, 4k, know, 70s, pbr, fg, distance, shaped, show, description, back, simplicity, anything, getting"/>
-        <meta name="description" content="This article explains a method for using roughness textures with blinn phong."/>
+        <meta name="keywords" content="antigo, pt, pelo, aumentar, baseado, usarei, height, aleatória, couro, varie, volta, abre, mostrar, motor, década, ambient, diffusecolor, conservação, configurar, mim, ótimos, si, funciona, luzes, pow, wikipedia, renderiza, ser, vice, cg, espera, todo, fefito, th, simplesmente, simplicidade, algo, multiplicando, sites, parte, renderizar, view, ruim, mesmo, maioria, esperava, controle, detalhes, propriedades, ele, pisos, energia, passar, brown, hoje, câmera, 4k, final, a3o, pbr, fg, removi, formato, falar"/>
+        <meta name="description" content="Esse artigo explica um método para utilizar texturas de roughness com blinn phong."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
@@ -14,8 +14,8 @@
         <!-- HTML Meta Tags -->
         
         <!-- OpenGraph -->
-        <meta name="og:title" content="Blinn Phong with Roughness Textures"/>
-        <meta name="og:description" content="This article explains a method for using roughness textures with blinn phong."/>
+        <meta name="og:title" content="Blinn Phong com Texturas de Roughness"/>
+        <meta name="og:description" content="Esse artigo explica um método para utilizar texturas de roughness com blinn phong."/>
         <meta name="og:type" content="article"/>
         <meta name="og:image" content="/data/icon.png"/>
         <!-- OpenGraph -->
@@ -47,74 +47,75 @@
     
     For more information, please refer to <http://unlicense.org/>
     
-    en-us
-        Blinn Phong with Roughness Textures
-        This article explains a method for using roughness textures with blinn phong.
+    pt-br
+        Blinn Phong com Texturas de Roughness
+        Esse artigo explica um método para utilizar texturas de roughness com blinn phong.
         1
-        2024/09/28 15:33, Updated at 2024/09/29 22:46
+        2024/09/28 15:33, Atualizado em 2024/09/29 22:46
     
     -->
     <body class="body">
         <header class="header">
-            <h1>Blinn Phong with Roughness Textures</h1>
-            <h2>This article explains a method for using roughness textures with blinn phong.</h2>
+            <h1>Blinn Phong com Texturas de Roughness</h1>
+            <h2>Esse artigo explica um método para utilizar texturas de roughness com blinn phong.</h2>
             <h3>0001</h3>
-            <h3>2024/09/28 15:33, Updated at 2024/09/29 22:46</h3>
+            <h3>2024/09/28 15:33, Atualizado em 2024/09/29 22:46</h3>
             <h4><a href="1_en-us.html">EN-US</a> | <a href="1_pt-br.html">PT-BR</a></h4>
         </header>
         <main class="article">
             <nav class="indices">
                 <ol>
-                    <li><a href="#1+Introduction">1 Introduction</a></li>
-                    <li><a href="#2+%26quot%3BFixing%26quot%3B+Blinn+Phong+Specular">2 &quot;Fixing&quot; Blinn Phong Specular</a></li>
-                    <li><a href="#3+A+Directional+Light">3 A Directional Light</a></li>
-                    <li><a href="#4+Shininess+value+from+a+roughness+value">4 Shininess value from a roughness value</a></li>
-                    <li><a href="#5+Specular+intensity+from+a+shininess+value">5 Specular intensity from a shininess value</a></li>
-                    <li><a href="#6+Specular+and+diffuse+material+colors+must+sum+to+1+at+maximum">6 Specular and diffuse material colors must sum to 1 at maximum</a></li>
-                    <li><a href="#7+Results">7 Results</a></li>
+                    <li><a href="#1+Introdu%C3%A7%C3%A3o">1 Introdução</a></li>
+                    <li><a href="#2+%26quot%3BArrumando%26quot%3B+o+Specular+do+Blinn+Phong">2 &quot;Arrumando&quot; o Specular do Blinn Phong</a></li>
+                    <li><a href="#3+Uma+Luz+Direcional">3 Uma Luz Direcional</a></li>
+                    <li><a href="#4+Valor+de+shininess+de+um+valor+de+roughness">4 Valor de shininess de um valor de roughness</a></li>
+                    <li><a href="#5+Intensidade+de+specular+de+um+valor+de+shininess">5 Intensidade de specular de um valor de shininess</a></li>
+                    <li><a href="#6+Specular+e+diffuse+dos+materiais+deve+somar+para+1+no+m%C3%A1ximo">6 Specular e diffuse dos materiais deve somar para 1 no máximo</a></li>
+                    <li><a href="#7+Resultados">7 Resultados</a></li>
                 </ol>
             </nav>
-            <section id="1+Introduction">
-                <h2>1 Introduction</h2>
+            <section id="1+Introdu%C3%A7%C3%A3o">
+                <h2>1 Introdução</h2>
                 <p class="text">
-                    So, you finished your OpenGL blinn phong tutorial and now you rush
-                    to google (or whatever search engine you are using) in search of
-                    good looking 4K textures to test it, you end up in websites such as
-                    <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a> and <a target="_blank" href="https://ambientcg.com/">Ambient CG</a>
-                    you find a good texture and download it, you look at the textures and find what
-                    you expected: a color, a normal, a height but there&#39;s one you don&#39;t know exactly
-                    what it is, a texture called roughness, you open it up and it looks like a specular
-                    texture, so you load it as a specular, but wait, what shininess value should I use?
-                    there&#39;s nothing on the description of the texture or anything, so you try a random
-                    shininess based on the texture type (high for tiles, low for rocks...) and it doesn&#39;t work
-                    well, you now go back to google and find out that for more than a decade everyone
-                    was now using <a target="_blank" href="https://en.wikipedia.org/wiki/Physically_based_rendering">PBR</a>
-                    textures and that you may need to learn a much more complicated
-                    way to render things and you end up getting frustated as what you have learned
-                    may have become worthless today.
+                    Então, você terminou seu tutorial de blinn phong no OpenGL e agora você
+                    corre para o google (ou qualquer que seja o motor de busca que esteja usando) em procura
+                    de boas texturas em 4K para testar, você termina em sites como
+                    <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a> e <a target="_blank" href="https://ambientcg.com/">Ambient CG</a>
+                    você encontra uma boa textura e baixa ela, você olha as texturas e encontra o que esperava:
+                    uma cor, um normal, um height mas tem uma que você não sabe exatamente o que é,
+                    uma textura chamada roughness, você abre ela e ela se parece com uma textura de specular
+                    então você carrega ela como uma de specular, mas espera, que valor de shininess eu deveria usar?
+                    não tem nada na descrição da textura ou em outros lugares, então você tenta uma shininess
+                    aleatória baseada no tipo da textura (alta para pisos, baixa para rochas...) e não funciona
+                    bem, então você volta para o google e descobre que por mais de uma década todo mundo agora
+                    estava usando texturas de
+                    <a target="_blank" href="https://pt.wikipedia.org/wiki/Renderiza%C3%A7%C3%A3o_baseada_em_f%C3%ADsica">PBR</a>
+                    e que agora você talvez precise aprender um jeito muito mais complicado de renderizar coisas
+                    e você termina ficando frustado já que o que aprendeu pode ter se tornado inútil nos dias
+                    de hoje.
                 </p>
                 <p class="text">
-                    This is why this article was made, to show you how to adapt a old
-                    blinn phong rendering system to a roughness texture, without the
-                    need to change material properties (I won&#39;t be using materials at all),
-                    the adaptation is very simple and the results are very good for something
-                    that was made in the 70s.
+                    É por isso que esse artigo foi feito, para mostrar a você como adaptar um velho
+                    sistema de blinn phong para uma textura de roughness, sem a necessidade de mudar
+                    as propriedades dos materiais (nem usarei materiais na verdade),
+                    a adaptação é bem simples e os resultados são ótimos para algo que foi feito
+                    nos anos 70.
                 </p>
                 <p class="text">
-                    This was based on this very old article: <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a>
+                    Isso foi baseado nesse artigo bem antigo (em inglês): <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a>
                 </p>
             </section>
-            <section id="2+%26quot%3BFixing%26quot%3B+Blinn+Phong+Specular">
-                <h2>2 &quot;Fixing&quot; Blinn Phong Specular</h2>
+            <section id="2+%26quot%3BArrumando%26quot%3B+o+Specular+do+Blinn+Phong">
+                <h2>2 &quot;Arrumando&quot; o Specular do Blinn Phong</h2>
                 <p class="text">
-                    One of the things you may or may not have noticed is that when using
-                    low shininess values, blinn phong may generate a cone shaped specular
-                    at the dark side of a mesh, this is a not a problem with blinn phong itself
-                    but most tutorials don&#39;t talk about it.
+                    Uma das coisas que você pode ou não pode ter percebido é que quando
+                    valores baixos de shininess são utilizados, blinn phong pode gerar um specular
+                    em formato de cone no lado escuro de uma mesh, isso não é um problema com blinn phong
+                    em si mas grande parte dos tutoriais não falam sobre ele.
                 </p>
                 <img class="image" src="/resources/1/Cone shaped specular.png" alt="Cone shaped specular"/>
                 <p class="text">
-                    To fix it simply multiply the specular factor by the diffuse factor.
+                    Para arrumar simplesmente multiplique o fator de specular pelo fator de diffuse.
                 </p>
                 <ol class="code">
                     <li><code>vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
@@ -123,8 +124,8 @@
                 </ol>
                 <img class="image" src="/resources/1/Fixed cone shaped specular.png" alt="Fixed cone shaped specular"/>
             </section>
-            <section id="3+A+Directional+Light">
-                <h2>3 A Directional Light</h2>
+            <section id="3+Uma+Luz+Direcional">
+                <h2>3 Uma Luz Direcional</h2>
                 <ol class="code">
                     <li><code>vec3 directionalLight(</code></li>
                     <li><code>    vec3 lightDirection, vec3 viewDirection, vec3 normal,</code></li>
@@ -142,26 +143,26 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="text">
-                    This is how a basic directional light usually looks like, we have the light direction,
-                    the view direction (the direction from the camera to the fragment <code>normalize(position - camera)</code>)
-                    the normal of the surface and the diffuseColor and specularColor from materials/textures and a shininess value
-                    from the material, for simplicity I removed the light colors vectors.
+                    É assim que uma luz direcional básica normalmente se parece, nós temos a direção da luz (lightDirection),
+                    a direção de view (viewDirection) (a direção da câmera para o fragment <code>normalize(position - camera)</code>)
+                    o normal da superfície e o diffuseColor e o specularColor dos materiais/texturas e um valor de shininess
+                    do material, para manter a simplicidade, eu removi os vetores de cores da luz.
                 </p>
                 <p class="fine">
-                    I won&#39;t talk about point lights or spot lights here, as a point light is a directional light
-                    constrained by distance and a spot light is a point light constrained by a angle.
+                    Não vou falar sobre point lights ou spot lights aqui, já que uma point light é uma luz direcional
+                    restringida por uma distância e uma spot light é uma point light restringida por um ângulo.
                 </p>
                 <p class="text">
-                    This is how it looks on this <a target="_blank" href="https://cc0-textures.com/t/th-brown-leather">leather texture</a> only with color and normal textures, with 64.0 of shininess.
+                    É assim que se parece nessa <a target="_blank" href="https://cc0-textures.com/t/th-brown-leather">textura de couro</a> somente com as texturas de cor e normal, com 64.0 de shininess.
                 </p>
                 <img class="image" src="/resources/1/Directional light on leather.png" alt="Directional light on leather"/>
             </section>
-            <section id="4+Shininess+value+from+a+roughness+value">
-                <h2>4 Shininess value from a roughness value</h2>
+            <section id="4+Valor+de+shininess+de+um+valor+de+roughness">
+                <h2>4 Valor de shininess de um valor de roughness</h2>
                 <p class="text">
-                    Calculating a shininess value from a roughness value is very easy, we can use a pow function
-                    and a maximum shininess value, 2048 is good for most purposes, you can put it in your
-                    material if you want too.
+                    Calcular um valor de shininess a partir de um valor de roughness é bem fácil, podemos usar uma função de pow
+                    e um valor máximo de shininess, 2048 é bom para a maioria dos casos, você pode colocar isso no seu material
+                    se quiser também.
                 </p>
                 <ol class="code">
                     <li><code>#define MAX_SHININESS 2048.0</code></li>
@@ -169,42 +170,42 @@
                     <li><code>float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
                 </ol>
                 <p class="text">
-                    And now it looks worse than before
+                    E agora está pior do que antes.
                 </p>
                 <img class="image" src="/resources/1/Worse than before.png" alt="Worse than before"/>
                 <p class="text">
-                    This is because we also need the specular intensity to vary with the shininess.
+                    Isso é porque também precisamos que a intensidade do specular varie com a shininess.
                 </p>
             </section>
-            <section id="5+Specular+intensity+from+a+shininess+value">
-                <h2>5 Specular intensity from a shininess value</h2>
+            <section id="5+Intensidade+de+specular+de+um+valor+de+shininess">
+                <h2>5 Intensidade de specular de um valor de shininess</h2>
                 <p class="text">
-                    This wasn&#39;t made by me, you should check this <a target="_blank" href="https://www.farbrausch.de/~fg/articles/phong.pdf">pdf</a> for further details.
+                    Isso não foi feito por mim, você deveria checar esse <a target="_blank" href="https://www.farbrausch.de/~fg/articles/phong.pdf">pdf</a> (em inglês) para mais detalhes.
                 </p>
                 <ol class="code">
                     <li><code>#define PI 3.14159265359</code></li>
                     <li><code></code></li>
                     <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
-                    <li><code>//and multiply the specular factor by it.</code></li>
+                    <li><code>//e multiplique o fator de specular por ele</code></li>
                     <li><code>...</code></li>
                     <li><code>float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;</code></li>
                 </ol>
                 <p class="text">
-                    And this is how it looks now.
+                    E é assim que se parece agora.
                 </p>
                 <img class="image" src="/resources/1/Still looks bad.png" alt="Still looks bad"/>
                 <p class="text">
-                    It still looks kind of bad, this is because we need to do one more thing.
+                    Ainda está um pouco ruim, isso é porque precisamos fazer mais uma coisa.
                 </p>
             </section>
-            <section id="6+Specular+and+diffuse+material+colors+must+sum+to+1+at+maximum">
-                <h2>6 Specular and diffuse material colors must sum to 1 at maximum</h2>
+            <section id="6+Specular+e+diffuse+dos+materiais+deve+somar+para+1+no+m%C3%A1ximo">
+                <h2>6 Specular e diffuse dos materiais deve somar para 1 no máximo</h2>
                 <p class="text">
-                    This is to remain &quot;energy conserving&quot;, it can easily be done on the shader by
-                    multiplying the light&#39;s diffuse and specular factors by a constant, if
-                    you want more specular, you will need to decrease the diffuse and vice versa,
-                    I usually use a very low specular value of 5%, but you can increase if you want (remember
-                    to decrease the diffuse!), if you need more control you can place it in your material too.
+                    Isso é para manter a &quot;conservação de energia&quot;, pode ser facilmente fefito no shader
+                    multiplicando os fatores de diffuse e specular da luz por uma constante, se você quer
+                    mais specular, você terá que diminuir o diffuse e vice versa, eu normalmente uso
+                    um valor bem baixo de specular de 5%, mas você pode aumentar se quiser (lembre-se de
+                    diminuir o diffuse!), se você quer mais controle pode colocar no seu material também.
                 </p>
                 <ol class="code">
                     <li><code>#define DIFFUSE_INTENSITY 0.95</code></li>
@@ -216,11 +217,11 @@
                     <li><code>specularFactor *= SPECULAR_INTENSITY;</code></li>
                 </ol>
                 <p class="text">
-                    And this is how it looks now, with a very faint specular, it is much better now.
+                    E é assim que se parece agora, com um specular bem fraco, está muito melhor agora.
                 </p>
                 <img class="image" src="/resources/1/Final result.png" alt="Final result"/>
                 <p class="text">
-                    This is the final code.
+                    Esse é o código final.
                 </p>
                 <ol class="code">
                     <li><code>#define PI 3.14159265359</code></li>
@@ -250,14 +251,14 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="fine">
-                    If you are rendering multiple lights on the same shader, it is better to
-                    calculate the shininess and normalization once and pass them as function arguments.
+                    Se você está renderizando múltiplas luzes no mesmo shader, é melhor
+                    calcular o shininess e normalization apenas uma vez e passar eles como argumentos de funções.
                 </p>
             </section>
-            <section id="7+Results">
-                <h2>7 Results</h2>
+            <section id="7+Resultados">
+                <h2>7 Resultados</h2>
                 <p class="text">
-                    Those are the final results, all of these textures come from <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a>
+                    Esses são os resultados finais, todas essas texturas vem de <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a> (em inglês)
                 </p>
                 <img class="image" src="/resources/1/final bricks.png" alt="final bricks"/>
                 <img class="image" src="/resources/1/final leather.png" alt="final leather"/>
@@ -266,13 +267,13 @@
                 <img class="image" src="/resources/1/final tiles.png" alt="final tiles"/>
                 <img class="image" src="/resources/1/final wood.png" alt="final wood"/>
                 <p class="text">
-                    And without configuring any material!
-                    using only three textures (color, normal and roughness).
+                    E sem configurar nenhum material!
+                    usando apenas três texturas (cor, normal e roughness).
                 </p>
             </section>
         </main>
         <footer class="footer">
-            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
             <script src="https://utteranc.es/client.js"
                     repo="CientistaVuador/cientistavuador.github.io"
                     issue-term="Article 1"
@@ -282,7 +283,7 @@
                     async="async"
                     >
             </script>
-            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+            <p>A Licença desta página pode ser encontrada no código-fonte ou no <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">repositório do github</a>.</p>
         </footer>
     </body>
 </html>
