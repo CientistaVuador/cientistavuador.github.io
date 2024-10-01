@@ -376,7 +376,7 @@ Excel never supported RFC4180 as far as I know, if
 things did not change, excel should still be the devil of
 csv files, generating different csv files that depend
 on which country you are, making sure that your life as a
-programmer will be a pain
+programmer will be a pain.
 [;<;>]
 
 [[subsection]] Other Online Editors
