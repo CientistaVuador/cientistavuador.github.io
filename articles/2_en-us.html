@@ -5,7 +5,7 @@
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="references, depend, gigabytes, ambiguous, without, quoted, character, quote, because, they, fully, github, sure, bundled, preprocessing, edit, remain, them, require, an, each, extend, eliminates, at, meta, unique, alternatives, fact, affect, devil, recommend, ddos, turn, skips, same, does, attack, supports, vector, after, so, escape, contain, started, right, many, people, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things, written, w3, export"/>
+        <meta name="keywords" content="references, depend, gigabytes, ambiguous, without, quoted, character, because, they, fully, github, sure, bundled, preprocessing, edit, remain, myself, them, require, am, an, each, extend, eliminates, at, meta, unique, alternatives, fact, affect, devil, recommend, ddos, turn, skips, same, does, attack, by, supports, vector, after, so, escape, contain, started, many, people, txt, advantages, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things"/>
         <meta name="description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
@@ -111,7 +111,8 @@
                     csv-metadata-key,csv-metadata-value as the header, set csv-type-name
                     if you want to set the type of your csv and csv-field-zero if you want
                     to set the value of the first field (the field index zero) and use empty keys as
-                    comments or to skip a line.
+                    comments or to skip a line and take care with double quotes, as one double quote
+                    is now two and a escaped double quote is now four.
                 </p>
                 <ol class="code">
                     <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -133,6 +134,10 @@
             </section>
             <section id="2+Introduction">
                 <h2>2 Introduction</h2>
+                <p class="text">
+                    This article assumes that the <a target="_blank" href="https://www.ietf.org/rfc/rfc4180.txt">RFC4180</a> is
+                    the right way to write and read CSV files.
+                </p>
                 <p class="text">
                     On the internet you can find many ways to add metadata to a csv file, some of them turn your csv into
                     proprietary formats that only your program can understand while others require additional files,
@@ -259,6 +264,8 @@
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
                         <li><code>a,10</code></li>
                         <li><code>b,20</code></li>
+                        <li><code>x,&quot;&quot;field, with, commas&quot;&quot;</code></li>
+                        <li><code>y,&quot;&quot;field with &quot;&quot;&quot;&quot;double quotes&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
                         <li><code>c,30</code></li>
                         <li><code>c,40</code></li>
                         <li><code>&quot;,y,z</code></li>
@@ -307,8 +314,8 @@
                     <p class="text">
                         If it is needed to remain compatible with a system,
                         we can move all data to the right and remove the &quot;csv-field-zero&quot;,
-                        this does not affect the &quot;csv-field-zero&quot; or anything, it only changes
-                        the structure of the csv itself and makes the header reappear correctly again.
+                        this does not affect anything, it only changes the structure of the
+                        csv itself and makes the header reappear correctly again.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -347,6 +354,11 @@
             </section>
             <section id="5+In+code">
                 <h2>5 In code</h2>
+                <p class="text">
+                    Reading and Writing becomes quite simple, the CSV parser I am using
+                    was made by myself with less than 100 lines, which is one of the main
+                    advantages of CSV, the class accepts null values as empty strings.
+                </p>
                 <section id="5.1+Reading">
                     <h3>5.1 Reading</h3>
                     <ol class="code">
@@ -427,17 +439,17 @@
             <section id="6+Security+Risks">
                 <h2>6 Security Risks</h2>
                 <p class="text">
-                    Embedding csvs inside of csvs can become a potential DDoS attack
+                    Embedding CSVs inside of CSVs can become a potential DDoS attack
                     vector due to how double quotes are escaped, for every depth level
                     the amount of required double quotes is doubled, at depth 32, the
                     required amount of double quotes for a single double quote would
                     need gigabytes of character data to escape it.
                 </p>
                 <p class="text">
-                    If you really need to embed multiple csvs inside of a csv file,
-                    the best way without additional files would be to create a file
-                    system using a single zip file, write all of your csvs to it and
-                    then embed the zip as base64 in a master csv, care should be taken
+                    If you really need to embed multiple CSVs inside of a CSV file
+                    without additional files, the best way would be to create a file
+                    system using a single zip file, write all of your CSVs to it and
+                    then embed the zip as base64 in a master CSV, care should be taken
                     as zip bombs can still be a possibility.
                 </p>
                 <ol class="code">
