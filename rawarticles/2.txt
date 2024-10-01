@@ -1,0 +1,349 @@
+[[id]] 2
+[[languages]] en-us
+
+[[title]] Field Zero Metadata - Adding metadata to your CSV files
+[description] 
+This article talks about adding metadata to CSV files while still being compatible with RFC4180.
+[;<;>]
+[[date]] 2024/10/01 01:10
+
+[[section]] TL;DR
+[text]
+Use the first field for metadata purposes, with a embedded csv starting with
+csv-metadata-key,csv-metadata-value as the header, set csv-type-name
+if you want to set the type of your csv and csv-field-zero if you want
+to set the value of the first field (the field index zero) and use empty keys as
+comments or to skip a line.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,vectors
+csv-field-zero,x
+,
+,""
+This is a comment!
+""
+,
+key,value
+key,""value""
+otherKey,""value with """"double quotes""""!""
+",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[section]] Introduction
+[text]
+On the internet you can find many ways to add metadata to a csv file, some of them turn your csv into
+proprietary formats that only your program can understand while others require additional files,
+zip files or other data formats such as JSON or XML, in this article I propose a method to add
+metadata to csv files.
+[;<;>]
+
+[[section]] Alternatives
+
+[[subsection]] # as comments or metadata
+[text]
+This seems to be the most common way to add metadata or comments to a csv, it either requires
+a custom parser or preprocessing, it has no standard and can be quite ambiguous
+as a field starting with # can also be a valid field.
+[;<;>]
+[code]
+#This is my csv file!
+#type=vectors
+x,y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] Metadata file/Zip file
+[text]
+A file for metadata purposes is carried together with the csv file,
+usually with the same name as the csv file plus a suffix (-meta.type)
+and uses any data format, both files can then be bundled
+in a zip file.
+[;<;>]
+[code]
+my-csv.csv:
+x,y,z
+1,2,3
+4,5,6
+7,8,9
+
+my-csv-meta.xml:
+<meta>
+    <description>This is my csv file!</description>
+    <type>vectors</type>
+</meta>
+
+my-csv.zip:
+    my-csv.csv
+    my-csv-meta.xml
+[;<;>]
+
+[[subsection]] W3C
+[text]
+They [[[https://www.w3.org/TR/tabular-data-model/#embedded-metadata:::tried]]],
+I never heard of this W3C format until I started searching about metadata in
+CSV files.
+[;<;>]
+[code]
+#publisher,W3C
+#updated,2015-10-17T00:00:00Z
+#name,sensor,temperature
+#datatype,string,float
+sensor,temperature
+s-1,25.5
+[;<;>]
+
+[[subsection]] References
+[ulist]
+,[[[https://stackoverflow.com/questions/18362864/adding-metadata-identifier-data-to-a-csv-file:::Adding metadata / identifier data to a CSV file?]]]
+,[[[https://stackoverflow.com/questions/30739931/store-metadata-in-csv-file:::Store metadata in CSV file]]]
+,[[[https://stackoverflow.com/questions/58987503/how-to-add-metadata-to-a-csv-file:::How to add metadata to a csv file?]]]
+,[[[https://gist.github.com/seece/97d02d6518db8b9e4c5b81fc686553e2:::A Straightforward Way To Extend CSV With Metadata]]]
+[;<;>]
+
+[[section]] My alternative
+[text]
+So, if we want to add metadata to our csv files, it must be a single csv
+file, it must not use other data formats, it must be compatible with a csv
+parser that can read RFC4180, it has to be identifiable and
+simple enough that people would consider to use it.
+[;<;>]
+
+[[subsection]] Field Zero
+[text]
+After thinking about it, there's no better place to add metadata
+than placing into the first field of the csv file.
+[;<;>]
+[code]
+"metadata",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] No other data formats
+[text]
+Instead of using other data formats such as json or xml, we use a embedded 
+csv for it, this eliminates the requirement for other data formats.
+[;<;>]
+[code]
+"a,b,c,d",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] Identifiable
+[text]
+We use a csv header for it, this can only contain a key and a value,
+any other header is not valid and should be processed as a normal field,
+even if the header is quite unique, it is still a good idea for parsers 
+to add a option for reading it as text instead of metadata, redefinition
+of fields is allowed and is done in order of appearance, because this
+is a embedded csv file, double quotes must be written as two instead of one
+and four instead of two inside of quoted fields.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+a,10
+b,20
+c,30
+c,40
+",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] Identification of the CSV data
+[text]
+We add a optional "csv-type-name" for type
+identification, similar to XML Namespaces, this
+allows a csv file to be easily distinguishable from each
+other, as it is for XML I recommend using a URL for it
+but any string is valid, even an empty one or nothing.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,https://example.com/vectors.txt
+",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] Field Zero Value
+[text]
+We add a optional "csv-field-zero" for defining
+the value of the field zero (the first field),
+if not present, a empty string is assumed.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,https://example.com/vectors.txt
+csv-field-zero,x
+",y,z
+1,2,3
+4,5,6
+7,8,9
+[;<;>]
+
+[[subsection]] Compatibility
+[text]
+If it is needed to remain compatible with a system,
+we can move all data to the right and remove the "csv-field-zero",
+this does not affect the "csv-field-zero" or anything, it only changes
+the structure of the csv itself and makes the header reappear correctly again.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,https://example.com/vectors.txt
+",x,y,z
+,1,2,3
+,4,5,6
+,7,8,9
+[;<;>]
+
+[[section]] In code
+
+[[subsection]] Reading
+[code]
+CSV csv = CSV.read(...);
+
+String keyHeader = "csv-metadata-key";
+String valueHeader = "csv-metadata-value";
+String header = keyHeader + "," + valueHeader;
+String quotedHeader = "\"" + keyHeader + "\",\"" + valueHeader + "\"";
+
+Map<String, String> metadata = new LinkedHashMap<>();
+String fieldZero = csv.get(0, 0);
+
+//check if the field zero starts with the header
+if (fieldZero.startsWith(header) || fieldZero.startsWith(quotedHeader)) {
+
+    //read the metadata as csv and check if the header is valid
+    CSV csvMetadata = CSV.read(fieldZero);
+    if (csvMetadata.getNumberOfFields() == 2 
+            && csvMetadata.get(0, 0).equals(keyHeader)
+            && csvMetadata.get(1, 0).equals(valueHeader)
+            ) {
+
+        //read the metadata, skipping the header
+        for (int metaRecord = 1; metaRecord < csvMetadata.getNumberOfRecords(); metaRecord++) {
+            String k = csvMetadata.get(0, metaRecord);
+            String v = csvMetadata.get(1, metaRecord);
+            //remove comments
+            if (k.isEmpty()) {
+                continue;
+            }
+            metadata.put(k, v);
+        }
+
+        //set the field zero
+        csv.set(0, 0, metadata.get("csv-field-zero"));
+    }
+}
+System.out.println("Type: "+metadata.get("csv-type-name"));
+System.out.println("Field zero: "+csv.get(0, 0));
+[;<;>]
+
+[[subsection]] Writing
+[code]
+CSV csv = CSV.read(...);
+
+String keyHeader = "csv-metadata-key";
+String valueHeader = "csv-metadata-value";
+...
+Map<String, String> metadata = new LinkedHashMap<>();
+...
+
+//set field zero
+metadata.put("csv-field-zero", csv.get(0, 0));
+
+//create a new csv with the size of metadata plus 1
+CSV csvMetadata = new CSV(null, 2, metadata.size() + 1);
+
+//write the header
+csvMetadata.set(0, 0, keyHeader);
+csvMetadata.set(1, 0, valueHeader);
+
+//write the metadata
+int index = 1;
+for (Map.Entry<String, String> e:metadata.entrySet()) {
+    csvMetadata.set(0, index, e.getKey());
+    csvMetadata.set(1, index, e.getValue());
+    index++;
+}
+
+//output to field zero
+csv.set(0, 0, csvMetadata.toString());
+System.out.println(csv.toString());
+[;<;>]
+
+[[section]] Security Risks
+[text]
+Embedding csvs inside of csvs can become a potential DDoS attack
+vector due to how double quotes are escaped, for every depth level
+the amount of required double quotes is doubled, at depth 32, the 
+required amount of double quotes for a single double quote would
+need gigabytes of character data to escape it.
+[;<;>]
+[text]
+If you really need to embed multiple csvs inside of a csv file,
+the best way without additional files would be to create a file
+system using a single zip file, write all of your csvs to it and
+then embed the zip as base64 in a master csv, care should be taken
+as zip bombs can still be a possibility.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,https://example.com/vectors.txt
+myOtherCsvsData,c2Rmc2Rmc2Rmc2RmZXdyZXdyY2J2eHZuY2ZqbnRyeXVqdHk3aTZ5dWtqaGcsbWd2bnZjYnhjdmFzZFFFVw==
+myOtherCsvsRoot,root.csv
+",x,y,z
+,1,2,3
+,4,5,6
+,7,8,9
+[;<;>]
+
+[[section]] On External Editors
+[text]
+If correctly escaped, any editor that supports the RFC4180 should
+be able to read and preserve the metadata.
+[;<;>]
+
+[[subsection]] Google Sheets
+[text]
+Google Sheets was the best one, seems to fully follow
+the RFC4180 in importing and exporting csv files.
+[;<;>]
+
+[[subsection]] LibreOffice
+[text]
+LibreOffice was able to import/export correctly but 
+it has a strange behaviour to replace double quotes 
+with curved double quotes on the editor and the lack
+of smooth scrolling makes it annoying to edit
+large metadata fields.
+[;<;>]
+
+[[subsection]] Excel
+[text]
+Excel never supported RFC4180 as far as I know, if
+things did not change, excel should still be the devil of
+csv files, generating different csv files that depend
+on which country you are, making sure that your life as a
+programmer will be a pain
+[;<;>]
+
+[[subsection]] Other Online Editors
+[text]
+I was able to find a bunch of small online editors
+of csv files, all of the ones I tested seems to
+follow the RFC4180.
+[;<;>]

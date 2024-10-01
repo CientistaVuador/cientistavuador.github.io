@@ -127,10 +127,7 @@ public class CSV {
     private final int numberOfFields;
     private final int numberOfRecords;
     private final HashMap<String, Integer> headerIndices = new HashMap<>();
-
-    private boolean metadataAware = false;
-    private final LinkedHashMap<String, String> metadata = new LinkedHashMap<>();
-
+    
     public CSV(String[] fields, int numberOfFields, int numberOfRecords) {
         if (numberOfFields <= 0) {
             throw new IllegalArgumentException("Number of fields <= 0: " + numberOfFields);
@@ -194,82 +191,15 @@ public class CSV {
         }
         return i;
     }
-
-    public boolean hasMetadata() {
-        return (get(0, 0).startsWith("csv-metadata-key,csv-metadata-value") 
-                || get(0, 0).startsWith("\"csv-metadata-key\",\"csv-metadata-value\""));
-    }
-    
-    public void readMetadata() {
-        CSV metadataCSV = CSV.read(get(0, 0));
-        for (int metaRecord = 1; metaRecord < metadataCSV.getNumberOfRecords(); metaRecord++) {
-            setMetadata(metadataCSV.get(0, metaRecord), metadataCSV.get(1, metaRecord));
-        }
-    }
-    
-    public boolean isMetadataAware() {
-        return metadataAware;
-    }
-
-    public void setMetadataAware(boolean metadataAware) {
-        this.metadataAware = metadataAware;
-    }
-
-    public String getMetadata(String key) {
-        return this.metadata.get(key);
-    }
-
-    public void setMetadata(String key, String value) {
-        Objects.requireNonNull(key, "Key is null.");
-        if (value == null) {
-            this.metadata.remove(key);
-            return;
-        }
-        this.metadata.put(key, value);
-    }
-
-    public String getCSVDataType() {
-        return getMetadata("csv-data-type");
-    }
-    
-    public void setCSVDataType(String typeName) {
-        setMetadata("csv-data-type", typeName);
-    }
     
     @Override
     public String toString() {
-        String metadataField = null;
-        if (isMetadataAware()) {
-            CSV metadataCSV = new CSV(null, 2, this.metadata.size() + 1);
-            metadataCSV.set(0, 0, "csv-metadata-key");
-            metadataCSV.set(1, 0, "csv-metadata-value");
-            int index = 1;
-            String dataType = getCSVDataType();
-            if (dataType != null) {
-                metadataCSV.set(0, index, "csv-data-type");
-                metadataCSV.set(1, index, dataType);
-                index++;
-            }
-            for (Map.Entry<String, String> entry:this.metadata.entrySet()) {
-                if (entry.getKey().equals("csv-data-type")) {
-                    continue;
-                }
-                metadataCSV.set(0, index, entry.getKey());
-                metadataCSV.set(1, index, entry.getValue());
-                index++;
-            }
-            metadataField = metadataCSV.toString();
-        }
-        
         StringBuilder b = new StringBuilder();
         StringBuilder fieldBuilder = new StringBuilder();
 
         for (int record = 0; record < getNumberOfRecords(); record++) {
             for (int field = 0; field < getNumberOfFields(); field++) {
                 String value = get(field, record);
-                if (record == 0 && field == 0 && metadataField != null) {
-                    value = metadataField;
-                }
                 
                 boolean hasEspecialCharacters = false;
                 for (int i = 0; i < value.length(); i++) {

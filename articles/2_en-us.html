@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Field Zero Metadata - Adding metadata to your CSV files</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="references, depend, allowed, gigabytes, ambiguous, without, quoted, character, quote, because, they, fully, github, sure, bundled, preprocessing, edit, remain, them, require, an, each, extend, eliminates, at, meta, unique, alternatives, affect, devil, recommend, ddos, turn, same, does, attack, taken, supports, vector, after, so, escape, contain, started, right, many, people, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things, written, w3, export"/>
+        <meta name="description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
+        <link rel="stylesheet" type="text/css" href="/data/style.css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Field Zero Metadata - Adding metadata to your CSV files"/>
+        <meta name="og:description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <!--
+    
+    This is free and unencumbered software released into the public domain.
+    
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.
+    
+    In jurisdictions that recognize copyright laws, the author or authors
+    of this software dedicate any and all copyright interest in the
+    software to the public domain. We make this dedication for the benefit
+    of the public at large and to the detriment of our heirs and
+    successors. We intend this dedication to be an overt act of
+    relinquishment in perpetuity of all present and future rights to this
+    software under copyright law.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+    OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+    For more information, please refer to <http://unlicense.org/>
+    
+    en-us
+        Field Zero Metadata - Adding metadata to your CSV files
+        This article talks about adding metadata to CSV files while still being compatible with RFC4180.
+        2
+        2024/10/01 01:10
+    
+    -->
+    <body class="body">
+        <header class="header">
+            <h1>Field Zero Metadata - Adding metadata to your CSV files</h1>
+            <h2>This article talks about adding metadata to CSV files while still being compatible with RFC4180.</h2>
+            <h3>0002</h3>
+            <h3>2024/10/01 01:10</h3>
+            <h4><a href="2_en-us.html">EN-US</a></h4>
+        </header>
+        <main class="article">
+            <nav class="indices">
+                <ol>
+                    <li><a href="#1+TL%3BDR">1 TL;DR</a></li>
+                    <li><a href="#2+Introduction">2 Introduction</a></li>
+                    <li><a href="#3+Alternatives">3 Alternatives</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#3.1+%23+as+comments+or+metadata">3.1 # as comments or metadata</a></li>
+                            <li><a href="#3.2+Metadata+file%2FZip+file">3.2 Metadata file/Zip file</a></li>
+                            <li><a href="#3.3+W3C">3.3 W3C</a></li>
+                            <li><a href="#3.4+References">3.4 References</a></li>
+                        </ol>
+                    </li><li><a href="#4+My+alternative">4 My alternative</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#4.1+Field+Zero">4.1 Field Zero</a></li>
+                            <li><a href="#4.2+No+other+data+formats">4.2 No other data formats</a></li>
+                            <li><a href="#4.3+Identifiable">4.3 Identifiable</a></li>
+                            <li><a href="#4.4+Identification+of+the+CSV+data">4.4 Identification of the CSV data</a></li>
+                            <li><a href="#4.5+Field+Zero+Value">4.5 Field Zero Value</a></li>
+                            <li><a href="#4.6+Compatibility">4.6 Compatibility</a></li>
+                        </ol>
+                    </li><li><a href="#5+In+code">5 In code</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#5.1+Reading">5.1 Reading</a></li>
+                            <li><a href="#5.2+Writing">5.2 Writing</a></li>
+                        </ol>
+                    </li><li><a href="#6+Security+Risks">6 Security Risks</a></li>
+                    <li><a href="#7+On+External+Editors">7 On External Editors</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#7.1+Google+Sheets">7.1 Google Sheets</a></li>
+                            <li><a href="#7.2+LibreOffice">7.2 LibreOffice</a></li>
+                            <li><a href="#7.3+Excel">7.3 Excel</a></li>
+                            <li><a href="#7.4+Other+Online+Editors">7.4 Other Online Editors</a></li>
+                        </ol>
+                    </li>
+                </ol>
+            </nav>
+            <section id="1+TL%3BDR">
+                <h2>1 TL;DR</h2>
+                <p class="text">
+                    Use the first field for metadata purposes, with a embedded csv starting with
+                    csv-metadata-key,csv-metadata-value as the header, set csv-type-name
+                    if you want to set the type of your csv and csv-field-zero if you want
+                    to set the value of the first field (the field index zero) and use empty keys as
+                    comments or to skip a line.
+                </p>
+                <ol class="code">
+                    <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                    <li><code>csv-type-name,vectors</code></li>
+                    <li><code>csv-field-zero,x</code></li>
+                    <li><code>,</code></li>
+                    <li><code>,&quot;&quot;</code></li>
+                    <li><code>This is a comment!</code></li>
+                    <li><code>&quot;&quot;</code></li>
+                    <li><code>,</code></li>
+                    <li><code>key,value</code></li>
+                    <li><code>key,&quot;&quot;value&quot;&quot;</code></li>
+                    <li><code>otherKey,&quot;&quot;value with &quot;&quot;&quot;&quot;double quotes&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
+                    <li><code>&quot;,y,z</code></li>
+                    <li><code>1,2,3</code></li>
+                    <li><code>4,5,6</code></li>
+                    <li><code>7,8,9</code></li>
+                </ol>
+            </section>
+            <section id="2+Introduction">
+                <h2>2 Introduction</h2>
+                <p class="text">
+                    On the internet you can find many ways to add metadata to a csv file, some of them turn your csv into
+                    proprietary formats that only your program can understand while others require additional files,
+                    zip files or other data formats such as JSON or XML, in this article I propose a method to add
+                    metadata to csv files.
+                </p>
+            </section>
+            <section id="3+Alternatives">
+                <h2>3 Alternatives</h2>
+                <section id="3.1+%23+as+comments+or+metadata">
+                    <h3>3.1 # as comments or metadata</h3>
+                    <p class="text">
+                        This seems to be the most common way to add metadata or comments to a csv, it either requires
+                        a custom parser or preprocessing, it has no standard and can be quite ambiguous
+                        as a field starting with # can also be a valid field.
+                    </p>
+                    <ol class="code">
+                        <li><code>#This is my csv file!</code></li>
+                        <li><code>#type=vectors</code></li>
+                        <li><code>x,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="3.2+Metadata+file%2FZip+file">
+                    <h3>3.2 Metadata file/Zip file</h3>
+                    <p class="text">
+                        A file for metadata purposes is carried together with the csv file,
+                        usually with the same name as the csv file plus a suffix (-meta.type)
+                        and uses any data format, both files can then be bundled
+                        in a zip file.
+                    </p>
+                    <ol class="code">
+                        <li><code>my-csv.csv:</code></li>
+                        <li><code>x,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                        <li><code></code></li>
+                        <li><code>my-csv-meta.xml:</code></li>
+                        <li><code>&lt;meta&gt;</code></li>
+                        <li><code>    &lt;description&gt;This is my csv file!&lt;/description&gt;</code></li>
+                        <li><code>    &lt;type&gt;vectors&lt;/type&gt;</code></li>
+                        <li><code>&lt;/meta&gt;</code></li>
+                        <li><code></code></li>
+                        <li><code>my-csv.zip:</code></li>
+                        <li><code>    my-csv.csv</code></li>
+                        <li><code>    my-csv-meta.xml</code></li>
+                    </ol>
+                </section>
+                <section id="3.3+W3C">
+                    <h3>3.3 W3C</h3>
+                    <p class="text">
+                        They <a target="_blank" href="https://www.w3.org/TR/tabular-data-model/#embedded-metadata">tried</a>,
+                        I never heard of this W3C format until I started searching about metadata in
+                        CSV files.
+                    </p>
+                    <ol class="code">
+                        <li><code>#publisher,W3C</code></li>
+                        <li><code>#updated,2015-10-17T00:00:00Z</code></li>
+                        <li><code>#name,sensor,temperature</code></li>
+                        <li><code>#datatype,string,float</code></li>
+                        <li><code>sensor,temperature</code></li>
+                        <li><code>s-1,25.5</code></li>
+                    </ol>
+                </section>
+                <section id="3.4+References">
+                    <h3>3.4 References</h3>
+                    <ul class="list">
+                        <li><p><a target="_blank" href="https://stackoverflow.com/questions/18362864/adding-metadata-identifier-data-to-a-csv-file">Adding metadata / identifier data to a CSV file?</a></p></li>
+                        <li><p><a target="_blank" href="https://stackoverflow.com/questions/30739931/store-metadata-in-csv-file">Store metadata in CSV file</a></p></li>
+                        <li><p><a target="_blank" href="https://stackoverflow.com/questions/58987503/how-to-add-metadata-to-a-csv-file">How to add metadata to a csv file?</a></p></li>
+                        <li><p><a target="_blank" href="https://gist.github.com/seece/97d02d6518db8b9e4c5b81fc686553e2">A Straightforward Way To Extend CSV With Metadata</a></p></li>
+                    </ul>
+                </section>
+            </section>
+            <section id="4+My+alternative">
+                <h2>4 My alternative</h2>
+                <p class="text">
+                    So, if we want to add metadata to our csv files, it must be a single csv
+                    file, it must not use other data formats, it must be compatible with a csv
+                    parser that can read RFC4180, it has to be identifiable and
+                    simple enough that people would consider to use it.
+                </p>
+                <section id="4.1+Field+Zero">
+                    <h3>4.1 Field Zero</h3>
+                    <p class="text">
+                        After thinking about it, there&#39;s no better place to add metadata
+                        than placing into the first field of the csv file.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;metadata&quot;,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.2+No+other+data+formats">
+                    <h3>4.2 No other data formats</h3>
+                    <p class="text">
+                        Instead of using other data formats such as json or xml, we use a embedded
+                        csv for it, this eliminates the requirement for other data formats.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;a,b,c,d&quot;,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.3+Identifiable">
+                    <h3>4.3 Identifiable</h3>
+                    <p class="text">
+                        We use a csv header for it, this can only contain a key and a value,
+                        any other header is not valid and should be processed as a normal field,
+                        even if the header is quite unique, it is still a good idea for parsers
+                        to add a option for reading it as text instead of metadata, redefinition
+                        of fields is allowed and is done in order of appearance, because this
+                        is a embedded csv file, double quotes must be written as two instead of one
+                        and four instead of two inside of quoted fields.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                        <li><code>a,10</code></li>
+                        <li><code>b,20</code></li>
+                        <li><code>c,30</code></li>
+                        <li><code>c,40</code></li>
+                        <li><code>&quot;,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.4+Identification+of+the+CSV+data">
+                    <h3>4.4 Identification of the CSV data</h3>
+                    <p class="text">
+                        We add a optional &quot;csv-type-name&quot; for type
+                        identification, similar to XML Namespaces, this
+                        allows a csv file to be easily distinguishable from each
+                        other, as it is for XML I recommend using a URL for it
+                        but any string is valid, even an empty one or nothing.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                        <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                        <li><code>&quot;,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.5+Field+Zero+Value">
+                    <h3>4.5 Field Zero Value</h3>
+                    <p class="text">
+                        We add a optional &quot;csv-field-zero&quot; for defining
+                        the value of the field zero (the first field),
+                        if not present, a empty string is assumed.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                        <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                        <li><code>csv-field-zero,x</code></li>
+                        <li><code>&quot;,y,z</code></li>
+                        <li><code>1,2,3</code></li>
+                        <li><code>4,5,6</code></li>
+                        <li><code>7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.6+Compatibility">
+                    <h3>4.6 Compatibility</h3>
+                    <p class="text">
+                        If it is needed to remain compatible with a system,
+                        we can move all data to the right and remove the &quot;csv-field-zero&quot;,
+                        this does not affect the &quot;csv-field-zero&quot; or anything, it only changes
+                        the structure of the csv itself and makes the header reappear correctly again.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                        <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                        <li><code>&quot;,x,y,z</code></li>
+                        <li><code>,1,2,3</code></li>
+                        <li><code>,4,5,6</code></li>
+                        <li><code>,7,8,9</code></li>
+                    </ol>
+                </section>
+            </section>
+            <section id="5+In+code">
+                <h2>5 In code</h2>
+                <section id="5.1+Reading">
+                    <h3>5.1 Reading</h3>
+                    <ol class="code">
+                        <li><code>CSV csv = CSV.read(...);</code></li>
+                        <li><code></code></li>
+                        <li><code>String keyHeader = &quot;csv-metadata-key&quot;;</code></li>
+                        <li><code>String valueHeader = &quot;csv-metadata-value&quot;;</code></li>
+                        <li><code>String header = keyHeader + &quot;,&quot; + valueHeader;</code></li>
+                        <li><code>String quotedHeader = &quot;\&quot;&quot; + keyHeader + &quot;\&quot;,\&quot;&quot; + valueHeader + &quot;\&quot;&quot;;</code></li>
+                        <li><code></code></li>
+                        <li><code>Map&lt;String, String&gt; metadata = new LinkedHashMap&lt;&gt;();</code></li>
+                        <li><code>String fieldZero = csv.get(0, 0);</code></li>
+                        <li><code></code></li>
+                        <li><code>//check if the field zero starts with the header</code></li>
+                        <li><code>if (fieldZero.startsWith(header) || fieldZero.startsWith(quotedHeader)) {</code></li>
+                        <li><code></code></li>
+                        <li><code>    //read the metadata as csv and check if the header is valid</code></li>
+                        <li><code>    CSV csvMetadata = CSV.read(fieldZero);</code></li>
+                        <li><code>    if (csvMetadata.getNumberOfFields() == 2</code></li>
+                        <li><code>            &amp;&amp; csvMetadata.get(0, 0).equals(keyHeader)</code></li>
+                        <li><code>            &amp;&amp; csvMetadata.get(1, 0).equals(valueHeader)</code></li>
+                        <li><code>            ) {</code></li>
+                        <li><code></code></li>
+                        <li><code>        //read the metadata, skipping the header</code></li>
+                        <li><code>        for (int metaRecord = 1; metaRecord &lt; csvMetadata.getNumberOfRecords(); metaRecord++) {</code></li>
+                        <li><code>            String k = csvMetadata.get(0, metaRecord);</code></li>
+                        <li><code>            String v = csvMetadata.get(1, metaRecord);</code></li>
+                        <li><code>            //remove comments</code></li>
+                        <li><code>            if (k.isEmpty()) {</code></li>
+                        <li><code>                continue;</code></li>
+                        <li><code>            }</code></li>
+                        <li><code>            metadata.put(k, v);</code></li>
+                        <li><code>        }</code></li>
+                        <li><code></code></li>
+                        <li><code>        //set the field zero</code></li>
+                        <li><code>        csv.set(0, 0, metadata.get(&quot;csv-field-zero&quot;));</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>}</code></li>
+                        <li><code>System.out.println(&quot;Type: &quot;+metadata.get(&quot;csv-type-name&quot;));</code></li>
+                        <li><code>System.out.println(&quot;Field zero: &quot;+csv.get(0, 0));</code></li>
+                    </ol>
+                </section>
+                <section id="5.2+Writing">
+                    <h3>5.2 Writing</h3>
+                    <ol class="code">
+                        <li><code>CSV csv = CSV.read(...);</code></li>
+                        <li><code></code></li>
+                        <li><code>String keyHeader = &quot;csv-metadata-key&quot;;</code></li>
+                        <li><code>String valueHeader = &quot;csv-metadata-value&quot;;</code></li>
+                        <li><code>...</code></li>
+                        <li><code>Map&lt;String, String&gt; metadata = new LinkedHashMap&lt;&gt;();</code></li>
+                        <li><code>...</code></li>
+                        <li><code></code></li>
+                        <li><code>//set field zero</code></li>
+                        <li><code>metadata.put(&quot;csv-field-zero&quot;, csv.get(0, 0));</code></li>
+                        <li><code></code></li>
+                        <li><code>//create a new csv with the size of metadata plus 1</code></li>
+                        <li><code>CSV csvMetadata = new CSV(null, 2, metadata.size() + 1);</code></li>
+                        <li><code></code></li>
+                        <li><code>//write the header</code></li>
+                        <li><code>csvMetadata.set(0, 0, keyHeader);</code></li>
+                        <li><code>csvMetadata.set(1, 0, valueHeader);</code></li>
+                        <li><code></code></li>
+                        <li><code>//write the metadata</code></li>
+                        <li><code>int index = 1;</code></li>
+                        <li><code>for (Map.Entry&lt;String, String&gt; e:metadata.entrySet()) {</code></li>
+                        <li><code>    csvMetadata.set(0, index, e.getKey());</code></li>
+                        <li><code>    csvMetadata.set(1, index, e.getValue());</code></li>
+                        <li><code>    index++;</code></li>
+                        <li><code>}</code></li>
+                        <li><code></code></li>
+                        <li><code>//output to field zero</code></li>
+                        <li><code>csv.set(0, 0, csvMetadata.toString());</code></li>
+                        <li><code>System.out.println(csv.toString());</code></li>
+                    </ol>
+                </section>
+            </section>
+            <section id="6+Security+Risks">
+                <h2>6 Security Risks</h2>
+                <p class="text">
+                    Embedding csvs inside of csvs can become a potential DDoS attack
+                    vector due to how double quotes are escaped, for every depth level
+                    the amount of required double quotes is doubled, at depth 32, the
+                    required amount of double quotes for a single double quote would
+                    need gigabytes of character data to escape it.
+                </p>
+                <p class="text">
+                    If you really need to embed multiple csvs inside of a csv file,
+                    the best way without additional files would be to create a file
+                    system using a single zip file, write all of your csvs to it and
+                    then embed the zip as base64 in a master csv, care should be taken
+                    as zip bombs can still be a possibility.
+                </p>
+                <ol class="code">
+                    <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                    <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                    <li><code>myOtherCsvsData,c2Rmc2Rmc2Rmc2RmZXdyZXdyY2J2eHZuY2ZqbnRyeXVqdHk3aTZ5dWtqaGcsbWd2bnZjYnhjdmFzZFFFVw==</code></li>
+                    <li><code>myOtherCsvsRoot,root.csv</code></li>
+                    <li><code>&quot;,x,y,z</code></li>
+                    <li><code>,1,2,3</code></li>
+                    <li><code>,4,5,6</code></li>
+                    <li><code>,7,8,9</code></li>
+                </ol>
+            </section>
+            <section id="7+On+External+Editors">
+                <h2>7 On External Editors</h2>
+                <p class="text">
+                    If correctly escaped, any editor that supports the RFC4180 should
+                    be able to read and preserve the metadata.
+                </p>
+                <section id="7.1+Google+Sheets">
+                    <h3>7.1 Google Sheets</h3>
+                    <p class="text">
+                        Google Sheets was the best one, seems to fully follow
+                        the RFC4180 in importing and exporting csv files.
+                    </p>
+                </section>
+                <section id="7.2+LibreOffice">
+                    <h3>7.2 LibreOffice</h3>
+                    <p class="text">
+                        LibreOffice was able to import/export correctly but
+                        it has a strange behaviour to replace double quotes
+                        with curved double quotes on the editor and the lack
+                        of smooth scrolling makes it annoying to edit
+                        large metadata fields.
+                    </p>
+                </section>
+                <section id="7.3+Excel">
+                    <h3>7.3 Excel</h3>
+                    <p class="text">
+                        Excel never supported RFC4180 as far as I know, if
+                        things did not change, excel should still be the devil of
+                        csv files, generating different csv files that depend
+                        on which country you are, making sure that your life as a
+                        programmer will be a pain
+                    </p>
+                </section>
+                <section id="7.4+Other+Online+Editors">
+                    <h3>7.4 Other Online Editors</h3>
+                    <p class="text">
+                        I was able to find a bunch of small online editors
+                        of csv files, all of the ones I tested seems to
+                        follow the RFC4180.
+                    </p>
+                </section>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 2"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+        </footer>
+    </body>
+</html>
