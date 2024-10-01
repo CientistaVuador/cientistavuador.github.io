@@ -325,7 +325,7 @@ System.out.println(csv.toString());
 
 [[section]] Security Risks
 [text]
-Embedding CSVs inside of CSVs can become a potential DDoS attack
+Embedding CSVs inside of CSVs can become a potential DoS attack
 vector due to how double quotes are escaped, for every depth level
 the amount of required double quotes is doubled, at depth 32, the 
 required amount of double quotes for a single double quote would
