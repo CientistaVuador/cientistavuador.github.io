@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="pt-br">
     <head>
-        <title>Field Zero Metadata - Adding metadata to your CSV files</title>
+        <title>Metadados de Campo Zero - Adicionando metadados em seus arquivos CSV</title>
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="references, depend, gigabytes, ambiguous, without, quoted, character, because, they, fully, github, sure, bundled, preprocessing, edit, remain, myself, them, require, am, an, each, extend, eliminates, at, meta, unique, alternatives, fact, affect, devil, recommend, turn, skips, same, does, attack, by, supports, vector, after, so, escape, contain, started, many, people, txt, advantages, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things, written"/>
-        <meta name="description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
+        <meta name="keywords" content="caracteres, possui, bastante, escapada, aos, gigabytes, programa, estranho, grandes, adicionarem, menos, aceita, ter, github, criar, preservar, permite, estou, mestre, tornar, extend, pessoas, junto, está, meta, sua, seus, vida, deles, transformam, feito, curvadas, mim, dobrada, desse, si, sei, escrevendo, fato, embedded, key, comecei, principais, pequenos, riscos, texto, txt, coisas, alguns, escapado, tl, processamento, precisaria, diabo, pulo, da, comum, tr, sufixo, compatibilidade, consiga, mudaram, nível, lugar"/>
+        <meta name="description" content="Esse artigo fala sobre adicionar metadados em seus arquivos CSV enquanto mantém compatibilidade com a RFC4180."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
@@ -14,8 +14,8 @@
         <!-- HTML Meta Tags -->
         
         <!-- OpenGraph -->
-        <meta name="og:title" content="Field Zero Metadata - Adding metadata to your CSV files"/>
-        <meta name="og:description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
+        <meta name="og:title" content="Metadados de Campo Zero - Adicionando metadados em seus arquivos CSV"/>
+        <meta name="og:description" content="Esse artigo fala sobre adicionar metadados em seus arquivos CSV enquanto mantém compatibilidade com a RFC4180."/>
         <meta name="og:type" content="article"/>
         <meta name="og:image" content="/data/icon.png"/>
         <!-- OpenGraph -->
@@ -47,17 +47,17 @@
     
     For more information, please refer to <http://unlicense.org/>
     
-    en-us
-        Field Zero Metadata - Adding metadata to your CSV files
-        This article talks about adding metadata to CSV files while still being compatible with RFC4180.
+    pt-br
+        Metadados de Campo Zero - Adicionando metadados em seus arquivos CSV
+        Esse artigo fala sobre adicionar metadados em seus arquivos CSV enquanto mantém compatibilidade com a RFC4180.
         2
         2024/10/01 01:10
     
     -->
     <body class="body">
         <header class="header">
-            <h1>Field Zero Metadata - Adding metadata to your CSV files</h1>
-            <h2>This article talks about adding metadata to CSV files while still being compatible with RFC4180.</h2>
+            <h1>Metadados de Campo Zero - Adicionando metadados em seus arquivos CSV</h1>
+            <h2>Esse artigo fala sobre adicionar metadados em seus arquivos CSV enquanto mantém compatibilidade com a RFC4180.</h2>
             <h3>0002</h3>
             <h3>2024/10/01 01:10</h3>
             <h4><a href="2_en-us.html">EN-US</a> | <a href="2_pt-br.html">PT-BR</a></h4>
@@ -66,40 +66,40 @@
             <nav class="indices">
                 <ol>
                     <li><a href="#1+TL%3BDR">1 TL;DR</a></li>
-                    <li><a href="#2+Introduction">2 Introduction</a></li>
-                    <li><a href="#3+Alternatives">3 Alternatives</a></li>
+                    <li><a href="#2+Introdu%C3%A7%C3%A3o">2 Introdução</a></li>
+                    <li><a href="#3+Alternativas">3 Alternativas</a></li>
                     <li>
                         <ol>
-                            <li><a href="#3.1+%23+as+comments+or+metadata">3.1 # as comments or metadata</a></li>
-                            <li><a href="#3.2+Metadata+file%2FZip+file">3.2 Metadata file/Zip file</a></li>
+                            <li><a href="#3.1+%23+como+coment%C3%A1rios+ou+metadados">3.1 # como comentários ou metadados</a></li>
+                            <li><a href="#3.2+Arquivo+de+metadados%2FArquivo+Zip">3.2 Arquivo de metadados/Arquivo Zip</a></li>
                             <li><a href="#3.3+W3C">3.3 W3C</a></li>
-                            <li><a href="#3.4+References">3.4 References</a></li>
+                            <li><a href="#3.4+Refer%C3%AAncias+%28em+ingl%C3%AAs%29">3.4 Referências (em inglês)</a></li>
                         </ol>
-                    </li><li><a href="#4+My+alternative">4 My alternative</a></li>
+                    </li><li><a href="#4+Minha+alternativa">4 Minha alternativa</a></li>
                     <li>
                         <ol>
-                            <li><a href="#4.1+Field+Zero">4.1 Field Zero</a></li>
-                            <li><a href="#4.2+No+other+data+formats">4.2 No other data formats</a></li>
-                            <li><a href="#4.3+Identifiable">4.3 Identifiable</a></li>
-                            <li><a href="#4.4+Identification+of+the+CSV+data">4.4 Identification of the CSV data</a></li>
-                            <li><a href="#4.5+Field+Zero+Value">4.5 Field Zero Value</a></li>
-                            <li><a href="#4.6+Compatibility">4.6 Compatibility</a></li>
-                            <li><a href="#4.7+Single-line+and+Multiline+Comments+and+Line+Skips">4.7 Single-line and Multiline Comments and Line Skips</a></li>
+                            <li><a href="#4.1+Campo+Zero">4.1 Campo Zero</a></li>
+                            <li><a href="#4.2+Sem+outros+formatos+de+dados">4.2 Sem outros formatos de dados</a></li>
+                            <li><a href="#4.3+Identific%C3%A1vel">4.3 Identificável</a></li>
+                            <li><a href="#4.4+Identifica%C3%A7%C3%A3o+dos+dados+CSV">4.4 Identificação dos dados CSV</a></li>
+                            <li><a href="#4.5+Valor+do+Campo+Zero">4.5 Valor do Campo Zero</a></li>
+                            <li><a href="#4.6+Compatibilidade">4.6 Compatibilidade</a></li>
+                            <li><a href="#4.7+Coment%C3%A1rios+de+uma+ou+mais+linhas+e+pulo+de+linhas">4.7 Comentários de uma ou mais linhas e pulo de linhas</a></li>
                         </ol>
-                    </li><li><a href="#5+In+code">5 In code</a></li>
+                    </li><li><a href="#5+Em+c%C3%B3digo">5 Em código</a></li>
                     <li>
                         <ol>
-                            <li><a href="#5.1+Reading">5.1 Reading</a></li>
-                            <li><a href="#5.2+Writing">5.2 Writing</a></li>
+                            <li><a href="#5.1+Lendo">5.1 Lendo</a></li>
+                            <li><a href="#5.2+Escrevendo">5.2 Escrevendo</a></li>
                         </ol>
-                    </li><li><a href="#6+Security+Risks">6 Security Risks</a></li>
-                    <li><a href="#7+On+External+Editors">7 On External Editors</a></li>
+                    </li><li><a href="#6+Riscos+de+seguran%C3%A7a">6 Riscos de segurança</a></li>
+                    <li><a href="#7+Em+editores+externos">7 Em editores externos</a></li>
                     <li>
                         <ol>
                             <li><a href="#7.1+Google+Sheets">7.1 Google Sheets</a></li>
                             <li><a href="#7.2+LibreOffice">7.2 LibreOffice</a></li>
                             <li><a href="#7.3+Excel">7.3 Excel</a></li>
-                            <li><a href="#7.4+Other+Online+Editors">7.4 Other Online Editors</a></li>
+                            <li><a href="#7.4+Outros+Editores+Online">7.4 Outros Editores Online</a></li>
                         </ol>
                     </li>
                 </ol>
@@ -107,12 +107,12 @@
             <section id="1+TL%3BDR">
                 <h2>1 TL;DR</h2>
                 <p class="text">
-                    Use the first field for metadata purposes, with a embedded csv starting with
-                    csv-metadata-key,csv-metadata-value as the header, set csv-type-name
-                    if you want to set the type of your csv and csv-field-zero if you want
-                    to set the value of the first field (the field index zero) and use empty keys as
-                    comments or to skip a line and take care with double quotes, as one double quote
-                    is now two and a escaped double quote is now four.
+                    Use o primeiro campo para propósitos de metadados, com um csv embutido começando
+                    com csv-metadata-key,csv-metadata-value como o cabeçalho, defina csv-type-name
+                    se você quiser definir o tipo do seu csv e csv-field-zero se quiser definir
+                    o valor do primeiro campo (o campo índice zero) e use chaves vazias como
+                    comentários ou para pular uma linha e tome cuidado com aspas duplas, já que
+                    uma aspas duplas agora são duas e uma aspas duplas escapada agora são quatro.
                 </p>
                 <ol class="code">
                     <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -120,81 +120,82 @@
                     <li><code>csv-field-zero,x</code></li>
                     <li><code>,</code></li>
                     <li><code>,&quot;&quot;</code></li>
-                    <li><code>This is a comment!</code></li>
+                    <li><code>Isso é um comentário</code></li>
                     <li><code>&quot;&quot;</code></li>
                     <li><code>,</code></li>
-                    <li><code>key,value</code></li>
-                    <li><code>key,&quot;&quot;value&quot;&quot;</code></li>
-                    <li><code>otherKey,&quot;&quot;value with &quot;&quot;&quot;&quot;double quotes&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
+                    <li><code>chave,valor</code></li>
+                    <li><code>chave,&quot;&quot;valor&quot;&quot;</code></li>
+                    <li><code>outraChave,&quot;&quot;valor com &quot;&quot;&quot;&quot;aspas duplas&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
                     <li><code>&quot;,y,z</code></li>
                     <li><code>1,2,3</code></li>
                     <li><code>4,5,6</code></li>
                     <li><code>7,8,9</code></li>
                 </ol>
             </section>
-            <section id="2+Introduction">
-                <h2>2 Introduction</h2>
+            <section id="2+Introdu%C3%A7%C3%A3o">
+                <h2>2 Introdução</h2>
                 <p class="text">
-                    This article assumes that the <a target="_blank" href="https://www.ietf.org/rfc/rfc4180.txt">RFC4180</a> is
-                    the right way to write and read CSV files.
+                    Esse artigo assume que a <a target="_blank" href="https://www.ietf.org/rfc/rfc4180.txt">RFC4180</a> é
+                    o jeito certo de escrever e ler arquivos CSV.
                 </p>
                 <p class="text">
-                    On the internet you can find many ways to add metadata to a csv file, some of them turn your csv into
-                    proprietary formats that only your program can understand while others require additional files,
-                    zip files or other data formats such as JSON or XML, in this article I propose a method to add
-                    metadata to csv files.
+                    Na internet você pode encontrar vários jeitos de adicionar metadados para um arquivo csv, alguns
+                    deles transformam seu csv em formatos proprietários que apenas o seu programa pode entender
+                    enquanto outros precisam de arquivos adicionais, arquivos zip ou outros formatos de dados
+                    como JSON ou XML, nesse artigo eu proponho um método para adicionar metadados para
+                    arquivos csv.
                 </p>
             </section>
-            <section id="3+Alternatives">
-                <h2>3 Alternatives</h2>
-                <section id="3.1+%23+as+comments+or+metadata">
-                    <h3>3.1 # as comments or metadata</h3>
+            <section id="3+Alternativas">
+                <h2>3 Alternativas</h2>
+                <section id="3.1+%23+como+coment%C3%A1rios+ou+metadados">
+                    <h3>3.1 # como comentários ou metadados</h3>
                     <p class="text">
-                        This seems to be the most common way to add metadata or comments to a csv, it either requires
-                        a custom parser or preprocessing, it has no standard and can be quite ambiguous
-                        as a field starting with # can also be a valid field.
+                        Esse parece ser o jeito mais comum de adicionar metadados ou comentários para um csv, ele requer
+                        um parser customizado ou pré-processamento, não possui padrão e pode ser meio ambíguo
+                        já que um campo começando com # também pode ser um campo válido.
                     </p>
                     <ol class="code">
-                        <li><code>#This is my csv file!</code></li>
-                        <li><code>#type=vectors</code></li>
+                        <li><code>#Isso é meu arquivo csv!</code></li>
+                        <li><code>#tipo=vetores</code></li>
                         <li><code>x,y,z</code></li>
                         <li><code>1,2,3</code></li>
                         <li><code>4,5,6</code></li>
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="3.2+Metadata+file%2FZip+file">
-                    <h3>3.2 Metadata file/Zip file</h3>
+                <section id="3.2+Arquivo+de+metadados%2FArquivo+Zip">
+                    <h3>3.2 Arquivo de metadados/Arquivo Zip</h3>
                     <p class="text">
-                        A file for metadata purposes is carried together with the csv file,
-                        usually with the same name as the csv file plus a suffix (-meta.type)
-                        and uses any data format, both files can then be bundled
-                        in a zip file.
+                        Um arquivo para propósitos de metadados é carregado junto com o arquivo csv
+                        normalmente com o mesmo nome do arquivo csv mais um sufixo (-meta.tipo) e
+                        usa qualquer formato de dados, ambos os arquivos podem ser juntados
+                        em um arquivo zip.
                     </p>
                     <ol class="code">
-                        <li><code>my-csv.csv:</code></li>
+                        <li><code>meu-csv.csv:</code></li>
                         <li><code>x,y,z</code></li>
                         <li><code>1,2,3</code></li>
                         <li><code>4,5,6</code></li>
                         <li><code>7,8,9</code></li>
                         <li><code></code></li>
-                        <li><code>my-csv-meta.xml:</code></li>
+                        <li><code>meu-csv-meta.xml:</code></li>
                         <li><code>&lt;meta&gt;</code></li>
-                        <li><code>    &lt;description&gt;This is my csv file!&lt;/description&gt;</code></li>
-                        <li><code>    &lt;type&gt;vectors&lt;/type&gt;</code></li>
+                        <li><code>    &lt;descricao&gt;Isso é meu arquivo csv!&lt;/descricao&gt;</code></li>
+                        <li><code>    &lt;tipo&gt;vetores&lt;/tipo&gt;</code></li>
                         <li><code>&lt;/meta&gt;</code></li>
                         <li><code></code></li>
-                        <li><code>my-csv.zip:</code></li>
-                        <li><code>    my-csv.csv</code></li>
-                        <li><code>    my-csv-meta.xml</code></li>
+                        <li><code>meu-csv.zip:</code></li>
+                        <li><code>    meu-csv.csv</code></li>
+                        <li><code>    meu-csv-meta.xml</code></li>
                     </ol>
                 </section>
                 <section id="3.3+W3C">
                     <h3>3.3 W3C</h3>
                     <p class="text">
-                        They <a target="_blank" href="https://www.w3.org/TR/tabular-data-model/#embedded-metadata">tried</a>,
-                        I never heard of this W3C format until I started searching about metadata in
-                        CSV files.
+                        Eles <a target="_blank" href="https://www.w3.org/TR/tabular-data-model/#embedded-metadata">tentaram</a> (em inglês),
+                        eu nunca ouvi falar desse formato da W3C até que comecei a pesquisar sobre metadados
+                        em arquivos csv.
                     </p>
                     <ol class="code">
                         <li><code>#publisher,W3C</code></li>
@@ -205,8 +206,8 @@
                         <li><code>s-1,25.5</code></li>
                     </ol>
                 </section>
-                <section id="3.4+References">
-                    <h3>3.4 References</h3>
+                <section id="3.4+Refer%C3%AAncias+%28em+ingl%C3%AAs%29">
+                    <h3>3.4 Referências (em inglês)</h3>
                     <ul class="list">
                         <li><p><a target="_blank" href="https://stackoverflow.com/questions/18362864/adding-metadata-identifier-data-to-a-csv-file">Adding metadata / identifier data to a CSV file?</a></p></li>
                         <li><p><a target="_blank" href="https://stackoverflow.com/questions/30739931/store-metadata-in-csv-file">Store metadata in CSV file</a></p></li>
@@ -215,32 +216,34 @@
                     </ul>
                 </section>
             </section>
-            <section id="4+My+alternative">
-                <h2>4 My alternative</h2>
+            <section id="4+Minha+alternativa">
+                <h2>4 Minha alternativa</h2>
                 <p class="text">
-                    So, if we want to add metadata to our csv files, it must be a single csv
-                    file, it must not use other data formats, it must be compatible with a csv
-                    parser that can read RFC4180, it has to be identifiable and
-                    simple enough that people would consider to use it.
+                    Então, se queremos adicionar metadados em nossos arquivos csv, ele deve continuar
+                    sendo um único arquivo csv, ele não deve usar outros formatos de dados, ele deve
+                    ser compatível com um parser que consiga ler RFC4180, ele tem que ser identificável
+                    e simples o bastante para que as pessoas considerem o seu uso.
                 </p>
-                <section id="4.1+Field+Zero">
-                    <h3>4.1 Field Zero</h3>
+                <section id="4.1+Campo+Zero">
+                    <h3>4.1 Campo Zero</h3>
                     <p class="text">
-                        After thinking about it, there&#39;s no better place to add metadata
-                        than placing into the first field of the csv file.
+                        Depois de pensar sobre, não há melhor lugar
+                        para adicionar metadados do que se não
+                        no primeiro campo do arquivo csv.
                     </p>
                     <ol class="code">
-                        <li><code>&quot;metadata&quot;,y,z</code></li>
+                        <li><code>&quot;metadados&quot;,y,z</code></li>
                         <li><code>1,2,3</code></li>
                         <li><code>4,5,6</code></li>
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.2+No+other+data+formats">
-                    <h3>4.2 No other data formats</h3>
+                <section id="4.2+Sem+outros+formatos+de+dados">
+                    <h3>4.2 Sem outros formatos de dados</h3>
                     <p class="text">
-                        Instead of using other data formats such as json or xml, we use a embedded
-                        csv for it, this eliminates the requirement for other data formats.
+                        Ao invés de usar outros formatos de dados como json ou xml, nós
+                        usamos um csv embutido para isso, isso elimina o requerimento para
+                        outros formatos de dados.
                     </p>
                     <ol class="code">
                         <li><code>&quot;a,b,c,d&quot;,y,z</code></li>
@@ -249,23 +252,23 @@
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.3+Identifiable">
-                    <h3>4.3 Identifiable</h3>
+                <section id="4.3+Identific%C3%A1vel">
+                    <h3>4.3 Identificável</h3>
                     <p class="text">
-                        We use a csv header for it, this can only contain a key and a value,
-                        any other header is not valid and should be processed as a normal field,
-                        even if the header is quite unique, it is still a good idea for parsers
-                        to add a option for reading it as text instead of metadata, redefinition
-                        of fields is allowed and is done in order of appearance, because this
-                        is a embedded csv file, double quotes must be written as two instead of one
-                        and four instead of two inside of quoted fields.
+                        Nós usamos um cabeçalho de csv para isso que só pode ter uma chave e um valor,
+                        qualquer outro cabeçalho não é válido e deve ser processado como um campo
+                        normal, mesmo que o cabeçalho seja meio único, ainda é uma boa ideia
+                        para os parsers adicionarem uma opção para ler como texto ao invés de metadados,
+                        redefinição de campos é permitida e é feita na ordem de aparição, como isso é um
+                        arquivo csv embutido, aspas duplas devem ser escritas como duas ao invés de uma
+                        e quatro ao invés de duas dentro de campos com aspas duplas.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
                         <li><code>a,10</code></li>
                         <li><code>b,20</code></li>
-                        <li><code>x,&quot;&quot;field, with, commas&quot;&quot;</code></li>
-                        <li><code>y,&quot;&quot;field with &quot;&quot;&quot;&quot;double quotes&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
+                        <li><code>x,&quot;&quot;campo, com, vírgulas&quot;&quot;</code></li>
+                        <li><code>y,&quot;&quot;campo com &quot;&quot;&quot;&quot;aspas duplas&quot;&quot;&quot;&quot;!&quot;&quot;</code></li>
                         <li><code>c,30</code></li>
                         <li><code>c,40</code></li>
                         <li><code>&quot;,y,z</code></li>
@@ -274,14 +277,14 @@
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.4+Identification+of+the+CSV+data">
-                    <h3>4.4 Identification of the CSV data</h3>
+                <section id="4.4+Identifica%C3%A7%C3%A3o+dos+dados+CSV">
+                    <h3>4.4 Identificação dos dados CSV</h3>
                     <p class="text">
-                        We add a optional &quot;csv-type-name&quot; for type
-                        identification, similar to XML Namespaces, this
-                        allows a csv file to be easily distinguishable from each
-                        other, as it is for XML I recommend using a URL for it
-                        but any string is valid, even an empty one or nothing.
+                        Nós adicionamos um opcional &quot;csv-type-name&quot; para identificação
+                        de tipos, similar aos namespaces de XML, isso permite que um
+                        arquivo csv seja facilmente distinguível de outro, assim como é
+                        pra XML eu recomendo usar uma URL para isso mas qualquer string
+                        é válida, até uma vazia ou nada.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -292,12 +295,12 @@
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.5+Field+Zero+Value">
-                    <h3>4.5 Field Zero Value</h3>
+                <section id="4.5+Valor+do+Campo+Zero">
+                    <h3>4.5 Valor do Campo Zero</h3>
                     <p class="text">
-                        We add a optional &quot;csv-field-zero&quot; for defining
-                        the value of the field zero (the first field),
-                        if not present, a empty string is assumed.
+                        Nós adicionamos um opcional &quot;csv-field-zero&quot; para definir
+                        o valor do campo zero (o primeiro campo), se não presente
+                        uma string vazia é assumida.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -309,13 +312,13 @@
                         <li><code>7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.6+Compatibility">
-                    <h3>4.6 Compatibility</h3>
+                <section id="4.6+Compatibilidade">
+                    <h3>4.6 Compatibilidade</h3>
                     <p class="text">
-                        If it is needed to remain compatible with a system,
-                        we can move all data to the right and remove the &quot;csv-field-zero&quot;,
-                        this does not affect anything, it only changes the structure of the
-                        csv itself and makes the header reappear correctly again.
+                        Se é necessário manter compatível com um sistema, podemos
+                        mover todos os dados para a direita e remover o &quot;csv-field-zero&quot;,
+                        isso não afeta nada, altera apenas a estrutura do csv em si
+                        e faz o cabeçalho reaparecer corretamente novamente.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
@@ -326,24 +329,24 @@
                         <li><code>,7,8,9</code></li>
                     </ol>
                 </section>
-                <section id="4.7+Single-line+and+Multiline+Comments+and+Line+Skips">
-                    <h3>4.7 Single-line and Multiline Comments and Line Skips</h3>
+                <section id="4.7+Coment%C3%A1rios+de+uma+ou+mais+linhas+e+pulo+de+linhas">
+                    <h3>4.7 Comentários de uma ou mais linhas e pulo de linhas</h3>
                     <p class="text">
-                        The fact that we allowed redefinition of fields means that we
-                        can now use empty keys as single-line or multiline comments or
-                        to skip a line, care should be taken with double quotes,
-                        as this is still a normal field.
+                        O Fato de que permitimos a redefinição de campos significa que agora
+                        podemos utilizar chaves vazias como comentários de uma ou mais linhas ou
+                        para pular linhas, cuidado deve ser tomado com as aspas duplas, já
+                        que isso ainda é um campo normal.
                     </p>
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
                         <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
                         <li><code>,</code></li>
-                        <li><code>,Single line comment!</code></li>
+                        <li><code>,Comentário de uma linha!</code></li>
                         <li><code>,</code></li>
                         <li><code>,&quot;&quot;</code></li>
-                        <li><code>This is</code></li>
-                        <li><code>a multiline</code></li>
-                        <li><code>comment!</code></li>
+                        <li><code>Isso é</code></li>
+                        <li><code>um comentário</code></li>
+                        <li><code>de várias linhas!</code></li>
                         <li><code>&quot;&quot;</code></li>
                         <li><code>&quot;,x,y,z</code></li>
                         <li><code>,1,2,3</code></li>
@@ -352,15 +355,16 @@
                     </ol>
                 </section>
             </section>
-            <section id="5+In+code">
-                <h2>5 In code</h2>
+            <section id="5+Em+c%C3%B3digo">
+                <h2>5 Em código</h2>
                 <p class="text">
-                    Reading and Writing becomes quite simple, the CSV parser I am using
-                    was made by myself with less than 100 lines, which is one of the main
-                    advantages of CSV, the class accepts null values as empty strings.
+                    Escrever e ler se torna bem simples, o parser de CSV que estou usando
+                    foi feito por mim mesmo com menos de 100 linhas, que é uma das
+                    principais vantagens de CSV, a classe aceita valores null como strings
+                    vazias.
                 </p>
-                <section id="5.1+Reading">
-                    <h3>5.1 Reading</h3>
+                <section id="5.1+Lendo">
+                    <h3>5.1 Lendo</h3>
                     <ol class="code">
                         <li><code>CSV csv = CSV.read(...);</code></li>
                         <li><code></code></li>
@@ -372,28 +376,28 @@
                         <li><code>Map&lt;String, String&gt; metadata = new LinkedHashMap&lt;&gt;();</code></li>
                         <li><code>String fieldZero = csv.get(0, 0);</code></li>
                         <li><code></code></li>
-                        <li><code>//check if the field zero starts with the header</code></li>
+                        <li><code>//cheque se o campo começa com o cabeçalho</code></li>
                         <li><code>if (fieldZero.startsWith(header) || fieldZero.startsWith(quotedHeader)) {</code></li>
                         <li><code></code></li>
-                        <li><code>    //read the metadata as csv and check if the header is valid</code></li>
+                        <li><code>    //leia os metadados como csv e cheque se o cabeçalho é válido</code></li>
                         <li><code>    CSV csvMetadata = CSV.read(fieldZero);</code></li>
                         <li><code>    if (csvMetadata.getNumberOfFields() == 2</code></li>
                         <li><code>            &amp;&amp; csvMetadata.get(0, 0).equals(keyHeader)</code></li>
                         <li><code>            &amp;&amp; csvMetadata.get(1, 0).equals(valueHeader)</code></li>
                         <li><code>            ) {</code></li>
                         <li><code></code></li>
-                        <li><code>        //read the metadata, skipping the header</code></li>
+                        <li><code>        //leia os metadados, ignorando o cabeçalho</code></li>
                         <li><code>        for (int metaRecord = 1; metaRecord &lt; csvMetadata.getNumberOfRecords(); metaRecord++) {</code></li>
                         <li><code>            String k = csvMetadata.get(0, metaRecord);</code></li>
                         <li><code>            String v = csvMetadata.get(1, metaRecord);</code></li>
-                        <li><code>            //remove comments</code></li>
+                        <li><code>            //remove comentários</code></li>
                         <li><code>            if (k.isEmpty()) {</code></li>
                         <li><code>                continue;</code></li>
                         <li><code>            }</code></li>
                         <li><code>            metadata.put(k, v);</code></li>
                         <li><code>        }</code></li>
                         <li><code></code></li>
-                        <li><code>        //set the field zero</code></li>
+                        <li><code>        //define o campo zero</code></li>
                         <li><code>        csv.set(0, 0, metadata.get(&quot;csv-field-zero&quot;));</code></li>
                         <li><code>    }</code></li>
                         <li><code>}</code></li>
@@ -401,8 +405,8 @@
                         <li><code>System.out.println(&quot;Field zero: &quot;+csv.get(0, 0));</code></li>
                     </ol>
                 </section>
-                <section id="5.2+Writing">
-                    <h3>5.2 Writing</h3>
+                <section id="5.2+Escrevendo">
+                    <h3>5.2 Escrevendo</h3>
                     <ol class="code">
                         <li><code>CSV csv = CSV.read(...);</code></li>
                         <li><code></code></li>
@@ -412,17 +416,17 @@
                         <li><code>Map&lt;String, String&gt; metadata = new LinkedHashMap&lt;&gt;();</code></li>
                         <li><code>...</code></li>
                         <li><code></code></li>
-                        <li><code>//set field zero</code></li>
+                        <li><code>//define o campo zero</code></li>
                         <li><code>metadata.put(&quot;csv-field-zero&quot;, csv.get(0, 0));</code></li>
                         <li><code></code></li>
-                        <li><code>//create a new csv with the size of metadata plus 1</code></li>
+                        <li><code>//cria um novo csv com o tamanho de metadata mais 1</code></li>
                         <li><code>CSV csvMetadata = new CSV(null, 2, metadata.size() + 1);</code></li>
                         <li><code></code></li>
-                        <li><code>//write the header</code></li>
+                        <li><code>//escreve o cabeçalho</code></li>
                         <li><code>csvMetadata.set(0, 0, keyHeader);</code></li>
                         <li><code>csvMetadata.set(1, 0, valueHeader);</code></li>
                         <li><code></code></li>
-                        <li><code>//write the metadata</code></li>
+                        <li><code>//escreve o metadata</code></li>
                         <li><code>int index = 1;</code></li>
                         <li><code>for (Map.Entry&lt;String, String&gt; e:metadata.entrySet()) {</code></li>
                         <li><code>    csvMetadata.set(0, index, e.getKey());</code></li>
@@ -430,84 +434,84 @@
                         <li><code>    index++;</code></li>
                         <li><code>}</code></li>
                         <li><code></code></li>
-                        <li><code>//output to field zero</code></li>
+                        <li><code>//escreve a saída no campo zero</code></li>
                         <li><code>csv.set(0, 0, csvMetadata.toString());</code></li>
                         <li><code>System.out.println(csv.toString());</code></li>
                     </ol>
                 </section>
             </section>
-            <section id="6+Security+Risks">
-                <h2>6 Security Risks</h2>
+            <section id="6+Riscos+de+seguran%C3%A7a">
+                <h2>6 Riscos de segurança</h2>
                 <p class="text">
-                    Embedding CSVs inside of CSVs can become a potential DoS attack
-                    vector due to how double quotes are escaped, for every depth level
-                    the amount of required double quotes is doubled, at depth 32, the
-                    required amount of double quotes for a single double quote would
-                    need gigabytes of character data to escape it.
+                    Embutir CSVs dentro de CSVs pode se tornar um potencial vetor
+                    de ataque DoS por causa de como as aspas duplas são escapadas, para
+                    cada nível de profundidade a quantidade de aspas duplas necessárias
+                    é dobrada, na profundidade 32, a quantidade necessária de aspas duplas
+                    para uma única aspas duplas precisaria de gigabytes de caracteres
+                    para escapar ela.
                 </p>
                 <p class="text">
-                    If you really need to embed multiple CSVs inside of a CSV file
-                    without additional files, the best way would be to create a file
-                    system using a single zip file, write all of your CSVs to it and
-                    then embed the zip as base64 in a master CSV, care should be taken
-                    as zip bombs can still be a possibility.
+                    Se você realmente precisa embutir múltiplos CSVs dentro de um arquivo
+                    CSV sem arquivos adicionais, o melhor jeito seria criar um file system
+                    com um arquivo zip, escrever todos os seus CSVs nele e então embutir
+                    o zip como base64 em um csv mestre, cuidado deve ser tomado
+                    já que zip bombs ainda são uma possibilidade.
                 </p>
                 <ol class="code">
                     <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
                     <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
-                    <li><code>myOtherCsvsData,c2Rmc2Rmc2Rmc2RmZXdyZXdyY2J2eHZuY2ZqbnRyeXVqdHk3aTZ5dWtqaGcsbWd2bnZjYnhjdmFzZFFFVw==</code></li>
-                    <li><code>myOtherCsvsRoot,root.csv</code></li>
+                    <li><code>meusOutrosCsvsDados,c2Rmc2Rmc2Rmc2RmZXdyZXdyY2J2eHZuY2ZqbnRyeXVqdHk3aTZ5dWtqaGcsbWd2bnZjYnhjdmFzZFFFVw==</code></li>
+                    <li><code>meusOutrosCsvsRaiz,raiz.csv</code></li>
                     <li><code>&quot;,x,y,z</code></li>
                     <li><code>,1,2,3</code></li>
                     <li><code>,4,5,6</code></li>
                     <li><code>,7,8,9</code></li>
                 </ol>
             </section>
-            <section id="7+On+External+Editors">
-                <h2>7 On External Editors</h2>
+            <section id="7+Em+editores+externos">
+                <h2>7 Em editores externos</h2>
                 <p class="text">
-                    If correctly escaped, any editor that supports the RFC4180 should
-                    be able to read and preserve the metadata.
+                    Se corretamente escapado, qualquer editor que suporte a RFC4180 deve
+                    conseguir ler e preservar os metadados.
                 </p>
                 <section id="7.1+Google+Sheets">
                     <h3>7.1 Google Sheets</h3>
                     <p class="text">
-                        Google Sheets was the best one, seems to fully follow
-                        the RFC4180 in importing and exporting csv files.
+                        Google Sheets foi o melhor, parece seguir
+                        a RFC4180 em importar e exportar arquivos csv.
                     </p>
                 </section>
                 <section id="7.2+LibreOffice">
                     <h3>7.2 LibreOffice</h3>
                     <p class="text">
-                        LibreOffice was able to import/export correctly but
-                        it has a strange behaviour to replace double quotes
-                        with curved double quotes on the editor and the lack
-                        of smooth scrolling makes it annoying to edit
-                        large metadata fields.
+                        LibreOffice conseguiu importar/exportar corretamente mas
+                        ele tem um estranho comportamento de trocar aspas duplas
+                        por aspas duplas curvadas no editor e a falta de um scroll
+                        suave torna chata a edição de grandes campos de metadados.
                     </p>
                 </section>
                 <section id="7.3+Excel">
                     <h3>7.3 Excel</h3>
                     <p class="text">
-                        Excel never supported RFC4180 as far as I know, if
-                        things did not change, excel should still be the devil of
-                        csv files, generating different csv files that depend
-                        on which country you are, making sure that your life as a
-                        programmer will be a pain.
+                        Excel nunca suportou a RFC4180 até onde eu sei, se
+                        as coisas não mudaram, excel ainda deve ser o diabo dos
+                        arquivos csv, gerando arquivos diferentes que dependem
+                        de qual país você está, garantindo que sua vida como
+                        programador será dolorida.
                     </p>
                 </section>
-                <section id="7.4+Other+Online+Editors">
-                    <h3>7.4 Other Online Editors</h3>
+                <section id="7.4+Outros+Editores+Online">
+                    <h3>7.4 Outros Editores Online</h3>
                     <p class="text">
-                        I was able to find a bunch of small online editors
-                        of csv files, all of the ones I tested seems to
-                        follow the RFC4180.
+                        Eu consegui encontrar vários editores online pequenos
+                        de arquivos csv, todos os que eu testei parecem
+                        seguir a RFC4180.
                     </p>
                 </section>
             </section>
         </main>
         <footer class="footer">
-            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
             <script src="https://utteranc.es/client.js"
                     repo="CientistaVuador/cientistavuador.github.io"
                     issue-term="Article 2"
@@ -517,7 +521,7 @@
                     async="async"
                     >
             </script>
-            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+            <p>A Licença desta página pode ser encontrada no código-fonte ou no <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">repositório do github</a>.</p>
         </footer>
     </body>
 </html>
