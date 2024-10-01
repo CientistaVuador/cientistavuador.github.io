@@ -209,6 +209,30 @@ csv-type-name,https://example.com/vectors.txt
 ,7,8,9
 [;<;>]
 
+[[subsection]] Single-line and Multiline Comments and Line Skips
+[text]
+The fact that we allowed redefinition of fields means that we
+can now use empty keys as single-line or multiline comments or
+to skip a line, care should be taken with double quotes,
+as this is still a normal field.
+[;<;>]
+[code]
+"csv-metadata-key,csv-metadata-value
+csv-type-name,https://example.com/vectors.txt
+,
+,Single line comment!
+,
+,""
+This is
+a multiline
+comment!
+""
+",x,y,z
+,1,2,3
+,4,5,6
+,7,8,9
+[;<;>]
+
 [[section]] In code
 
 [[subsection]] Reading

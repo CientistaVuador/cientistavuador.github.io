@@ -5,7 +5,7 @@
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="references, depend, allowed, gigabytes, ambiguous, without, quoted, character, quote, because, they, fully, github, sure, bundled, preprocessing, edit, remain, them, require, an, each, extend, eliminates, at, meta, unique, alternatives, affect, devil, recommend, ddos, turn, same, does, attack, taken, supports, vector, after, so, escape, contain, started, right, many, people, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things, written, w3, export"/>
+        <meta name="keywords" content="references, depend, gigabytes, ambiguous, without, quoted, character, quote, because, they, fully, github, sure, bundled, preprocessing, edit, remain, them, require, an, each, extend, eliminates, at, meta, unique, alternatives, fact, affect, devil, recommend, ddos, turn, skips, same, does, attack, supports, vector, after, so, escape, contain, started, right, many, people, tl, tr, did, supported, standard, country, exporting, parsers, reappear, good, dr, placing, either, things, written, w3, export"/>
         <meta name="description" content="This article talks about adding metadata to CSV files while still being compatible with RFC4180."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
@@ -84,6 +84,7 @@
                             <li><a href="#4.4+Identification+of+the+CSV+data">4.4 Identification of the CSV data</a></li>
                             <li><a href="#4.5+Field+Zero+Value">4.5 Field Zero Value</a></li>
                             <li><a href="#4.6+Compatibility">4.6 Compatibility</a></li>
+                            <li><a href="#4.7+Single-line+and+Multiline+Comments+and+Line+Skips">4.7 Single-line and Multiline Comments and Line Skips</a></li>
                         </ol>
                     </li><li><a href="#5+In+code">5 In code</a></li>
                     <li>
@@ -312,6 +313,31 @@
                     <ol class="code">
                         <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
                         <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                        <li><code>&quot;,x,y,z</code></li>
+                        <li><code>,1,2,3</code></li>
+                        <li><code>,4,5,6</code></li>
+                        <li><code>,7,8,9</code></li>
+                    </ol>
+                </section>
+                <section id="4.7+Single-line+and+Multiline+Comments+and+Line+Skips">
+                    <h3>4.7 Single-line and Multiline Comments and Line Skips</h3>
+                    <p class="text">
+                        The fact that we allowed redefinition of fields means that we
+                        can now use empty keys as single-line or multiline comments or
+                        to skip a line, care should be taken with double quotes,
+                        as this is still a normal field.
+                    </p>
+                    <ol class="code">
+                        <li><code>&quot;csv-metadata-key,csv-metadata-value</code></li>
+                        <li><code>csv-type-name,https://example.com/vectors.txt</code></li>
+                        <li><code>,</code></li>
+                        <li><code>,Single line comment!</code></li>
+                        <li><code>,</code></li>
+                        <li><code>,&quot;&quot;</code></li>
+                        <li><code>This is</code></li>
+                        <li><code>a multiline</code></li>
+                        <li><code>comment!</code></li>
+                        <li><code>&quot;&quot;</code></li>
                         <li><code>&quot;,x,y,z</code></li>
                         <li><code>,1,2,3</code></li>
                         <li><code>,4,5,6</code></li>
