@@ -175,8 +175,8 @@ For more information, please refer to <https://unlicense.org>
 .image, .video {
     display: block;
     max-width: 95%;
+    max-height: 600px;
     width: fit-content;
-    height: auto;
     justify-content: center;
     margin: 0 auto;
     margin-top: 20px;

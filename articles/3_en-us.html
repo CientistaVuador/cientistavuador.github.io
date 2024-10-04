@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Blinn Phong with Metallic Textures</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="specularfactor, shift, resolution, scene, shininess, these, bar, reflect, seamless, remain, sampling, lighting, plastic, looking, must, components, another, least, sum, two, colors, diffusecolor, example, into, current, after, learn, returning, increasing, calculation, cc0t, zero, darker, things, wood, up, add, en, take, know, little, full, doing, basics, life, imprecision, negative, stronger, root, normal, go, yet, better, interpolation, well, avoid, time, articles, smaller, practice, advanced, bit, changing, output"/>
+        <meta name="description" content="Follow up of the Roughness Article, now with Metallic Textures."/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
+        <link rel="stylesheet" type="text/css" href="/data/style.css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Blinn Phong with Metallic Textures"/>
+        <meta name="og:description" content="Follow up of the Roughness Article, now with Metallic Textures."/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <!--
+    
+    This is free and unencumbered software released into the public domain.
+    
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.
+    
+    In jurisdictions that recognize copyright laws, the author or authors
+    of this software dedicate any and all copyright interest in the
+    software to the public domain. We make this dedication for the benefit
+    of the public at large and to the detriment of our heirs and
+    successors. We intend this dedication to be an overt act of
+    relinquishment in perpetuity of all present and future rights to this
+    software under copyright law.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+    OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+    For more information, please refer to <http://unlicense.org/>
+    
+    en-us
+        Blinn Phong with Metallic Textures
+        Follow up of the Roughness Article, now with Metallic Textures.
+        3
+        2024/10/04 01:24
+    
+    -->
+    <body class="body">
+        <header class="header">
+            <h1>Blinn Phong with Metallic Textures</h1>
+            <h2>Follow up of the Roughness Article, now with Metallic Textures.</h2>
+            <h3>0003</h3>
+            <h3>2024/10/04 01:24</h3>
+            <h4><a href="3_en-us.html">EN-US</a></h4>
+        </header>
+        <main class="article">
+            <nav class="indices">
+                <ol>
+                    <li><a href="#1+Introduction">1 Introduction</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#1.1+Washed+colors">1.1 Washed colors</a></li>
+                            <li><a href="#1.2+Diffuse+Energy+Conservation">1.2 Diffuse Energy Conservation</a></li>
+                        </ol>
+                    </li><li><a href="#2+Metallic+Texture">2 Metallic Texture</a></li>
+                    <li><a href="#3+Metals">3 Metals</a></li>
+                    <li><a href="#4+In+code">4 In code</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#4.1+Lighting">4.1 Lighting</a></li>
+                            <li><a href="#4.2+Reflection">4.2 Reflection</a></li>
+                            <li><a href="#4.3+The+Roughness+Problem">4.3 The Roughness Problem</a></li>
+                            <li><a href="#4.4+The+Easy+Alternative">4.4 The Easy Alternative</a></li>
+                            <li><a href="#4.5+Final+Code">4.5 Final Code</a></li>
+                        </ol>
+                    </li><li><a href="#5+Final+Results">5 Final Results</a></li>
+                </ol>
+            </nav>
+            <section id="1+Introduction">
+                <h2>1 Introduction</h2>
+                <p class="text">
+                    This is a follow up of <a target="_blank" href="/articles/1_en-us.html">Blinn Phong with Roughness Textures</a>
+                </p>
+                <section id="1.1+Washed+colors">
+                    <h3>1.1 Washed colors</h3>
+                    <p class="text">
+                        In very dark and very rough textures there can still be a very small specular
+                        causing the texture to look washed out, this can be undesirable if the texture
+                        was not supposed to have specular at all, such as doom style sprites or half
+                        life 1 textures.
+                    </p>
+                    <img class="image" src="/resources/3/Washed Color.png" alt="Washed Color"/>
+                    <p class="text">
+                        What we can do is to calculate the normalization for the smaller shininess
+                        we can have, which is 1.0, and then use it to shift the normalization.
+                    </p>
+                    <ol class="code">
+                        <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                        <li><code>normalization = max(normalization - 0.3496155267919281, 0.0);</code></li>
+                    </ol>
+                    <p class="text">
+                        The max function is to avoid the normalization from going negative
+                        and causing undefined behaviour (due to floating point imprecision).
+                    </p>
+                    <img class="image" src="/resources/3/Pitch Black.png" alt="Pitch Black"/>
+                    <p class="text">
+                        The texture is now pitch-black as it was supposed to be.
+                    </p>
+                </section>
+                <section id="1.2+Diffuse+Energy+Conservation">
+                    <h3>1.2 Diffuse Energy Conservation</h3>
+                    <p class="text">
+                        From <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a>
+                    </p>
+                    <p class="text">
+                        The author suggests dividing the material diffuse color by PI but
+                        this would cause the scene to become darker which would require
+                        the light to be multiplied by PI in order for the diffuse to
+                        remain as bright as it was.
+                    </p>
+                    <p class="text">
+                        Instead of doing this, we can simply multiply the normalization
+                        by PI, which would be the same as dividing the diffuse by PI
+                        and increasing the light intensity by PI.
+                    </p>
+                    <ol class="code">
+                        <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                        <li><code>normalization = max(normalization - 0.3496155267919281, 0.0) * PI;</code></li>
+                    </ol>
+                    <p class="text">
+                        This is how it looks now, with a stronger specular.
+                    </p>
+                    <img class="image" src="/resources/3/Strong Specular.png" alt="Strong Specular"/>
+                </section>
+            </section>
+            <section id="2+Metallic+Texture">
+                <h2>2 Metallic Texture</h2>
+                <p class="text">
+                    So, a metallic (or metalness) texture defines if the surface is a metal or not,
+                    but because it usually goes from 0 to 255 or 0 to 1 (if normalized) and because
+                    there&#39;s no such thing as a &quot;half metal&quot;, it in practice defines a linear
+                    interpolation between a non metallic version of the material and
+                    a metallic version of the material.
+                </p>
+                <ol class="code">
+                    <li><code>vec3 outputColor = mix(nonMetallicOutputColor, metallicOutputColor, metallic);</code></li>
+                </ol>
+            </section>
+            <section id="3+Metals">
+                <h2>3 Metals</h2>
+                <p class="text">
+                    So, what does make a metal look like a metal? let&#39;s look at the most
+                    metallic and shiny thing everyone owns, a mirror.
+                </p>
+                <img class="image" src="/resources/3/Mirror.png" alt="Mirror"/>
+                <p class="text">
+                    Looking at a mirror we see two things:
+                </p>
+                <ul class="list">
+                    <li><p>It is fully reflective.</p></li>
+                    <li><p>It has no diffuse or shadows at all (look at the shadows in the wood surface).</p></li>
+                </ul>
+                <p class="text">
+                    Now, let&#39;s look at another example (this is from a candy bar, but it has the properties of a metal):
+                </p>
+                <img class="image" src="/resources/3/Yellow Metal.png" alt="Yellow Metal"/>
+                <p class="text">
+                    And this is what we see:
+                </p>
+                <ul class="list">
+                    <li><p>It has a little bit of diffuse, so it&#39;s not fully metallic.</p></li>
+                    <li><p>The color of the reflection seems to have the same color as it&#39;s surface.</p></li>
+                </ul>
+                <p class="text">
+                    So, from those small observations we see that:
+                </p>
+                <ul class="list">
+                    <li><p>Metals are fully reflective.</p></li>
+                    <li><p>Metals have almost no diffuse at all.</p></li>
+                    <li><p>The color of the reflection has the same color as the metal.</p></li>
+                </ul>
+            </section>
+            <section id="4+In+code">
+                <h2>4 In code</h2>
+                <p class="text">
+                    This is how this <a target="_blank" href="https://cc0-textures.com/t/cc0t-metal-047-a">copper texture</a> currently looks like.
+                </p>
+                <img class="image" src="/resources/3/Plastic Copper.png" alt="Plastic Copper"/>
+                <p class="text">
+                    It does not look like a metal at all, it looks like plastic.
+                </p>
+                <section id="4.1+Lighting">
+                    <h3>4.1 Lighting</h3>
+                    <p class="text">
+                        So, what we need to do is actually quite simple, we only need to multiply the specularFactor
+                        by the diffuseColor and mix it with the current sum of light components using the metallic value,
+                        we also must remember to move both DIFFUSE_INTENSITY and SPECULAR_INTENSITY to the diffuse and
+                        specular light calculation as a metal is 0.0 diffuse and 1.0 specular
+                        (the specular is a reflection of the light).
+                    </p>
+                    <p class="text">
+                        So this
+                    </p>
+                    <ol class="code">
+                        <li><code>diffuseFactor *= DIFFUSE_INTENSITY;</code></li>
+                        <li><code>specularFactor *= SPECULAR_INTENSITY;</code></li>
+                        <li><code></code></li>
+                        <li><code>vec3 diffuse = diffuseFactor * diffuseColor;</code></li>
+                        <li><code>vec3 specular = specularFactor * specularColor;</code></li>
+                        <li><code>vec3 ambient = 0.10 * diffuseColor;</code></li>
+                        <li><code></code></li>
+                        <li><code>return diffuse + specular + ambient;</code></li>
+                    </ol>
+                    <p class="text">
+                        Becomes this
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;</code></li>
+                        <li><code>vec3 specular = specularFactor * specularColor * SPECULAR_INTENSITY;</code></li>
+                        <li><code>vec3 ambient = 0.10 * diffuseColor;</code></li>
+                        <li><code></code></li>
+                        <li><code>return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);</code></li>
+                    </ol>
+                    <p class="text">
+                        And the full code is:
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 directionalLight(</code></li>
+                        <li><code>    vec3 lightDirection, vec3 viewDirection, vec3 normal,</code></li>
+                        <li><code>    vec3 diffuseColor, vec3 specularColor,</code></li>
+                        <li><code>    float roughness, float metallic</code></li>
+                        <li><code>) {</code></li>
+                        <li><code>    float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
+                        <li><code>    float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                        <li><code>    normalization = max(normalization - 0.3496155267919281, 0.0) * PI;</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                        <li><code>    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                        <li><code>    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;</code></li>
+                        <li><code>    vec3 specular = specularFactor * specularColor * SPECULAR_INTENSITY;</code></li>
+                        <li><code>    vec3 ambient = 0.10 * diffuseColor;</code></li>
+                        <li><code></code></li>
+                        <li><code>    return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                    <p class="fine">
+                        At this point, the specularColor may have no more uses and can be removed.
+                    </p>
+                    <p class="text">
+                        And this is how it looks now:
+                    </p>
+                    <img class="image" src="/resources/3/Dark Copper.png" alt="Dark Copper"/>
+                    <p class="text">
+                        The specular now has the color of the metal and it looks fully black because it has nothing
+                        to reflect.
+                    </p>
+                </section>
+                <section id="4.2+Reflection">
+                    <h3>4.2 Reflection</h3>
+                    <p class="text">
+                        We can now create a function that does the reflection for us.
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 computeReflection(</code></li>
+                        <li><code>    samplerCube cube,</code></li>
+                        <li><code>    vec3 viewDirection,</code></li>
+                        <li><code>    vec3 normal,</code></li>
+                        <li><code>    vec3 diffuseColor,</code></li>
+                        <li><code>    float metallic</code></li>
+                        <li><code>) {</code></li>
+                        <li><code>    vec3 reflectedColor = texture(cube, reflect(viewDirection, normal)).rgb;</code></li>
+                        <li><code>    return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                    <p class="text">
+                        If you already know the basics of cubemaps (and if you don&#39;t, you should go <a target="_blank" href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">learn it</a>)
+                        this is nothing new, we are sampling the cubemap by the reflection of the viewDirection with the normal of the surface
+                        and returning a mix between zero (because we don&#39;t have reflections for non metals yet) and the reflection color
+                        multiplied by the diffuse color using the metallic value.
+                    </p>
+                    <p class="text">
+                        We then add it to our final output color.
+                    </p>
+                    <ol class="code">
+                        <li><code>output += computeReflection(reflection, viewDirection, normal, color.rgb, metallic);</code></li>
+                    </ol>
+                    <p class="text">
+                        And this is what we get.
+                    </p>
+                    <img class="image" src="/resources/3/Shiny Copper.png" alt="Shiny Copper"/>
+                    <p class="text">
+                        And it looks like a metal now, but there&#39;s one more problem, the copper
+                        was supposed to be quite rough actually and it looks shiny because we
+                        are not taking the roughness into account.
+                    </p>
+                </section>
+                <section id="4.3+The+Roughness+Problem">
+                    <h3>4.3 The Roughness Problem</h3>
+                    <p class="text">
+                        The issue is that roughness on a cubemap would require a filtered cubemap such as
+                        one from a <a target="_blank" href="https://learnopengl.com/PBR/IBL/Specular-IBL">Specular IBL</a> and
+                        this would take some time to do, and if we are going to use PBR techniques, why
+                        use Blinn Phong after all? there has to be some easy alternative.
+                    </p>
+                </section>
+                <section id="4.4+The+Easy+Alternative">
+                    <h3>4.4 The Easy Alternative</h3>
+                    <p class="text">
+                        Well, if we can&#39;t filter the cubemap, we can at least try to fake roughness
+                        by decreasing the resolution of the cubemap using the mipmaps, which is quite
+                        easy, we only need to calculate the amount of mipmaps and then multiply it
+                        by the roughness.
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 computeReflection(</code></li>
+                        <li><code>    samplerCube cube,</code></li>
+                        <li><code>    vec3 viewDirection,</code></li>
+                        <li><code>    vec3 normal,</code></li>
+                        <li><code>    vec3 diffuseColor,</code></li>
+                        <li><code>    float metallic,</code></li>
+                        <li><code>    float roughness</code></li>
+                        <li><code>) {</code></li>
+                        <li><code>    ivec2 cubemapSize = textureSize(cube, 0);</code></li>
+                        <li><code>    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));</code></li>
+                        <li><code>    float lodLevel = mipLevels * roughness;</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;</code></li>
+                        <li><code>    return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                    <p class="text">
+                        Also, remember to enable seamless cubemaps:
+                    </p>
+                    <ol class="code">
+                        <li><code>glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);</code></li>
+                    </ol>
+                    <img class="image" src="/resources/3/Quite Shiny Copper.png" alt="Quite Shiny Copper"/>
+                    <p class="text">
+                        And it still looks quite shiny, we can make the reflections more rough by
+                        taking the square root of the roughness.
+                    </p>
+                    <ol class="code">
+                        <li><code>float lodLevel = mipLevels * sqrt(roughness);</code></li>
+                    </ol>
+                    <p class="text">
+                        And this is how it looks:
+                    </p>
+                    <img class="image" src="/resources/3/Quite Rough Copper.png" alt="Quite Rough Copper"/>
+                    <p class="text">
+                        It is better now.
+                    </p>
+                </section>
+                <section id="4.5+Final+Code">
+                    <h3>4.5 Final Code</h3>
+                    <p class="text">
+                        And this is the final code, with the specularColor already removed from the light function,
+                        as we already have the metallic value for changing the color of the specular.
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 directionalLight(</code></li>
+                        <li><code>    vec3 lightDirection,</code></li>
+                        <li><code>    vec3 viewDirection,</code></li>
+                        <li><code>    vec3 normal,</code></li>
+                        <li><code>    vec3 diffuseColor,</code></li>
+                        <li><code>    float metallic,</code></li>
+                        <li><code>    float roughness</code></li>
+                        <li><code>) {</code></li>
+                        <li><code>    float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
+                        <li><code>    float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                        <li><code>    normalization = max(normalization - 0.3496155267919281, 0.0) * PI;</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                        <li><code>    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                        <li><code>    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;</code></li>
+                        <li><code>    vec3 specular = vec3(specularFactor) * SPECULAR_INTENSITY;</code></li>
+                        <li><code>    vec3 ambient = 0.10 * diffuseColor;</code></li>
+                        <li><code></code></li>
+                        <li><code>    return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);</code></li>
+                        <li><code>}</code></li>
+                        <li><code></code></li>
+                        <li><code>vec3 computeReflection(</code></li>
+                        <li><code>    samplerCube cube,</code></li>
+                        <li><code>    vec3 viewDirection,</code></li>
+                        <li><code>    vec3 normal,</code></li>
+                        <li><code>    vec3 diffuseColor,</code></li>
+                        <li><code>    float metallic,</code></li>
+                        <li><code>    float roughness</code></li>
+                        <li><code>) {</code></li>
+                        <li><code>    ivec2 cubemapSize = textureSize(cube, 0);</code></li>
+                        <li><code>    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));</code></li>
+                        <li><code>    float lodLevel = mipLevels * sqrt(roughness);</code></li>
+                        <li><code></code></li>
+                        <li><code>    vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;</code></li>
+                        <li><code>    return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                </section>
+            </section>
+            <section id="5+Final+Results">
+                <h2>5 Final Results</h2>
+                <p class="text">
+                    Those are the final results, all of these textures come from <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a>
+                </p>
+                <img class="image" src="/resources/3/Final Steel.png" alt="Final Steel"/>
+                <img class="image" src="/resources/3/Final Rusty Steel.png" alt="Final Rusty Steel"/>
+                <img class="image" src="/resources/3/Final Gold.png" alt="Final Gold"/>
+                <img class="image" src="/resources/3/Final Copper.png" alt="Final Copper"/>
+                <img class="image" src="/resources/3/Final Brass.png" alt="Final Brass"/>
+                <img class="image" src="/resources/3/Final Brushed Steel.png" alt="Final Brushed Steel"/>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 3"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+        </footer>
+    </body>
+</html>

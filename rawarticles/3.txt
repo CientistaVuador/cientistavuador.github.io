@@ -1,0 +1,318 @@
+[[id]] 3
+[[languages]] en-us
+
+[[title]] Blinn Phong with Metallic Textures
+[[description]] Follow up of the Roughness Article, now with Metallic Textures.
+[[date]] 2024/10/04 01:24
+
+[[section]] Introduction
+
+[text]
+This is a follow up of [[[/articles/1_en-us.html:::Blinn Phong with Roughness Textures]]]
+[;<;>]
+
+[[subsection]] Washed colors
+[text]
+In very dark and very rough textures there can still be a very small specular
+causing the texture to look washed out, this can be undesirable if the texture
+was not supposed to have specular at all, such as doom style sprites or half
+life 1 textures.
+[;<;>]
+[[image]] /resources/3/Washed Color.png
+[text]
+What we can do is to calculate the normalization for the smaller shininess
+we can have, which is 1.0, and then use it to shift the normalization.
+[;<;>]
+[code]
+float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+normalization = max(normalization - 0.3496155267919281, 0.0);
+[;<;>]
+[text]
+The max function is to avoid the normalization from going negative
+and causing undefined behaviour (due to floating point imprecision).
+[;<;>]
+[[image]] /resources/3/Pitch Black.png
+[text]
+The texture is now pitch-black as it was supposed to be.
+[;<;>]
+
+[[subsection]] Diffuse Energy Conservation
+[text]
+From [[[https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/:::Energy Conservation In Games]]]
+[;<;>]
+[text]
+The author suggests dividing the material diffuse color by PI but
+this would cause the scene to become darker which would require
+the light to be multiplied by PI in order for the diffuse to
+remain as bright as it was.
+[;<;>]
+[text]
+Instead of doing this, we can simply multiply the normalization
+by PI, which would be the same as dividing the diffuse by PI
+and increasing the light intensity by PI.
+[;<;>]
+[code]
+float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+normalization = max(normalization - 0.3496155267919281, 0.0) * PI;
+[;<;>]
+[text]
+This is how it looks now, with a stronger specular.
+[;<;>]
+[[image]] /resources/3/Strong Specular.png
+
+[[section]] Metallic Texture
+[text]
+So, a metallic (or metalness) texture defines if the surface is a metal or not,
+but because it usually goes from 0 to 255 or 0 to 1 (if normalized) and because
+there's no such thing as a "half metal", it in practice defines a linear
+interpolation between a non metallic version of the material and
+a metallic version of the material.
+[;<;>]
+[code]
+vec3 outputColor = mix(nonMetallicOutputColor, metallicOutputColor, metallic);
+[;<;>]
+
+[[section]] Metals
+[text]
+So, what does make a metal look like a metal? let's look at the most
+metallic and shiny thing everyone owns, a mirror.
+[;<;>]
+[[image]] /resources/3/Mirror.png
+[text]
+Looking at a mirror we see two things:
+[;<;>]
+[ulist]
+,It is fully reflective.
+,It has no diffuse or shadows at all (look at the shadows in the wood surface).
+[;<;>]
+[text]
+Now, let's look at another example (this is from a candy bar, but it has the properties of a metal):
+[;<;>]
+[[image]] /resources/3/Yellow Metal.png
+[text]
+And this is what we see:
+[;<;>]
+[ulist]
+,It has a little bit of diffuse,, so it's not fully metallic.
+,The color of the reflection seems to have the same color as it's surface.
+[;<;>]
+[text]
+So, from those small observations we see that:
+[;<;>]
+[ulist]
+,Metals are fully reflective.
+,Metals have almost no diffuse at all.
+,The color of the reflection has the same color as the metal.
+[;<;>]
+
+[[section]] In code
+
+[text]
+This is how this [[[https://cc0-textures.com/t/cc0t-metal-047-a:::copper texture]]] currently looks like.
+[;<;>]
+[[image]] /resources/3/Plastic Copper.png
+[text]
+It does not look like a metal at all, it looks like plastic.
+[;<;>]
+
+[[subsection]] Lighting
+[text]
+So, what we need to do is actually quite simple, we only need to multiply the specularFactor
+by the diffuseColor and mix it with the current sum of light components using the metallic value,
+we also must remember to move both DIFFUSE_INTENSITY and SPECULAR_INTENSITY to the diffuse and
+specular light calculation as a metal is 0.0 diffuse and 1.0 specular
+(the specular is a reflection of the light).
+[;<;>]
+[[text]] So this
+[code]
+diffuseFactor *= DIFFUSE_INTENSITY;
+specularFactor *= SPECULAR_INTENSITY;
+
+vec3 diffuse = diffuseFactor * diffuseColor;
+vec3 specular = specularFactor * specularColor;
+vec3 ambient = 0.10 * diffuseColor;
+
+return diffuse + specular + ambient;
+[;<;>]
+[[text]] Becomes this
+[code]
+vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;
+vec3 specular = specularFactor * specularColor * SPECULAR_INTENSITY;
+vec3 ambient = 0.10 * diffuseColor;
+
+return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);
+[;<;>]
+[[text]] And the full code is:
+[code]
+vec3 directionalLight(
+    vec3 lightDirection, vec3 viewDirection, vec3 normal,
+    vec3 diffuseColor, vec3 specularColor,
+    float roughness, float metallic
+) {
+    float shininess = pow(MAX_SHININESS, 1.0 - roughness);
+    float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+    normalization = max(normalization - 0.3496155267919281, 0.0) * PI;
+    
+    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;
+    
+    vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;
+    vec3 specular = specularFactor * specularColor * SPECULAR_INTENSITY;
+    vec3 ambient = 0.10 * diffuseColor;
+    
+    return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);
+}
+[;<;>]
+[fine]
+At this point, the specularColor may have no more uses and can be removed.
+[;<;>]
+[text]
+And this is how it looks now:
+[;<;>]
+[[image]] /resources/3/Dark Copper.png
+[text]
+The specular now has the color of the metal and it looks fully black because it has nothing
+to reflect.
+[;<;>]
+
+[[subsection]] Reflection
+[text]
+We can now create a function that does the reflection for us.
+[;<;>]
+[code]
+vec3 computeReflection(
+    samplerCube cube,
+    vec3 viewDirection,
+    vec3 normal,
+    vec3 diffuseColor,
+    float metallic
+) {
+    vec3 reflectedColor = texture(cube, reflect(viewDirection, normal)).rgb;
+    return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);
+}
+[;<;>]
+[text]
+If you already know the basics of cubemaps (and if you don't, you should go [[[https://learnopengl.com/Advanced-OpenGL/Cubemaps:::learn it]]])
+this is nothing new, we are sampling the cubemap by the reflection of the viewDirection with the normal of the surface
+and returning a mix between zero (because we don't have reflections for non metals yet) and the reflection color
+multiplied by the diffuse color using the metallic value.
+[;<;>]
+[[text]] We then add it to our final output color.
+[code]
+output += computeReflection(reflection, viewDirection, normal, color.rgb, metallic);
+[;<;>]
+[[text]] And this is what we get.
+[[image]] /resources/3/Shiny Copper.png
+[text]
+And it looks like a metal now, but there's one more problem, the copper
+was supposed to be quite rough actually and it looks shiny because we
+are not taking the roughness into account.
+[;<;>]
+
+[[subsection]] The Roughness Problem
+[text]
+The issue is that roughness on a cubemap would require a filtered cubemap such as
+one from a [[[https://learnopengl.com/PBR/IBL/Specular-IBL:::Specular IBL]]] and
+this would take some time to do, and if we are going to use PBR techniques, why
+use Blinn Phong after all? there has to be some easy alternative.
+[;<;>]
+[[subsection]] The Easy Alternative
+[text]
+Well, if we can't filter the cubemap, we can at least try to fake roughness
+by decreasing the resolution of the cubemap using the mipmaps, which is quite
+easy, we only need to calculate the amount of mipmaps and then multiply it
+by the roughness.
+[;<;>]
+[code]
+vec3 computeReflection(
+    samplerCube cube,
+    vec3 viewDirection,
+    vec3 normal,
+    vec3 diffuseColor,
+    float metallic,
+    float roughness
+) {
+    ivec2 cubemapSize = textureSize(cube, 0);
+    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));
+    float lodLevel = mipLevels * roughness;
+    
+    vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;
+    return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);
+}
+[;<;>]
+[text]
+Also, remember to enable seamless cubemaps:
+[;<;>]
+[code]
+glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+[;<;>]
+[[image]] /resources/3/Quite Shiny Copper.png
+[text]
+And it still looks quite shiny, we can make the reflections more rough by
+taking the square root of the roughness.
+[;<;>]
+[code]
+float lodLevel = mipLevels * sqrt(roughness);
+[;<;>]
+[[text]] And this is how it looks:
+[[image]] /resources/3/Quite Rough Copper.png
+[text]
+It is better now.
+[;<;>]
+
+[[subsection]] Final Code
+[text]
+And this is the final code, with the specularColor already removed from the light function,
+as we already have the metallic value for changing the color of the specular.
+[;<;>]
+[code]
+            vec3 directionalLight(
+                vec3 lightDirection,
+                vec3 viewDirection,
+                vec3 normal,
+                vec3 diffuseColor,
+                float metallic,
+                float roughness
+            ) {
+                float shininess = pow(MAX_SHININESS, 1.0 - roughness);
+                float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+                normalization = max(normalization - 0.3496155267919281, 0.0) * PI;
+                
+                vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+                float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+                float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), shininess) * diffuseFactor * normalization;
+                
+                vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;
+                vec3 specular = vec3(specularFactor) * SPECULAR_INTENSITY;
+                vec3 ambient = 0.10 * diffuseColor;
+                
+                return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);
+            }
+            
+            vec3 computeReflection(
+                samplerCube cube,
+                vec3 viewDirection,
+                vec3 normal,
+                vec3 diffuseColor,
+                float metallic,
+                float roughness
+            ) {
+                ivec2 cubemapSize = textureSize(cube, 0);
+                float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));
+                float lodLevel = mipLevels * sqrt(roughness);
+                
+                vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;
+                return mix(vec3(0.0), reflectedColor * diffuseColor, metallic);
+            }
+[;<;>]
+
+[[section]] Final Results
+[[text]] Those are the final results, all of these textures come from [[[https://cc0-textures.com/:::CC0 Textures]]]
+[[image]] /resources/3/Final Steel.png
+[[image]] /resources/3/Final Rusty Steel.png
+[[image]] /resources/3/Final Gold.png
+[[image]] /resources/3/Final Copper.png
+[[image]] /resources/3/Final Brass.png
+[[image]] /resources/3/Final Brushed Steel.png
+
