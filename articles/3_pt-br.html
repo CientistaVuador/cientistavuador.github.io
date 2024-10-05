@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="pt-br">
     <head>
-        <title>Blinn Phong with Metallic Textures</title>
+        <title>Blinn Phong com Textures de Metallic</title>
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="specularfactor, shift, resolution, scene, shininess, these, bar, reflect, seamless, remain, sampling, lighting, plastic, looking, must, components, another, least, sum, two, colors, diffusecolor, example, into, current, after, learn, returning, increasing, calculation, cc0t, zero, darker, things, wood, up, add, en, take, know, little, full, doing, basics, life, imprecision, negative, stronger, root, normal, go, yet, better, interpolation, well, avoid, time, articles, smaller, practice, advanced, bit, changing, output"/>
-        <meta name="description" content="Follow up of the Roughness Article, now with Metallic Textures."/>
+        <meta name="keywords" content="preto, doce, half, pt, specularfactor, brilho, novo, filtrado, aumentar, preta, shininess, menos, menor, madeira, seamless, criar, olhando, exemplo, sampling, tornar, iluminação, sugere, misturar, técnicas, melhor, escuras, pequenas, sua, completamente, conservação, anterior, diffusecolor, br, outro, seu, quadrada, adicionamos, todo, possuem, coisas, simplesmente, interpolação, lavada, cc0t, meio, zero, metálico, refletir, quantidade, propriedades, energia, duas, necessitar, observações, intensidade, feita, diminuindo, foi, soma, conta, ativar, usados, life, introdução"/>
+        <meta name="description" content="Seguimento do Artigo de Roughness, agora com Texturas Metallic."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
@@ -14,8 +14,8 @@
         <!-- HTML Meta Tags -->
         
         <!-- OpenGraph -->
-        <meta name="og:title" content="Blinn Phong with Metallic Textures"/>
-        <meta name="og:description" content="Follow up of the Roughness Article, now with Metallic Textures."/>
+        <meta name="og:title" content="Blinn Phong com Textures de Metallic"/>
+        <meta name="og:description" content="Seguimento do Artigo de Roughness, agora com Texturas Metallic."/>
         <meta name="og:type" content="article"/>
         <meta name="og:image" content="/data/icon.png"/>
         <!-- OpenGraph -->
@@ -47,17 +47,17 @@
     
     For more information, please refer to <http://unlicense.org/>
     
-    en-us
-        Blinn Phong with Metallic Textures
-        Follow up of the Roughness Article, now with Metallic Textures.
+    pt-br
+        Blinn Phong com Textures de Metallic
+        Seguimento do Artigo de Roughness, agora com Texturas Metallic.
         3
         2024/10/04 01:24
     
     -->
     <body class="body">
         <header class="header">
-            <h1>Blinn Phong with Metallic Textures</h1>
-            <h2>Follow up of the Roughness Article, now with Metallic Textures.</h2>
+            <h1>Blinn Phong com Textures de Metallic</h1>
+            <h2>Seguimento do Artigo de Roughness, agora com Texturas Metallic.</h2>
             <h3>0003</h3>
             <h3>2024/10/04 01:24</h3>
             <h4><a href="3_en-us.html">EN-US</a> | <a href="3_pt-br.html">PT-BR</a></h4>
@@ -65,150 +65,149 @@
         <main class="article">
             <nav class="indices">
                 <ol>
-                    <li><a href="#1+Introduction">1 Introduction</a></li>
+                    <li><a href="#1+Introdu%C3%A7%C3%A3o">1 Introdução</a></li>
                     <li>
                         <ol>
-                            <li><a href="#1.1+Washed+colors">1.1 Washed colors</a></li>
-                            <li><a href="#1.2+Diffuse+Energy+Conservation">1.2 Diffuse Energy Conservation</a></li>
+                            <li><a href="#1.1+Cores+lavadas">1.1 Cores lavadas</a></li>
+                            <li><a href="#1.2+Conserva%C3%A7%C3%A3o+de+Energia+Difusa">1.2 Conservação de Energia Difusa</a></li>
                         </ol>
-                    </li><li><a href="#2+Metallic+Texture">2 Metallic Texture</a></li>
-                    <li><a href="#3+Metals">3 Metals</a></li>
-                    <li><a href="#4+In+code">4 In code</a></li>
+                    </li><li><a href="#2+Textura+Metallic">2 Textura Metallic</a></li>
+                    <li><a href="#3+Metais">3 Metais</a></li>
+                    <li><a href="#4+Em+c%C3%B3digo">4 Em código</a></li>
                     <li>
                         <ol>
-                            <li><a href="#4.1+Lighting">4.1 Lighting</a></li>
-                            <li><a href="#4.2+Reflection">4.2 Reflection</a></li>
-                            <li><a href="#4.3+The+Roughness+Problem">4.3 The Roughness Problem</a></li>
-                            <li><a href="#4.4+The+Easy+Alternative">4.4 The Easy Alternative</a></li>
-                            <li><a href="#4.5+Final+Code">4.5 Final Code</a></li>
+                            <li><a href="#4.1+Ilumina%C3%A7%C3%A3o">4.1 Iluminação</a></li>
+                            <li><a href="#4.2+Reflexo">4.2 Reflexo</a></li>
+                            <li><a href="#4.3+O+Problema+da+Roughness">4.3 O Problema da Roughness</a></li>
+                            <li><a href="#4.4+A+Alternative+F%C3%A1cil">4.4 A Alternative Fácil</a></li>
+                            <li><a href="#4.5+C%C3%B3digo+Final">4.5 Código Final</a></li>
                         </ol>
-                    </li><li><a href="#5+Final+Results">5 Final Results</a></li>
+                    </li><li><a href="#5+Resultados+Finais">5 Resultados Finais</a></li>
                 </ol>
             </nav>
-            <section id="1+Introduction">
-                <h2>1 Introduction</h2>
+            <section id="1+Introdu%C3%A7%C3%A3o">
+                <h2>1 Introdução</h2>
                 <p class="text">
-                    This is a follow up of <a target="_blank" href="/articles/1_en-us.html">Blinn Phong with Roughness Textures</a>
+                    Isso é o seguimento de <a target="_blank" href="/articles/1_pt-br.html">Blinn Phong with Roughness Textures</a>
                 </p>
-                <section id="1.1+Washed+colors">
-                    <h3>1.1 Washed colors</h3>
+                <section id="1.1+Cores+lavadas">
+                    <h3>1.1 Cores lavadas</h3>
                     <p class="text">
-                        In very dark and very rough textures there can still be a very small specular
-                        causing the texture to look washed out, this can be undesirable if the texture
-                        was not supposed to have specular at all, such as doom style sprites or half
-                        life 1 textures.
+                        Em texturas bem escuras e bem ásperas (roughness alto) ainda pode ter um
+                        pequeno specular fazendo a textura parecer lavada, isso pode ser indesejável
+                        se a textura não foi feita pra ter specular, como sprites do doom ou texturas
+                        do half life 1.
                     </p>
                     <img class="image" src="/resources/3/Washed Color.png" alt="Washed Color"/>
                     <p class="text">
-                        What we can do is to calculate the normalization for the smaller shininess
-                        we can have, which is 1.0, and then use it to shift the normalization.
+                        O que nós podemos fazer é calcular a normalização para o menor shininess
+                        que podemos ter, que é 1.0, e então usar ele para mover a normalização.
                     </p>
                     <ol class="code">
                         <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
                         <li><code>normalization = max(normalization - 0.3496155267919281, 0.0);</code></li>
                     </ol>
                     <p class="text">
-                        The max function is to avoid the normalization from going negative
-                        and causing undefined behaviour (due to floating point imprecision).
+                        A função max é para evitar que a normalização se torne negativa
+                        e cause comportamento indefinido (por causa da imprecisão de float).
                     </p>
                     <img class="image" src="/resources/3/Pitch Black.png" alt="Pitch Black"/>
                     <p class="text">
-                        The texture is now pitch-black as it was supposed to be.
+                        A textura agora está completamente preta, como deveria ser.
                     </p>
                 </section>
-                <section id="1.2+Diffuse+Energy+Conservation">
-                    <h3>1.2 Diffuse Energy Conservation</h3>
+                <section id="1.2+Conserva%C3%A7%C3%A3o+de+Energia+Difusa">
+                    <h3>1.2 Conservação de Energia Difusa</h3>
                     <p class="text">
-                        From <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a>
+                        De <a target="_blank" href="https://www.rorydriscoll.com/2009/01/25/energy-conservation-in-games/">Energy Conservation In Games</a> (em inglês)
                     </p>
                     <p class="text">
-                        The author suggests dividing the material diffuse color by PI but
-                        this would cause the scene to become darker which would require
-                        the light to be multiplied by PI in order for the diffuse to
-                        remain as bright as it was.
+                        O autor sugere dividir o diffuse do material por PI mas
+                        isso iria tornar a cena inteira mais escura que então
+                        iria necessitar da luz ser multiplicada por PI para
+                        que possa retornar ao seu estado de brilho anterior.
                     </p>
                     <p class="text">
-                        Instead of doing this, we can simply multiply the normalization
-                        by PI, which would be the same as dividing the diffuse by PI
-                        and increasing the light intensity by PI.
+                        Ao invés de fazer isso, nós podemos simplesmente multiplicar
+                        a normalização por PI, que seria o mesmo que dividir o diffuse
+                        por Pi e então aumentar a intensidade da luz por PI.
                     </p>
                     <ol class="code">
                         <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
                         <li><code>normalization = max(normalization - 0.3496155267919281, 0.0) * PI;</code></li>
                     </ol>
                     <p class="text">
-                        This is how it looks now, with a stronger specular.
+                        É assim que se parece agora, com um especular mais forte.
                     </p>
                     <img class="image" src="/resources/3/Strong Specular.png" alt="Strong Specular"/>
                 </section>
             </section>
-            <section id="2+Metallic+Texture">
-                <h2>2 Metallic Texture</h2>
+            <section id="2+Textura+Metallic">
+                <h2>2 Textura Metallic</h2>
                 <p class="text">
-                    So, a metallic (or metalness) texture defines if the surface is a metal or not,
-                    but because it usually goes from 0 to 255 or 0 to 1 (if normalized) and because
-                    there&#39;s no such thing as a &quot;half metal&quot;, it in practice defines a linear
-                    interpolation between a non metallic version of the material and
-                    a metallic version of the material.
+                    Então, uma textura de metallic (ou metalness) define se a superfície é um metal
+                    ou não mas como ela normalmente vai de 0 a 255 ou de 0 a 1 (se normalizada) e
+                    como não existe tal coisa como &quot;meio metal&quot;, em prática ela define
+                    uma interpolação linear entre a versão não metálica do material
+                    e a versão metálica do material.
                 </p>
                 <ol class="code">
                     <li><code>vec3 outputColor = mix(nonMetallicOutputColor, metallicOutputColor, metallic);</code></li>
                 </ol>
             </section>
-            <section id="3+Metals">
-                <h2>3 Metals</h2>
+            <section id="3+Metais">
+                <h2>3 Metais</h2>
                 <p class="text">
-                    So, what does make a metal look like a metal? let&#39;s look at the most
-                    metallic and shiny thing everyone owns, a mirror.
+                    Então, o que faz um metal se parecer com um metal? vamos olhar a coisa
+                    mais metálica e brilhante que todo mundo tem, um espelho.
                 </p>
                 <img class="image" src="/resources/3/Mirror.png" alt="Mirror"/>
                 <p class="text">
-                    Looking at a mirror we see two things:
+                    Olhando um espelho nós vemos duas coisas:
                 </p>
                 <ul class="list">
-                    <li><p>It is fully reflective.</p></li>
-                    <li><p>It has no diffuse or shadows at all (look at the shadows in the wood surface).</p></li>
+                    <li><p>É totalmente refletivo.</p></li>
+                    <li><p>Não tem diffuse ou sombras (olhe as sombras na superfície de &quot;madeira&quot;).</p></li>
                 </ul>
                 <p class="text">
-                    Now, let&#39;s look at another example (this is from a candy bar, but it has the properties of a metal):
+                    Agora, vamos olhar outro exemplo (isso é de um doce, mas tem as propriedades de um metal):
                 </p>
                 <img class="image" src="/resources/3/Yellow Metal.png" alt="Yellow Metal"/>
                 <p class="text">
-                    And this is what we see:
+                    E é isso que nós vemos:
                 </p>
                 <ul class="list">
-                    <li><p>It has a little bit of diffuse, so it&#39;s not fully metallic.</p></li>
-                    <li><p>The color of the reflection seems to have the same color as it&#39;s surface.</p></li>
+                    <li><p>Ele tem um pouco de diffuse, então não é totalmente metálico.</p></li>
+                    <li><p>A cor do reflexo parece ter a mesma cor que a sua superfície.</p></li>
                 </ul>
                 <p class="text">
-                    So, from those small observations we see that:
+                    Então, dessas pequenas observações nós vemos que:
                 </p>
                 <ul class="list">
-                    <li><p>Metals are fully reflective.</p></li>
-                    <li><p>Metals have almost no diffuse at all.</p></li>
-                    <li><p>The color of the reflection has the same color as the metal.</p></li>
+                    <li><p>Metais são totalmente refletivos.</p></li>
+                    <li><p>Metais quase não possuem diffuse.</p></li>
+                    <li><p>A cor do reflexo tem a mesma cor do metal.</p></li>
                 </ul>
             </section>
-            <section id="4+In+code">
-                <h2>4 In code</h2>
+            <section id="4+Em+c%C3%B3digo">
+                <h2>4 Em código</h2>
                 <p class="text">
-                    This is how this <a target="_blank" href="https://cc0-textures.com/t/cc0t-metal-047-a">copper texture</a> currently looks like.
+                    É assim que essa <a target="_blank" href="https://cc0-textures.com/t/cc0t-metal-047-a">textura de cobre</a> atualmente se parece.
                 </p>
                 <img class="image" src="/resources/3/Plastic Copper.png" alt="Plastic Copper"/>
                 <p class="text">
-                    It does not look like a metal at all, it looks like plastic.
+                    Não se parece com um metal, se parece como plástico.
                 </p>
-                <section id="4.1+Lighting">
-                    <h3>4.1 Lighting</h3>
+                <section id="4.1+Ilumina%C3%A7%C3%A3o">
+                    <h3>4.1 Iluminação</h3>
                     <p class="text">
-                        So, what we need to do is actually quite simple, we only need to multiply the specularFactor
-                        by the diffuseColor and mix it with the current sum of light components using the metallic value,
-                        we also must remember to move both DIFFUSE_INTENSITY and SPECULAR_INTENSITY to the diffuse and
-                        specular light calculation as a metal is 0.0 diffuse and 1.0 specular
-                        (the specular is a reflection of the light).
+                        Então, o que nós temos que fazer é na verdade bem simples, nós só precisamos multiplicar o
+                        specularFactor pelo diffuseColor e misturar (função mix) com a soma atual de componentes de luz usando
+                        o valor de metallic, também temos que nos lembrar de mover ambos DIFFUSE_INTENSITY e SPECULAR_INTENSITY
+                        para o cálculo de luz do diffuse e do specular já que um metal é 0.0 diffuse e 1.0 specular.
                     </p>
                     <p class="text">
-                        So this
+                        Então isso
                     </p>
                     <ol class="code">
                         <li><code>diffuseFactor *= DIFFUSE_INTENSITY;</code></li>
@@ -221,7 +220,7 @@
                         <li><code>return diffuse + specular + ambient;</code></li>
                     </ol>
                     <p class="text">
-                        Becomes this
+                        Se torna isso
                     </p>
                     <ol class="code">
                         <li><code>vec3 diffuse = diffuseFactor * diffuseColor * DIFFUSE_INTENSITY;</code></li>
@@ -231,7 +230,7 @@
                         <li><code>return mix(diffuse + specular + ambient, specularFactor * diffuseColor, metallic);</code></li>
                     </ol>
                     <p class="text">
-                        And the full code is:
+                        E o código completo é:
                     </p>
                     <ol class="code">
                         <li><code>vec3 directionalLight(</code></li>
@@ -255,21 +254,21 @@
                         <li><code>}</code></li>
                     </ol>
                     <p class="fine">
-                        At this point, the specularColor may have no more uses and can be removed.
+                        A esse ponto, o specularColor pode não ter mais usos e pode ser removido.
                     </p>
                     <p class="text">
-                        And this is how it looks now:
+                        E é assim que se parece agora:
                     </p>
                     <img class="image" src="/resources/3/Dark Copper.png" alt="Dark Copper"/>
                     <p class="text">
-                        The specular now has the color of the metal and it looks fully black because it has nothing
-                        to reflect.
+                        O specular agora tem a cor do metal e ele está totalmente preto pois não tem nada para
+                        refletir.
                     </p>
                 </section>
-                <section id="4.2+Reflection">
-                    <h3>4.2 Reflection</h3>
+                <section id="4.2+Reflexo">
+                    <h3>4.2 Reflexo</h3>
                     <p class="text">
-                        We can now create a function that does the reflection for us.
+                        Podemos agora criar uma função que faz o reflexo para nós.
                     </p>
                     <ol class="code">
                         <li><code>vec3 computeReflection(</code></li>
@@ -284,43 +283,43 @@
                         <li><code>}</code></li>
                     </ol>
                     <p class="text">
-                        If you already know the basics of cubemaps (and if you don&#39;t, you should go <a target="_blank" href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">learn it</a>)
-                        this is nothing new, we are sampling the cubemap by the reflection of the viewDirection with the normal of the surface
-                        and returning a mix between zero (because we don&#39;t have reflections for non metals yet) and the reflection color
-                        multiplied by the diffuse color using the metallic value.
+                        Se você já sabe os báximos de cubemaps (e se você não sabe, você deveria ir <a target="_blank" href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">aprender</a> (em inglês))
+                        isso não é nada novo, estamos fazendo o sampling do cubemap pelo reflexo do viewDirection com o normal da superfície
+                        e returnando uma mistura (função mix) entre zero (pois não temos reflexos para não metais ainda) e a cor do reflexo
+                        multiplicada pela cor do diffuse usando o valor do metallic.
                     </p>
                     <p class="text">
-                        We then add it to our final output color.
+                        Nós então adicionamos para a nossa saída final.
                     </p>
                     <ol class="code">
                         <li><code>output += computeReflection(reflection, viewDirection, normal, color.rgb, metallic);</code></li>
                     </ol>
                     <p class="text">
-                        And this is what we get.
+                        E é isso que nós temos.
                     </p>
                     <img class="image" src="/resources/3/Shiny Copper.png" alt="Shiny Copper"/>
                     <p class="text">
-                        And it looks like a metal now, but there&#39;s one more problem, the copper
-                        was supposed to be quite rough actually and it looks shiny because we
-                        are not taking the roughness into account.
+                        E se parece com um metal agora, mas tem mais um problema, o cobre
+                        era pra ser bem áspero na verdade (roughness alto) e ele parece brilhante
+                        pois não estamos levando a roughness em conta.
                     </p>
                 </section>
-                <section id="4.3+The+Roughness+Problem">
-                    <h3>4.3 The Roughness Problem</h3>
+                <section id="4.3+O+Problema+da+Roughness">
+                    <h3>4.3 O Problema da Roughness</h3>
                     <p class="text">
-                        The issue is that roughness on a cubemap would require a filtered cubemap such as
-                        one from a <a target="_blank" href="https://learnopengl.com/PBR/IBL/Specular-IBL">Specular IBL</a> and
-                        this would take some time to do, and if we are going to use PBR techniques, why
-                        use Blinn Phong after all? there has to be some easy alternative.
+                        O problema é que a roughness em um cubemap iria precisar de um cubemap filtrado
+                        como um dos usados em <a target="_blank" href="https://learnopengl.com/PBR/IBL/Specular-IBL">IBL de Specular</a>
+                        (em inglês) e isso iria levar um tempo para fazer, e se nós vamos usar técnicas de PBR, por quê
+                        usar Blinn Phong mesmo? deve ter uma alternativa mais fácil.
                     </p>
                 </section>
-                <section id="4.4+The+Easy+Alternative">
-                    <h3>4.4 The Easy Alternative</h3>
+                <section id="4.4+A+Alternative+F%C3%A1cil">
+                    <h3>4.4 A Alternative Fácil</h3>
                     <p class="text">
-                        Well, if we can&#39;t filter the cubemap, we can at least try to fake roughness
-                        by decreasing the resolution of the cubemap using the mipmaps, which is quite
-                        easy, we only need to calculate the amount of mipmaps and then multiply it
-                        by the roughness.
+                        Bom, se não podemos filtrar o cubemap, podemos pelo menos tentar falsificar
+                        uma roughness diminuindo a resolução dos cubemaps com os mipmaps, que é
+                        bem fácil, nós só precisamos calcular a quantidade de mipmaps e então
+                        multiplicar pela roughness.
                     </p>
                     <ol class="code">
                         <li><code>vec3 computeReflection(</code></li>
@@ -340,32 +339,32 @@
                         <li><code>}</code></li>
                     </ol>
                     <p class="text">
-                        Also, remember to enable seamless cubemaps:
+                        Também, lembre-se de ativar cubemaps seamless:
                     </p>
                     <ol class="code">
                         <li><code>glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);</code></li>
                     </ol>
                     <img class="image" src="/resources/3/Quite Shiny Copper.png" alt="Quite Shiny Copper"/>
                     <p class="text">
-                        And it still looks quite shiny, we can make the reflections more rough by
-                        taking the square root of the roughness.
+                        E ainda se parece bem brilhante, nós podemos deixar os reflexos mais ásperos
+                        pegando a raiz quadrada da roughness.
                     </p>
                     <ol class="code">
                         <li><code>float lodLevel = mipLevels * sqrt(roughness);</code></li>
                     </ol>
                     <p class="text">
-                        And this is how it looks:
+                        E é assim que se parece agora:
                     </p>
                     <img class="image" src="/resources/3/Quite Rough Copper.png" alt="Quite Rough Copper"/>
                     <p class="text">
-                        It is better now.
+                        Está melhor agora.
                     </p>
                 </section>
-                <section id="4.5+Final+Code">
-                    <h3>4.5 Final Code</h3>
+                <section id="4.5+C%C3%B3digo+Final">
+                    <h3>4.5 Código Final</h3>
                     <p class="text">
-                        And this is the final code, with the specularColor already removed from the light function,
-                        as we already have the metallic value for changing the color of the specular.
+                        E esse é o código final, com o specularColor já removido da função da luz,
+                        já que já temos o valor do metallic para mudar a cor do specular.
                     </p>
                     <ol class="code">
                         <li><code>vec3 directionalLight(</code></li>
@@ -409,10 +408,10 @@
                     </ol>
                 </section>
             </section>
-            <section id="5+Final+Results">
-                <h2>5 Final Results</h2>
+            <section id="5+Resultados+Finais">
+                <h2>5 Resultados Finais</h2>
                 <p class="text">
-                    Those are the final results, all of these textures come from <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a>
+                    Esses são os resultados finais, todas essas texturas vem de <a target="_blank" href="https://cc0-textures.com/">CC0 Textures</a> (em inglês)
                 </p>
                 <img class="image" src="/resources/3/Final Steel.png" alt="Final Steel"/>
                 <img class="image" src="/resources/3/Final Rusty Steel.png" alt="Final Rusty Steel"/>
@@ -423,7 +422,7 @@
             </section>
         </main>
         <footer class="footer">
-            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
             <script src="https://utteranc.es/client.js"
                     repo="CientistaVuador/cientistavuador.github.io"
                     issue-term="Article 3"
@@ -433,7 +432,7 @@
                     async="async"
                     >
             </script>
-            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+            <p>A Licença desta página pode ser encontrada no código-fonte ou no <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">repositório do github</a>.</p>
         </footer>
     </body>
 </html>
