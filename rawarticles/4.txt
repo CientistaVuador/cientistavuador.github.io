@@ -1,0 +1,232 @@
+[[id]] 4
+[[languages]] en-us
+
+[[title]] Blinn Phong with the Fresnel Effect
+[[description]] Follow up of the Metallic Article, now with the Fresnel Effect.
+[[date]] 2024/10/08 14:46
+
+[[section]] Introduction
+[text]
+This is a follow up of [[[/articles/3_en-us.html:::Blinn Phong with Metallic Textures]]]
+and hopefully the last one, I have to say, I had never written articles before
+and english is not even my first language, I know that some things here
+may be a little bit confusing or weird, but in my opinion it is better to write
+a bad article about something interesting that you discovered than say it on the
+discord chat and let it get lost forever.
+[;<;>]
+
+[[section]] Fresnel Effect
+[text]
+The fresnel effect is one of those things that once you start noticing it exists
+you will always see it everywhere, from shiny plastics to ceramic tiles or large
+bodies of water, fresnel is usually not very visible on metals and on 3D rendering
+it is often assumed that metals have no fresnel at all.
+[;<;>]
+[text]
+Instead of showing you a boring graph, I will show you real pictures of the effect.
+[;<;>]
+[[image]] /resources/4/Low Reflection.jpg
+[[image]] /resources/4/Medium Reflection.jpg
+[[image]] /resources/4/High Reflection.jpg
+[text]
+Did you get it? if not I will say it then:
+[;<;>]
+[text]
+The fresnel effect is a light effect that you often see on non metallic surfaces
+where the reflection becomes more intense the larger the angle between the surface
+normal and the view direction is, as you can see in the first picture, we almost
+can't see a reflection, but there is still one, fresnel doesn't completely eliminates
+reflections when looking from the top, this is usually assumed to be close to 5%
+for most things but you can find tables with more values on the internet, and as you
+can see on the second and third picture, the reflection gets more intense as the
+angle increases.
+[;<;>]
+
+[[section]] In code
+[text]
+If you know what a dot product is, you probably already guessed how
+this is going to look.
+[;<;>]
+[code]
+#define FRESNEL_MIN 0.05
+#define FRESNEL_MAX 0.95
+float fresnelFactor(vec3 viewDirection, vec3 normal) {
+    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);
+    return FRESNEL_MIN + (FRESNEL_MAX * pow(fresnelDot, 5.0));
+}
+[;<;>]
+[text]
+Here we created a function for calculating the fresnel factor for a 
+viewDirection (in my setup, this points from the camera to the fragment,
+I find it more intuitive this way) and the normal from the surface.
+[;<;>]
+[text]
+We then calcule the dot product between the opposite of the viewDirection
+and the normal of the surface (this gives how much "close" the viewDirection
+is from the normal) and we then clamp it so it doesn't go negative and flip it
+because we want a value that gets larger as the angle increases.
+[;<;>]
+[text]
+Because fresnel is not linear (we only see very strong reflections when the
+angle is pretty large), we need to apply a pow function to it, which is
+usually 5.0, we then multiply by the max value of the fresnel effect
+and add the minimum value.
+[;<;>]
+[text]
+As the min and max always sum to one, it can be simplified to a single
+constant.
+[;<;>]
+[code]
+#define FRESNEL_BALANCE 0.05
+float fresnelFactor(vec3 viewDirection, vec3 normal) {
+    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);
+    return FRESNEL_BALANCE + ((1.0 - FRESNEL_BALANCE) * pow(fresnelDot, 5.0));
+}
+[;<;>]
+[text]
+Here we call it the "FRESNEL_BALANCE" but it's normally called "F0"
+[;<;>]
+[text]
+Now we just need to add it to our reflection function and also multiply
+by the roughness so the reflection goes down as the roughness increases.
+[;<;>]
+[code]
+vec3 computeReflection(
+    samplerCube cube,
+    vec3 viewDirection,
+    vec3 normal,
+    vec3 diffuseColor,
+    float metallic,
+    float roughness
+) {
+    ivec2 cubemapSize = textureSize(cube, 0);
+    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));
+    float lodLevel = mipLevels * sqrt(roughness);
+    
+    vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;
+    return mix(
+        reflectedColor * fresnelFactor(viewDirection, normal) * pow(1.0 - roughness, 2.0),
+        reflectedColor * diffuseColor,
+        metallic
+    );
+}
+[;<;>]
+[text]
+And this is how it looks:
+[;<;>]
+[[image]] /resources/4/Red Shiny Plastic.png
+
+[[section]] Blinn Phong
+[text]
+After further thinking about what I have done, I eventually simplified all of the roughness
+to blinn phong shininess conversion into a single function that converts a PBR Metallic Roughness
+Material to a Blinn Phong Material in the shader, you will just need to use this as the material
+in your light calculations.
+[;<;>]
+[code]
+#define PI 3.14159265359
+#define MAX_SHININESS 2048.0
+#define DIFFUSE_BALANCE 0.50
+#define FRESNEL_BALANCE 0.05
+struct BlinnPhongMaterial {
+    float shininess;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 ambient;
+};
+float fresnelFactor(vec3 viewDirection, vec3 normal) {
+    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);
+    return FRESNEL_BALANCE + ((1.0 - FRESNEL_BALANCE) * pow(fresnelDot, 5.0));
+}
+BlinnPhongMaterial convertPBRMaterialToBlinnPhong(
+    vec3 viewDirection, vec3 normal,
+    vec3 color, float metallic, float roughness, float ambientOcclusion
+) {
+    float shininess = pow(MAX_SHININESS, 1.0 - roughness);
+    float specular = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));
+    float fresnel = fresnelFactor(viewDirection, normal);
+    return BlinnPhongMaterial(
+        shininess,
+        mix(
+            (color * DIFFUSE_BALANCE) / PI,
+            vec3(0.0),
+            metallic
+        ),
+        mix(
+            vec3(max(specular - 0.3496155267919281, 0.0)) * (1.0 - DIFFUSE_BALANCE) * fresnel * PI,
+            vec3(specular) * color,
+            metallic
+        ),
+        mix(
+            vec3(ambientOcclusion) * color,
+            vec3(0.0),
+            metallic
+        )
+    );
+}
+[;<;>]
+[code]
+vec3 directionalLight(
+    vec3 lightDirection,
+    vec3 viewDirection,
+    vec3 normal,
+    BlinnPhongMaterial material
+ ) {
+    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);
+    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);
+    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), material.shininess) * diffuseFactor;
+    
+    float lightDiffuse = 1.90;
+    float lightSpecular = 1.0;
+    float lightAmbient = 0.10;
+    
+    vec3 diffuse = lightDiffuse * diffuseFactor * material.diffuse;
+    vec3 specular = lightSpecular * specularFactor * material.specular;
+    vec3 ambient = lightAmbient * material.ambient;
+    
+    return diffuse + specular + ambient;
+}
+[;<;>]
+[text]
+This time I divided the diffuse by PI so it will look darker, I also added a fresnel
+to it, so it should look more realistic when looking from high angles, this is how it
+looks on the leather texture with no reflections:
+[;<;>]
+[[image]] /resources/4/Leather.png
+[text]
+I also split the reflection function into three more generic functions.
+[;<;>]
+[code]
+float cubemapMipLevels(samplerCube cube) {
+    ivec2 cubemapSize = textureSize(cube, 0);
+    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));
+    return mipLevels;
+}
+vec4 cubemapRoughnessColor(samplerCube cube, float roughness, vec3 direction) {
+    float mipLevels = cubemapMipLevels(cube);
+    float lodLevel = mipLevels * sqrt(roughness);
+    return textureLod(cube, direction, lodLevel);
+}
+vec3 cubemapReflection(
+    vec3 cubemapColor,
+    vec3 viewDirection, vec3 normal,
+    vec3 color, float metallic, float roughness
+) {
+    return mix(
+        cubemapColor * fresnelFactor(viewDirection, normal) * pow(1.0 - roughness, 2.0),
+        cubemapColor * color,
+        metallic
+    );
+}
+[;<;>]
+
+[[section]] Final Results
+[text]
+This time those textures come from multiple sources.
+[;<;>]
+[[image]] /resources/4/Monitor.png
+[[image]] /resources/4/Ice.png
+[[image]] /resources/4/Gold.png
+[[image]] /resources/4/Marble.png
+[[image]] /resources/4/Wood.png
+[[image]] /resources/4/Sand with water.png

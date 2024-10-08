@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Blinn Phong with the Fresnel Effect</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="bad, functions, your, shininess, english, let, going, want, opposite, something, eliminates, at, calculations, much, discovered, strong, probably, bodies, sum, min, pow, where, after, flip, gives, plastics, texture, call, weird, boring, did, added, had, language, f0, down, 3d, view, darker, calcule, up, written, results, us, which, last, en, article, graph, never, discord, once, everywhere, guessed, final, internet, little, some, pbr, sources, divided, show, non, negative"/>
+        <meta name="description" content="Follow up of the Metallic Article, now with the Fresnel Effect."/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
+        <link rel="stylesheet" type="text/css" href="/data/style.css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Blinn Phong with the Fresnel Effect"/>
+        <meta name="og:description" content="Follow up of the Metallic Article, now with the Fresnel Effect."/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <!--
+    
+    This is free and unencumbered software released into the public domain.
+    
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.
+    
+    In jurisdictions that recognize copyright laws, the author or authors
+    of this software dedicate any and all copyright interest in the
+    software to the public domain. We make this dedication for the benefit
+    of the public at large and to the detriment of our heirs and
+    successors. We intend this dedication to be an overt act of
+    relinquishment in perpetuity of all present and future rights to this
+    software under copyright law.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+    OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+    For more information, please refer to <http://unlicense.org/>
+    
+    en-us
+        Blinn Phong with the Fresnel Effect
+        Follow up of the Metallic Article, now with the Fresnel Effect.
+        4
+        2024/10/08 14:46
+    
+    -->
+    <body class="body">
+        <header class="header">
+            <h1>Blinn Phong with the Fresnel Effect</h1>
+            <h2>Follow up of the Metallic Article, now with the Fresnel Effect.</h2>
+            <h3>0004</h3>
+            <h3>2024/10/08 14:46</h3>
+            <h4><a href="4_en-us.html">EN-US</a></h4>
+        </header>
+        <main class="article">
+            <nav class="indices">
+                <ol>
+                    <li><a href="#1+Introduction">1 Introduction</a></li>
+                    <li><a href="#2+Fresnel+Effect">2 Fresnel Effect</a></li>
+                    <li><a href="#3+In+code">3 In code</a></li>
+                    <li><a href="#4+Blinn+Phong">4 Blinn Phong</a></li>
+                    <li><a href="#5+Final+Results">5 Final Results</a></li>
+                </ol>
+            </nav>
+            <section id="1+Introduction">
+                <h2>1 Introduction</h2>
+                <p class="text">
+                    This is a follow up of <a target="_blank" href="/articles/3_en-us.html">Blinn Phong with Metallic Textures</a>
+                    and hopefully the last one, I have to say, I had never written articles before
+                    and english is not even my first language, I know that some things here
+                    may be a little bit confusing or weird, but in my opinion it is better to write
+                    a bad article about something interesting that you discovered than say it on the
+                    discord chat and let it get lost forever.
+                </p>
+            </section>
+            <section id="2+Fresnel+Effect">
+                <h2>2 Fresnel Effect</h2>
+                <p class="text">
+                    The fresnel effect is one of those things that once you start noticing it exists
+                    you will always see it everywhere, from shiny plastics to ceramic tiles or large
+                    bodies of water, fresnel is usually not very visible on metals and on 3D rendering
+                    it is often assumed that metals have no fresnel at all.
+                </p>
+                <p class="text">
+                    Instead of showing you a boring graph, I will show you real pictures of the effect.
+                </p>
+                <img class="image" src="/resources/4/Low Reflection.jpg" alt="Low Reflection"/>
+                <img class="image" src="/resources/4/Medium Reflection.jpg" alt="Medium Reflection"/>
+                <img class="image" src="/resources/4/High Reflection.jpg" alt="High Reflection"/>
+                <p class="text">
+                    Did you get it? if not I will say it then:
+                </p>
+                <p class="text">
+                    The fresnel effect is a light effect that you often see on non metallic surfaces
+                    where the reflection becomes more intense the larger the angle between the surface
+                    normal and the view direction is, as you can see in the first picture, we almost
+                    can&#39;t see a reflection, but there is still one, fresnel doesn&#39;t completely eliminates
+                    reflections when looking from the top, this is usually assumed to be close to 5%
+                    for most things but you can find tables with more values on the internet, and as you
+                    can see on the second and third picture, the reflection gets more intense as the
+                    angle increases.
+                </p>
+            </section>
+            <section id="3+In+code">
+                <h2>3 In code</h2>
+                <p class="text">
+                    If you know what a dot product is, you probably already guessed how
+                    this is going to look.
+                </p>
+                <ol class="code">
+                    <li><code>#define FRESNEL_MIN 0.05</code></li>
+                    <li><code>#define FRESNEL_MAX 0.95</code></li>
+                    <li><code>float fresnelFactor(vec3 viewDirection, vec3 normal) {</code></li>
+                    <li><code>    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);</code></li>
+                    <li><code>    return FRESNEL_MIN + (FRESNEL_MAX * pow(fresnelDot, 5.0));</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="text">
+                    Here we created a function for calculating the fresnel factor for a
+                    viewDirection (in my setup, this points from the camera to the fragment,
+                    I find it more intuitive this way) and the normal from the surface.
+                </p>
+                <p class="text">
+                    We then calcule the dot product between the opposite of the viewDirection
+                    and the normal of the surface (this gives how much &quot;close&quot; the viewDirection
+                    is from the normal) and we then clamp it so it doesn&#39;t go negative and flip it
+                    because we want a value that gets larger as the angle increases.
+                </p>
+                <p class="text">
+                    Because fresnel is not linear (we only see very strong reflections when the
+                    angle is pretty large), we need to apply a pow function to it, which is
+                    usually 5.0, we then multiply by the max value of the fresnel effect
+                    and add the minimum value.
+                </p>
+                <p class="text">
+                    As the min and max always sum to one, it can be simplified to a single
+                    constant.
+                </p>
+                <ol class="code">
+                    <li><code>#define FRESNEL_BALANCE 0.05</code></li>
+                    <li><code>float fresnelFactor(vec3 viewDirection, vec3 normal) {</code></li>
+                    <li><code>    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);</code></li>
+                    <li><code>    return FRESNEL_BALANCE + ((1.0 - FRESNEL_BALANCE) * pow(fresnelDot, 5.0));</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="text">
+                    Here we call it the &quot;FRESNEL_BALANCE&quot; but it&#39;s normally called &quot;F0&quot;
+                </p>
+                <p class="text">
+                    Now we just need to add it to our reflection function and also multiply
+                    by the roughness so the reflection goes down as the roughness increases.
+                </p>
+                <ol class="code">
+                    <li><code>vec3 computeReflection(</code></li>
+                    <li><code>    samplerCube cube,</code></li>
+                    <li><code>    vec3 viewDirection,</code></li>
+                    <li><code>    vec3 normal,</code></li>
+                    <li><code>    vec3 diffuseColor,</code></li>
+                    <li><code>    float metallic,</code></li>
+                    <li><code>    float roughness</code></li>
+                    <li><code>) {</code></li>
+                    <li><code>    ivec2 cubemapSize = textureSize(cube, 0);</code></li>
+                    <li><code>    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));</code></li>
+                    <li><code>    float lodLevel = mipLevels * sqrt(roughness);</code></li>
+                    <li><code></code></li>
+                    <li><code>    vec3 reflectedColor = textureLod(cube, reflect(viewDirection, normal), lodLevel).rgb;</code></li>
+                    <li><code>    return mix(</code></li>
+                    <li><code>        reflectedColor * fresnelFactor(viewDirection, normal) * pow(1.0 - roughness, 2.0),</code></li>
+                    <li><code>        reflectedColor * diffuseColor,</code></li>
+                    <li><code>        metallic</code></li>
+                    <li><code>    );</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="text">
+                    And this is how it looks:
+                </p>
+                <img class="image" src="/resources/4/Red Shiny Plastic.png" alt="Red Shiny Plastic"/>
+            </section>
+            <section id="4+Blinn+Phong">
+                <h2>4 Blinn Phong</h2>
+                <p class="text">
+                    After further thinking about what I have done, I eventually simplified all of the roughness
+                    to blinn phong shininess conversion into a single function that converts a PBR Metallic Roughness
+                    Material to a Blinn Phong Material in the shader, you will just need to use this as the material
+                    in your light calculations.
+                </p>
+                <ol class="code">
+                    <li><code>#define PI 3.14159265359</code></li>
+                    <li><code>#define MAX_SHININESS 2048.0</code></li>
+                    <li><code>#define DIFFUSE_BALANCE 0.50</code></li>
+                    <li><code>#define FRESNEL_BALANCE 0.05</code></li>
+                    <li><code>struct BlinnPhongMaterial {</code></li>
+                    <li><code>    float shininess;</code></li>
+                    <li><code>    vec3 diffuse;</code></li>
+                    <li><code>    vec3 specular;</code></li>
+                    <li><code>    vec3 ambient;</code></li>
+                    <li><code>};</code></li>
+                    <li><code>float fresnelFactor(vec3 viewDirection, vec3 normal) {</code></li>
+                    <li><code>    float fresnelDot = 1.0 - max(dot(-viewDirection, normal), 0.0);</code></li>
+                    <li><code>    return FRESNEL_BALANCE + ((1.0 - FRESNEL_BALANCE) * pow(fresnelDot, 5.0));</code></li>
+                    <li><code>}</code></li>
+                    <li><code>BlinnPhongMaterial convertPBRMaterialToBlinnPhong(</code></li>
+                    <li><code>    vec3 viewDirection, vec3 normal,</code></li>
+                    <li><code>    vec3 color, float metallic, float roughness, float ambientOcclusion</code></li>
+                    <li><code>) {</code></li>
+                    <li><code>    float shininess = pow(MAX_SHININESS, 1.0 - roughness);</code></li>
+                    <li><code>    float specular = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
+                    <li><code>    float fresnel = fresnelFactor(viewDirection, normal);</code></li>
+                    <li><code>    return BlinnPhongMaterial(</code></li>
+                    <li><code>        shininess,</code></li>
+                    <li><code>        mix(</code></li>
+                    <li><code>            (color * DIFFUSE_BALANCE) / PI,</code></li>
+                    <li><code>            vec3(0.0),</code></li>
+                    <li><code>            metallic</code></li>
+                    <li><code>        ),</code></li>
+                    <li><code>        mix(</code></li>
+                    <li><code>            vec3(max(specular - 0.3496155267919281, 0.0)) * (1.0 - DIFFUSE_BALANCE) * fresnel * PI,</code></li>
+                    <li><code>            vec3(specular) * color,</code></li>
+                    <li><code>            metallic</code></li>
+                    <li><code>        ),</code></li>
+                    <li><code>        mix(</code></li>
+                    <li><code>            vec3(ambientOcclusion) * color,</code></li>
+                    <li><code>            vec3(0.0),</code></li>
+                    <li><code>            metallic</code></li>
+                    <li><code>        )</code></li>
+                    <li><code>    );</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <ol class="code">
+                    <li><code>vec3 directionalLight(</code></li>
+                    <li><code>    vec3 lightDirection,</code></li>
+                    <li><code>    vec3 viewDirection,</code></li>
+                    <li><code>    vec3 normal,</code></li>
+                    <li><code>    BlinnPhongMaterial material</code></li>
+                    <li><code> ) {</code></li>
+                    <li><code>    vec3 halfwayDirection = -normalize(lightDirection + viewDirection);</code></li>
+                    <li><code>    float diffuseFactor = max(dot(normal, -lightDirection), 0.0);</code></li>
+                    <li><code>    float specularFactor = pow(max(dot(normal, halfwayDirection), 0.0), material.shininess) * diffuseFactor;</code></li>
+                    <li><code></code></li>
+                    <li><code>    float lightDiffuse = 1.90;</code></li>
+                    <li><code>    float lightSpecular = 1.0;</code></li>
+                    <li><code>    float lightAmbient = 0.10;</code></li>
+                    <li><code></code></li>
+                    <li><code>    vec3 diffuse = lightDiffuse * diffuseFactor * material.diffuse;</code></li>
+                    <li><code>    vec3 specular = lightSpecular * specularFactor * material.specular;</code></li>
+                    <li><code>    vec3 ambient = lightAmbient * material.ambient;</code></li>
+                    <li><code></code></li>
+                    <li><code>    return diffuse + specular + ambient;</code></li>
+                    <li><code>}</code></li>
+                </ol>
+                <p class="text">
+                    This time I divided the diffuse by PI so it will look darker, I also added a fresnel
+                    to it, so it should look more realistic when looking from high angles, this is how it
+                    looks on the leather texture with no reflections:
+                </p>
+                <img class="image" src="/resources/4/Leather.png" alt="Leather"/>
+                <p class="text">
+                    I also split the reflection function into three more generic functions.
+                </p>
+                <ol class="code">
+                    <li><code>float cubemapMipLevels(samplerCube cube) {</code></li>
+                    <li><code>    ivec2 cubemapSize = textureSize(cube, 0);</code></li>
+                    <li><code>    float mipLevels = 1.0 + floor(log2(max(float(cubemapSize.x), float(cubemapSize.y))));</code></li>
+                    <li><code>    return mipLevels;</code></li>
+                    <li><code>}</code></li>
+                    <li><code>vec4 cubemapRoughnessColor(samplerCube cube, float roughness, vec3 direction) {</code></li>
+                    <li><code>    float mipLevels = cubemapMipLevels(cube);</code></li>
+                    <li><code>    float lodLevel = mipLevels * sqrt(roughness);</code></li>
+                    <li><code>    return textureLod(cube, direction, lodLevel);</code></li>
+                    <li><code>}</code></li>
+                    <li><code>vec3 cubemapReflection(</code></li>
+                    <li><code>    vec3 cubemapColor,</code></li>
+                    <li><code>    vec3 viewDirection, vec3 normal,</code></li>
+                    <li><code>    vec3 color, float metallic, float roughness</code></li>
+                    <li><code>) {</code></li>
+                    <li><code>    return mix(</code></li>
+                    <li><code>        cubemapColor * fresnelFactor(viewDirection, normal) * pow(1.0 - roughness, 2.0),</code></li>
+                    <li><code>        cubemapColor * color,</code></li>
+                    <li><code>        metallic</code></li>
+                    <li><code>    );</code></li>
+                    <li><code>}</code></li>
+                </ol>
+            </section>
+            <section id="5+Final+Results">
+                <h2>5 Final Results</h2>
+                <p class="text">
+                    This time those textures come from multiple sources.
+                </p>
+                <img class="image" src="/resources/4/Monitor.png" alt="Monitor"/>
+                <img class="image" src="/resources/4/Ice.png" alt="Ice"/>
+                <img class="image" src="/resources/4/Gold.png" alt="Gold"/>
+                <img class="image" src="/resources/4/Marble.png" alt="Marble"/>
+                <img class="image" src="/resources/4/Wood.png" alt="Wood"/>
+                <img class="image" src="/resources/4/Sand with water.png" alt="Sand with water"/>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 4"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+        </footer>
+    </body>
+</html>

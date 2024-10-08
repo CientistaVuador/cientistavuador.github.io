@@ -5,7 +5,7 @@
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="preto, doce, half, pt, specularfactor, brilho, novo, filtrado, aumentar, preta, shininess, menos, menor, madeira, seamless, criar, olhando, exemplo, sampling, tornar, iluminação, sugere, misturar, técnicas, melhor, escuras, pequenas, sua, completamente, conservação, anterior, diffusecolor, br, outro, seu, quadrada, adicionamos, todo, possuem, coisas, simplesmente, interpolação, lavada, cc0t, meio, zero, metálico, refletir, quantidade, propriedades, energia, duas, necessitar, observações, intensidade, feita, diminuindo, foi, soma, conta, ativar, usados, life, introdução"/>
+        <meta name="keywords" content="preto, doce, half, pt, specularfactor, brilho, novo, filtrado, aumentar, preta, shininess, menos, menor, madeira, seamless, criar, olhando, exemplo, sampling, tornar, iluminação, sugere, misturar, técnicas, melhor, escuras, pequenas, sua, completamente, conservação, anterior, diffusecolor, br, outro, seu, quadrada, adicionamos, todo, possuem, coisas, simplesmente, interpolação, lavada, básicos, cc0t, meio, zero, metálico, refletir, quantidade, propriedades, energia, duas, necessitar, observações, intensidade, feita, diminuindo, foi, soma, conta, ativar, usados, life"/>
         <meta name="description" content="Seguimento do Artigo de Roughness, agora com Texturas Metallic."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
@@ -79,7 +79,7 @@
                             <li><a href="#4.1+Ilumina%C3%A7%C3%A3o">4.1 Iluminação</a></li>
                             <li><a href="#4.2+Reflexo">4.2 Reflexo</a></li>
                             <li><a href="#4.3+O+Problema+da+Roughness">4.3 O Problema da Roughness</a></li>
-                            <li><a href="#4.4+A+Alternative+F%C3%A1cil">4.4 A Alternative Fácil</a></li>
+                            <li><a href="#4.4+A+Alternativa+F%C3%A1cil">4.4 A Alternativa Fácil</a></li>
                             <li><a href="#4.5+C%C3%B3digo+Final">4.5 Código Final</a></li>
                         </ol>
                     </li><li><a href="#5+Resultados+Finais">5 Resultados Finais</a></li>
@@ -88,7 +88,7 @@
             <section id="1+Introdu%C3%A7%C3%A3o">
                 <h2>1 Introdução</h2>
                 <p class="text">
-                    Isso é o seguimento de <a target="_blank" href="/articles/1_pt-br.html">Blinn Phong with Roughness Textures</a>
+                    Isso é o seguimento de <a target="_blank" href="/articles/1_pt-br.html">Blinn Phong com Texturas de Roughness</a>
                 </p>
                 <section id="1.1+Cores+lavadas">
                     <h3>1.1 Cores lavadas</h3>
@@ -130,7 +130,7 @@
                     <p class="text">
                         Ao invés de fazer isso, nós podemos simplesmente multiplicar
                         a normalização por PI, que seria o mesmo que dividir o diffuse
-                        por Pi e então aumentar a intensidade da luz por PI.
+                        por PI e então aumentar a intensidade da luz por PI.
                     </p>
                     <ol class="code">
                         <li><code>float normalization = ((shininess + 2.0) * (shininess + 4.0)) / (8.0 * PI * (pow(2.0, -shininess * 0.5) + shininess));</code></li>
@@ -283,7 +283,7 @@
                         <li><code>}</code></li>
                     </ol>
                     <p class="text">
-                        Se você já sabe os báximos de cubemaps (e se você não sabe, você deveria ir <a target="_blank" href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">aprender</a> (em inglês))
+                        Se você já sabe os básicos de cubemaps (e se você não sabe, você deveria ir <a target="_blank" href="https://learnopengl.com/Advanced-OpenGL/Cubemaps">aprender</a> (em inglês))
                         isso não é nada novo, estamos fazendo o sampling do cubemap pelo reflexo do viewDirection com o normal da superfície
                         e returnando uma mistura (função mix) entre zero (pois não temos reflexos para não metais ainda) e a cor do reflexo
                         multiplicada pela cor do diffuse usando o valor do metallic.
@@ -313,8 +313,8 @@
                         usar Blinn Phong mesmo? deve ter uma alternativa mais fácil.
                     </p>
                 </section>
-                <section id="4.4+A+Alternative+F%C3%A1cil">
-                    <h3>4.4 A Alternative Fácil</h3>
+                <section id="4.4+A+Alternativa+F%C3%A1cil">
+                    <h3>4.4 A Alternativa Fácil</h3>
                     <p class="text">
                         Bom, se não podemos filtrar o cubemap, podemos pelo menos tentar falsificar
                         uma roughness diminuindo a resolução dos cubemaps com os mipmaps, que é
