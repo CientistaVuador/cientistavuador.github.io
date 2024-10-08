@@ -85,6 +85,7 @@ float fresnelFactor(vec3 viewDirection, vec3 normal) {
 [;<;>]
 [text]
 Here we call it the "FRESNEL_BALANCE" but it's normally called "F0"
+(Fresnel at angle 0).
 [;<;>]
 [text]
 Now we just need to add it to our reflection function and also multiply
