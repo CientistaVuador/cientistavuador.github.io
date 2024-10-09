@@ -1,12 +1,15 @@
 [[id]] 4
-[[languages]] en-us
+[[languages]] en-us, pt-br
 
-[[title]] Blinn Phong with the Fresnel Effect
-[[description]] Follow up of the Metallic Article, now with the Fresnel Effect.
+[[title<en-us>]] Blinn Phong with the Fresnel Effect
+[[description<en-us>]] Follow up of the Metallic Article, now with the Fresnel Effect.
+[[title<pt-br>]] Blinn Phong com o Efeito de Fresnel
+[[description<pt-br>]] Seguimento do Artigo de Metallic, agora com o Efeito de Fresnel.
 [[date]] 2024/10/08 14:46
 
-[[section]] Introduction
-[text]
+[[section<en-us>]] Introduction
+[[section<pt-br>]] Introdução
+[text<en-us>]
 This is a follow up of [[[/articles/3_en-us.html:::Blinn Phong with Metallic Textures]]]
 and hopefully the last one, I have to say, I had never written articles before
 and english is not even my first language, I know that some things here
@@ -14,24 +17,44 @@ may be a little bit confusing or weird, but in my opinion it is better to write
 a bad article about something interesting that you discovered than say it on the
 discord chat and let it get lost forever.
 [;<;>]
+[text<pt-br>]
+Esse é o seguimento de [[[/articles/3_pt-br.html:::Blinn Phong com Textures de Metallic]]]
+e esperadamente, o último, tenho que dizer, eu nunca escrevi artigos antes,
+eu sei que algumas coisas aqui pode ser um pouco confusas ou estranhas mas em minha
+opinião é melhor escrever um artigo ruim sobre algo interessante que você descobriu
+do que dizer no chat do discord e deixar que se perca para sempre.
+[;<;>]
 
-[[section]] Fresnel Effect
-[text]
+[[section<en-us>]] Fresnel Effect
+[[section<pt-br>]] Efeito de Fresnel
+[text<en-us>]
 The fresnel effect is one of those things that once you start noticing it exists
 you will always see it everywhere, from shiny plastics to ceramic tiles or large
 bodies of water, fresnel is usually not very visible on metals and on 3D rendering
 it is often assumed that metals have no fresnel at all.
 [;<;>]
-[text]
+[text<pt-br>]
+O Efeito de Fresnel é uma daquelas coisas que uma vez que você perceber que ele
+existe você sempre vai ver ele em todo lugar, de plásticos brilhantes a pisos
+cerâmicos ou grandes corpos de água, fresnel normalmente não é visível em metais
+e em renderização 3D normalmente se assume que metais não tem fresnel.
+[;<;>]
+[text<en-us>]
 Instead of showing you a boring graph, I will show you real pictures of the effect.
+[;<;>]
+[text<pt-br>]
+Ao invés de te mostrar um gráfico chato, irei the mostrar fotos reais do efeito.
 [;<;>]
 [[image]] /resources/4/Low Reflection.jpg
 [[image]] /resources/4/Medium Reflection.jpg
 [[image]] /resources/4/High Reflection.jpg
-[text]
+[text<en-us>]
 Did you get it? if not I will say it then:
 [;<;>]
-[text]
+[text<pt-br>]
+Você entendeu? se não, vou dizer então:
+[;<;>]
+[text<en-us>]
 The fresnel effect is a light effect that you often see on non metallic surfaces
 where the reflection becomes more intense the larger the angle between the surface
 normal and the view direction is, as you can see in the first picture, we almost
@@ -41,11 +64,26 @@ for most things but you can find tables with more values on the internet, and as
 can see on the second and third picture, the reflection gets more intense as the
 angle increases.
 [;<;>]
+[text<pt-br>]
+O efeito de fresnel é um efeito de luz que você normalmente vê em superfície não metálicas
+onde o reflexo se torna mais intenso quanto maior o ângulo entre o normal da superfície
+e a direção de view se torna, como pode ver na primeira foto, nós quase não conseguimos
+ver um reflexo, mas ainda tem um, fresnel não remove completamente os reflexos quando
+se olha de cima, isso é normalmente assumido de ser próximo a 5% para grande parte
+das coisas mas você pode encontrar tabelas com mais valores na internet e como pode
+ver na segunda e terceira foto, o reflexo fica mais intenso conforme o ângulo
+aumenta.
+[;<;>]
 
-[[section]] In code
-[text]
+[[section<en-us>]] In code
+[[section<pt-br>]] Em código
+[text<en-us>]
 If you know what a dot product is, you probably already guessed how
 this is going to look.
+[;<;>]
+[text<pt-br>]
+Se você sabe o que é um produto escalar (dot product) você provavelmente
+já adivinhou como isso vai se parecer.
 [;<;>]
 [code]
 #define FRESNEL_MIN 0.05
@@ -55,26 +93,48 @@ float fresnelFactor(vec3 viewDirection, vec3 normal) {
     return FRESNEL_MIN + (FRESNEL_MAX * pow(fresnelDot, 5.0));
 }
 [;<;>]
-[text]
+[text<en-us>]
 Here we created a function for calculating the fresnel factor for a 
 viewDirection (in my setup, this points from the camera to the fragment,
 I find it more intuitive this way) and the normal from the surface.
 [;<;>]
-[text]
+[text<pt-br>]
+Aqui nós criamos uma função para calcular o fator de fresnel para
+a direção de view (na minha configuração, isso aponta da câmera para o
+fragmento, eu acho mais intuitivo desse jeito) e o normal da superfície.
+[;<;>]
+[text<en-us>]
 We then calcule the dot product between the opposite of the viewDirection
 and the normal of the surface (this gives how much "close" the viewDirection
 is from the normal) and we then clamp it so it doesn't go negative and flip it
 because we want a value that gets larger as the angle increases.
 [;<;>]
-[text]
+[text<pt-br>]
+Nós então calculamos o produto escalar entre o oposto da direção de view
+e o normal da superfície (isso nos dá o quão "próximo" a direção de view
+está do normal) e então limitamos o valor para que não se torne negativo
+e espelhamos ele pois queremos um valor que fique maior conforme o ângulo
+aumenta.
+[;<;>]
+[text<en-us>]
 Because fresnel is not linear (we only see very strong reflections when the
 angle is pretty large), we need to apply a pow function to it, which is
 usually 5.0, we then multiply by the max value of the fresnel effect
 and add the minimum value.
 [;<;>]
-[text]
+[text<pt-br>]
+Como fresnel não é linear (só vemos reflexos fortes quando o ângulo está
+bem grande), nós precisamos aplicar uma função exponencial (pow) para ele, que
+normalmente é 5.0, nós então multiplicamos pelo valor máximo do efeito de fresnel
+e adicionamos o valor mínimo.
+[;<;>]
+[text<en-us>]
 As the min and max always sum to one, it can be simplified to a single
 constant.
+[;<;>]
+[text<pt-br>]
+Já que o mínimo e máximo sempre somam para um, pode ser simplificado para
+uma única constante.
 [;<;>]
 [code]
 #define FRESNEL_BALANCE 0.05
@@ -83,13 +143,22 @@ float fresnelFactor(vec3 viewDirection, vec3 normal) {
     return FRESNEL_BALANCE + ((1.0 - FRESNEL_BALANCE) * pow(fresnelDot, 5.0));
 }
 [;<;>]
-[text]
+[text<en-us>]
 Here we call it the "FRESNEL_BALANCE" but it's normally called "F0"
 (Fresnel at angle 0).
 [;<;>]
-[text]
+[text<pt-br>]
+Aqui nós chamamos de "FRESNEL_BALANCE" mas é normalmente chamado de "F0"
+(Fresnel no ângulo 0).
+[;<;>]
+[text<en-us>]
 Now we just need to add it to our reflection function and also multiply
 by the roughness so the reflection goes down as the roughness increases.
+[;<;>]
+[text<pt-br>]
+Agora nós só precisamos adicionar ele para a nossa função de reflexo
+e também multiplicar pela roughness para que o reflexo diminua conforme
+a roughness aumente.
 [;<;>]
 [code]
 vec3 computeReflection(
@@ -112,17 +181,26 @@ vec3 computeReflection(
     );
 }
 [;<;>]
-[text]
+[text<en-us>]
 And this is how it looks:
+[;<;>]
+[text<pt-br>]
+E é assim que se parece:
 [;<;>]
 [[image]] /resources/4/Red Shiny Plastic.png
 
 [[section]] Blinn Phong
-[text]
+[text<en-us>]
 After further thinking about what I have done, I eventually simplified all of the roughness
 to blinn phong shininess conversion into a single function that converts a PBR Metallic Roughness
 Material to a Blinn Phong Material in the shader, you will just need to use this as the material
 in your light calculations.
+[;<;>]
+[text<pt-br>]
+Depois de pensar sobre o que eu fiz, eu eventualmente simplifiquei toda a conversão de roughness
+para shininess de blinn phong em uma única função que converte um material de PBR de Metallic
+Roughness para um Material de Blinn Phong no shader, você só vai precisar usar isso como material
+nos seus cálculos de luz.
 [;<;>]
 [code]
 #define PI 3.14159265359
@@ -188,14 +266,22 @@ vec3 directionalLight(
     return diffuse + specular + ambient;
 }
 [;<;>]
-[text]
+[text<en-us>]
 This time I divided the diffuse by PI so it will look darker, I also added a fresnel
 to it, so it should look more realistic when looking from high angles, this is how it
 looks on the leather texture with no reflections:
 [;<;>]
+[text<pt-br>]
+Dessa vez eu dividi o diffuse por PI então vai se parecer escuro, eu também adicionei
+um fresnel nele, então deve parecer mais realista quando olhando de altos ângulos, é
+assim que se parece naquela textura de couro sem reflexos:
+[;<;>]
 [[image]] /resources/4/Leather.png
-[text]
+[text<en-us>]
 I also split the reflection function into three more generic functions.
+[;<;>]
+[text<pt-br>]
+Eu também dividi a função de reflexo em três funções mais genéricas.
 [;<;>]
 [code]
 float cubemapMipLevels(samplerCube cube) {
@@ -221,9 +307,13 @@ vec3 cubemapReflection(
 }
 [;<;>]
 
-[[section]] Final Results
-[text]
+[[section<en-us>]] Final Results
+[[section<pt-br>]] Resultados Finais
+[text<en-us>]
 This time those textures come from multiple sources.
+[;<;>]
+[text<pt-br>]
+Dessa vez essas texturas vem de múltiplos lugares.
 [;<;>]
 [[image]] /resources/4/Monitor.png
 [[image]] /resources/4/Ice.png

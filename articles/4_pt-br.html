@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="pt-br">
     <head>
-        <title>Blinn Phong with the Fresnel Effect</title>
+        <title>Blinn Phong com o Efeito de Fresnel</title>
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="bad, functions, your, shininess, english, let, going, want, opposite, something, eliminates, calculations, much, discovered, strong, probably, bodies, sum, min, pow, where, after, flip, gives, plastics, texture, call, weird, boring, did, added, had, language, f0, down, 3d, view, darker, calcule, up, written, results, us, which, last, en, article, graph, never, discord, once, everywhere, guessed, final, internet, little, some, pbr, sources, divided, show, non, negative, surfaces"/>
-        <meta name="description" content="Follow up of the Metallic Article, now with the Fresnel Effect."/>
+        <meta name="keywords" content="aumente, texturas, eventualmente, pt, pelo, grandes, toda, shininess, aplicar, fiz, genéricas, pela, multiplicamos, couro, olhando, espelhamos, ao, melhor, conversão, artigos, terceira, fotos, completamente, interessante, seus, exponencial, último, reais, fica, corpos, br, por, cima, desse, sei, pow, sem, nunca, perca, adicionamos, textura, criamos, esperadamente, todo, the, te, perceber, algo, textures, acho, lugar, parte, f0, bem, encontrar, 3d, escrever, ruim, onde, calculamos, simplificado, pisos, fragmento, vemos"/>
+        <meta name="description" content="Seguimento do Artigo de Metallic, agora com o Efeito de Fresnel."/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
@@ -14,8 +14,8 @@
         <!-- HTML Meta Tags -->
         
         <!-- OpenGraph -->
-        <meta name="og:title" content="Blinn Phong with the Fresnel Effect"/>
-        <meta name="og:description" content="Follow up of the Metallic Article, now with the Fresnel Effect."/>
+        <meta name="og:title" content="Blinn Phong com o Efeito de Fresnel"/>
+        <meta name="og:description" content="Seguimento do Artigo de Metallic, agora com o Efeito de Fresnel."/>
         <meta name="og:type" content="article"/>
         <meta name="og:image" content="/data/icon.png"/>
         <!-- OpenGraph -->
@@ -47,17 +47,17 @@
     
     For more information, please refer to <http://unlicense.org/>
     
-    en-us
-        Blinn Phong with the Fresnel Effect
-        Follow up of the Metallic Article, now with the Fresnel Effect.
+    pt-br
+        Blinn Phong com o Efeito de Fresnel
+        Seguimento do Artigo de Metallic, agora com o Efeito de Fresnel.
         4
         2024/10/08 14:46
     
     -->
     <body class="body">
         <header class="header">
-            <h1>Blinn Phong with the Fresnel Effect</h1>
-            <h2>Follow up of the Metallic Article, now with the Fresnel Effect.</h2>
+            <h1>Blinn Phong com o Efeito de Fresnel</h1>
+            <h2>Seguimento do Artigo de Metallic, agora com o Efeito de Fresnel.</h2>
             <h3>0004</h3>
             <h3>2024/10/08 14:46</h3>
             <h4><a href="4_en-us.html">EN-US</a> | <a href="4_pt-br.html">PT-BR</a></h4>
@@ -65,57 +65,56 @@
         <main class="article">
             <nav class="indices">
                 <ol>
-                    <li><a href="#1+Introduction">1 Introduction</a></li>
-                    <li><a href="#2+Fresnel+Effect">2 Fresnel Effect</a></li>
-                    <li><a href="#3+In+code">3 In code</a></li>
+                    <li><a href="#1+Introdu%C3%A7%C3%A3o">1 Introdução</a></li>
+                    <li><a href="#2+Efeito+de+Fresnel">2 Efeito de Fresnel</a></li>
+                    <li><a href="#3+Em+c%C3%B3digo">3 Em código</a></li>
                     <li><a href="#4+Blinn+Phong">4 Blinn Phong</a></li>
-                    <li><a href="#5+Final+Results">5 Final Results</a></li>
+                    <li><a href="#5+Resultados+Finais">5 Resultados Finais</a></li>
                 </ol>
             </nav>
-            <section id="1+Introduction">
-                <h2>1 Introduction</h2>
+            <section id="1+Introdu%C3%A7%C3%A3o">
+                <h2>1 Introdução</h2>
                 <p class="text">
-                    This is a follow up of <a target="_blank" href="/articles/3_en-us.html">Blinn Phong with Metallic Textures</a>
-                    and hopefully the last one, I have to say, I had never written articles before
-                    and english is not even my first language, I know that some things here
-                    may be a little bit confusing or weird, but in my opinion it is better to write
-                    a bad article about something interesting that you discovered than say it on the
-                    discord chat and let it get lost forever.
+                    Esse é o seguimento de <a target="_blank" href="/articles/3_pt-br.html">Blinn Phong com Textures de Metallic</a>
+                    e esperadamente, o último, tenho que dizer, eu nunca escrevi artigos antes,
+                    eu sei que algumas coisas aqui pode ser um pouco confusas ou estranhas mas em minha
+                    opinião é melhor escrever um artigo ruim sobre algo interessante que você descobriu
+                    do que dizer no chat do discord e deixar que se perca para sempre.
                 </p>
             </section>
-            <section id="2+Fresnel+Effect">
-                <h2>2 Fresnel Effect</h2>
+            <section id="2+Efeito+de+Fresnel">
+                <h2>2 Efeito de Fresnel</h2>
                 <p class="text">
-                    The fresnel effect is one of those things that once you start noticing it exists
-                    you will always see it everywhere, from shiny plastics to ceramic tiles or large
-                    bodies of water, fresnel is usually not very visible on metals and on 3D rendering
-                    it is often assumed that metals have no fresnel at all.
+                    O Efeito de Fresnel é uma daquelas coisas que uma vez que você perceber que ele
+                    existe você sempre vai ver ele em todo lugar, de plásticos brilhantes a pisos
+                    cerâmicos ou grandes corpos de água, fresnel normalmente não é visível em metais
+                    e em renderização 3D normalmente se assume que metais não tem fresnel.
                 </p>
                 <p class="text">
-                    Instead of showing you a boring graph, I will show you real pictures of the effect.
+                    Ao invés de te mostrar um gráfico chato, irei the mostrar fotos reais do efeito.
                 </p>
                 <img class="image" src="/resources/4/Low Reflection.jpg" alt="Low Reflection"/>
                 <img class="image" src="/resources/4/Medium Reflection.jpg" alt="Medium Reflection"/>
                 <img class="image" src="/resources/4/High Reflection.jpg" alt="High Reflection"/>
                 <p class="text">
-                    Did you get it? if not I will say it then:
+                    Você entendeu? se não, vou dizer então:
                 </p>
                 <p class="text">
-                    The fresnel effect is a light effect that you often see on non metallic surfaces
-                    where the reflection becomes more intense the larger the angle between the surface
-                    normal and the view direction is, as you can see in the first picture, we almost
-                    can&#39;t see a reflection, but there is still one, fresnel doesn&#39;t completely eliminates
-                    reflections when looking from the top, this is usually assumed to be close to 5%
-                    for most things but you can find tables with more values on the internet, and as you
-                    can see on the second and third picture, the reflection gets more intense as the
-                    angle increases.
+                    O efeito de fresnel é um efeito de luz que você normalmente vê em superfície não metálicas
+                    onde o reflexo se torna mais intenso quanto maior o ângulo entre o normal da superfície
+                    e a direção de view se torna, como pode ver na primeira foto, nós quase não conseguimos
+                    ver um reflexo, mas ainda tem um, fresnel não remove completamente os reflexos quando
+                    se olha de cima, isso é normalmente assumido de ser próximo a 5% para grande parte
+                    das coisas mas você pode encontrar tabelas com mais valores na internet e como pode
+                    ver na segunda e terceira foto, o reflexo fica mais intenso conforme o ângulo
+                    aumenta.
                 </p>
             </section>
-            <section id="3+In+code">
-                <h2>3 In code</h2>
+            <section id="3+Em+c%C3%B3digo">
+                <h2>3 Em código</h2>
                 <p class="text">
-                    If you know what a dot product is, you probably already guessed how
-                    this is going to look.
+                    Se você sabe o que é um produto escalar (dot product) você provavelmente
+                    já adivinhou como isso vai se parecer.
                 </p>
                 <ol class="code">
                     <li><code>#define FRESNEL_MIN 0.05</code></li>
@@ -126,25 +125,26 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="text">
-                    Here we created a function for calculating the fresnel factor for a
-                    viewDirection (in my setup, this points from the camera to the fragment,
-                    I find it more intuitive this way) and the normal from the surface.
+                    Aqui nós criamos uma função para calcular o fator de fresnel para
+                    a direção de view (na minha configuração, isso aponta da câmera para o
+                    fragmento, eu acho mais intuitivo desse jeito) e o normal da superfície.
                 </p>
                 <p class="text">
-                    We then calcule the dot product between the opposite of the viewDirection
-                    and the normal of the surface (this gives how much &quot;close&quot; the viewDirection
-                    is from the normal) and we then clamp it so it doesn&#39;t go negative and flip it
-                    because we want a value that gets larger as the angle increases.
+                    Nós então calculamos o produto escalar entre o oposto da direção de view
+                    e o normal da superfície (isso nos dá o quão &quot;próximo&quot; a direção de view
+                    está do normal) e então limitamos o valor para que não se torne negativo
+                    e espelhamos ele pois queremos um valor que fique maior conforme o ângulo
+                    aumenta.
                 </p>
                 <p class="text">
-                    Because fresnel is not linear (we only see very strong reflections when the
-                    angle is pretty large), we need to apply a pow function to it, which is
-                    usually 5.0, we then multiply by the max value of the fresnel effect
-                    and add the minimum value.
+                    Como fresnel não é linear (só vemos reflexos fortes quando o ângulo está
+                    bem grande), nós precisamos aplicar uma função exponencial (pow) para ele, que
+                    normalmente é 5.0, nós então multiplicamos pelo valor máximo do efeito de fresnel
+                    e adicionamos o valor mínimo.
                 </p>
                 <p class="text">
-                    As the min and max always sum to one, it can be simplified to a single
-                    constant.
+                    Já que o mínimo e máximo sempre somam para um, pode ser simplificado para
+                    uma única constante.
                 </p>
                 <ol class="code">
                     <li><code>#define FRESNEL_BALANCE 0.05</code></li>
@@ -154,12 +154,13 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="text">
-                    Here we call it the &quot;FRESNEL_BALANCE&quot; but it&#39;s normally called &quot;F0&quot;
-                    (Fresnel at angle 0).
+                    Aqui nós chamamos de &quot;FRESNEL_BALANCE&quot; mas é normalmente chamado de &quot;F0&quot;
+                    (Fresnel no ângulo 0).
                 </p>
                 <p class="text">
-                    Now we just need to add it to our reflection function and also multiply
-                    by the roughness so the reflection goes down as the roughness increases.
+                    Agora nós só precisamos adicionar ele para a nossa função de reflexo
+                    e também multiplicar pela roughness para que o reflexo diminua conforme
+                    a roughness aumente.
                 </p>
                 <ol class="code">
                     <li><code>vec3 computeReflection(</code></li>
@@ -183,17 +184,17 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="text">
-                    And this is how it looks:
+                    E é assim que se parece:
                 </p>
                 <img class="image" src="/resources/4/Red Shiny Plastic.png" alt="Red Shiny Plastic"/>
             </section>
             <section id="4+Blinn+Phong">
                 <h2>4 Blinn Phong</h2>
                 <p class="text">
-                    After further thinking about what I have done, I eventually simplified all of the roughness
-                    to blinn phong shininess conversion into a single function that converts a PBR Metallic Roughness
-                    Material to a Blinn Phong Material in the shader, you will just need to use this as the material
-                    in your light calculations.
+                    Depois de pensar sobre o que eu fiz, eu eventualmente simplifiquei toda a conversão de roughness
+                    para shininess de blinn phong em uma única função que converte um material de PBR de Metallic
+                    Roughness para um Material de Blinn Phong no shader, você só vai precisar usar isso como material
+                    nos seus cálculos de luz.
                 </p>
                 <ol class="code">
                     <li><code>#define PI 3.14159265359</code></li>
@@ -260,13 +261,13 @@
                     <li><code>}</code></li>
                 </ol>
                 <p class="text">
-                    This time I divided the diffuse by PI so it will look darker, I also added a fresnel
-                    to it, so it should look more realistic when looking from high angles, this is how it
-                    looks on the leather texture with no reflections:
+                    Dessa vez eu dividi o diffuse por PI então vai se parecer escuro, eu também adicionei
+                    um fresnel nele, então deve parecer mais realista quando olhando de altos ângulos, é
+                    assim que se parece naquela textura de couro sem reflexos:
                 </p>
                 <img class="image" src="/resources/4/Leather.png" alt="Leather"/>
                 <p class="text">
-                    I also split the reflection function into three more generic functions.
+                    Eu também dividi a função de reflexo em três funções mais genéricas.
                 </p>
                 <ol class="code">
                     <li><code>float cubemapMipLevels(samplerCube cube) {</code></li>
@@ -292,10 +293,10 @@
                     <li><code>}</code></li>
                 </ol>
             </section>
-            <section id="5+Final+Results">
-                <h2>5 Final Results</h2>
+            <section id="5+Resultados+Finais">
+                <h2>5 Resultados Finais</h2>
                 <p class="text">
-                    This time those textures come from multiple sources.
+                    Dessa vez essas texturas vem de múltiplos lugares.
                 </p>
                 <img class="image" src="/resources/4/Monitor.png" alt="Monitor"/>
                 <img class="image" src="/resources/4/Ice.png" alt="Ice"/>
@@ -306,7 +307,7 @@
             </section>
         </main>
         <footer class="footer">
-            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
             <script src="https://utteranc.es/client.js"
                     repo="CientistaVuador/cientistavuador.github.io"
                     issue-term="Article 4"
@@ -316,7 +317,7 @@
                     async="async"
                     >
             </script>
-            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+            <p>A Licença desta página pode ser encontrada no código-fonte ou no <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">repositório do github</a>.</p>
         </footer>
     </body>
 </html>
