@@ -53,6 +53,7 @@ public class Localization {
     public static final String UTTERANCES_LABEL = "utterances-label";
     public static final String UTTERANCES_THEME = "utterances-theme";
 
+    public static final String WEBSITE_URL = "website-url";
     public static final String DEFAULT_LANG = "default-lang";
 
     public static final String TITLE = "title";
@@ -104,6 +105,7 @@ public class Localization {
             UTTERANCES_ISSUE_TERM_MAIN_PAGE, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
             UTTERANCES_LABEL, "none", (Function<String, String>) TextFormatting::getTitleFormatted,
             UTTERANCES_THEME, "github-dark", (Function<String, String>) TextFormatting::getTitleFormatted,
+            WEBSITE_URL, "https://example.com", (Function<String, String>) TextFormatting::getTitleFormatted,
             DEFAULT_LANG, "en-us", (Function<String, String>) s -> TextFormatting.getISOLanguageFormatted(s).toString(),
             TITLE, "No Title", (Function<String, String>) TextFormatting::getTitleFormatted,
             DESCRIPTION, "No Description", (Function<String, String>) TextFormatting::getParagraphFormatted,

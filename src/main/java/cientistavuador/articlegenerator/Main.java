@@ -114,7 +114,7 @@ public class Main {
                 Files.writeString(htmlFile, c.toHTML(language), StandardCharsets.UTF_8);
                 System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId() + ", Language: " + language);
                 
-                generatedURLs.add("/"+htmlFile.toString().replace('\\', '/'));
+                generatedURLs.add(htmlFile.toString());
             }
         }
 
@@ -126,7 +126,7 @@ public class Main {
             Files.writeString(htmlFile, mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)), StandardCharsets.UTF_8);
             System.out.println("Written main articles page of language " + mainArticlesPage.getLanguage(i));
             
-            generatedURLs.add("/"+htmlFile.toString().replace('\\', '/'));
+            generatedURLs.add(htmlFile.toString());
         }
 
         ISOLanguage[] languages = new ISOLanguage[mainArticlesPage.getNumberOfLanguages()];
@@ -145,7 +145,10 @@ public class Main {
         System.out.println("Generated index.html");
         
         {
-            
+            String website = Localization.get().localize(Localization.WEBSITE_URL, null);
+            if (!website.endsWith("/")) {
+                website += "/";
+            }
             
             final String indent = " ".repeat(4);
             
@@ -156,7 +159,7 @@ public class Main {
             b.append("<urlset xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">\n");
             for (String url:generatedURLs) {
                 b.append(indent).append("<url>\n");
-                b.append(indent).append(indent).append("<loc>").append(url).append("</loc>\n");
+                b.append(indent).append(indent).append("<loc>").append(website).append(url.replace('\\', '/')).append("</loc>\n");
                 b.append(indent).append("</url>\n");
             }
             b.append("</urlset>");
