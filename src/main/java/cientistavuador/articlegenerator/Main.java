@@ -143,7 +143,6 @@ public class Main {
                 StandardCharsets.UTF_8
         );
         System.out.println("Generated index.html");
-        generatedURLs.add("/index.html");
         
         {
             
