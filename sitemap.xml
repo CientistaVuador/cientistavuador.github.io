@@ -1,0 +1,44 @@
+<!--
+Sitemap XML - Mechanically Generated File
+-->
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>/articles/0_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/articles/0_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/1_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/1_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/articles/2_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/2_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/articles/3_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/3_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/articles/4_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/4_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/articles/articles_en-us.html</loc>
+    </url>
+    <url>
+        <loc>/articles/articles_pt-br.html</loc>
+    </url>
+    <url>
+        <loc>/index.html</loc>
+    </url>
+</urlset>

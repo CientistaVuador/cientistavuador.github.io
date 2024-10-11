@@ -66,6 +66,12 @@ public class Main {
             Files.delete(indexFile);
         }
         
+        Path sitemapFile = Path.of("sitemap.xml");
+        if (Files.exists(sitemapFile)) {
+            System.out.println("Deleted sitemap.xml");
+            Files.delete(sitemapFile);
+        }
+        
         List<Article> articles = new ArrayList<>();
         
         Path rawArticlesFolder = Path.of("rawarticles");
@@ -96,14 +102,19 @@ public class Main {
             System.out.println("No articles to compile.");
             return;
         }
-
+        
+        List<String> generatedURLs = new ArrayList<>();
+        
         Files.createDirectories(articlesFolder);
-
+        
         for (Article c : articles) {
             for (int i = 0; i < c.getNumberOfLanguages(); i++) {
                 ISOLanguage language = c.getLanguage(i);
-                Files.writeString(articlesFolder.resolve(URLEncoder.encode(c.getId() + "_" + language, StandardCharsets.UTF_8) + ".html"), c.toHTML(language));
+                Path htmlFile = articlesFolder.resolve(c.getId() + "_" + language + ".html");
+                Files.writeString(htmlFile, c.toHTML(language), StandardCharsets.UTF_8);
                 System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId() + ", Language: " + language);
+                
+                generatedURLs.add("/"+htmlFile.toString().replace('\\', '/'));
             }
         }
 
@@ -111,9 +122,11 @@ public class Main {
 
         ArticlesPage mainArticlesPage = new ArticlesPage(articles);
         for (int i = 0; i < mainArticlesPage.getNumberOfLanguages(); i++) {
-            String fileName = URLEncoder.encode("articles_" + mainArticlesPage.getLanguage(i), StandardCharsets.UTF_8) + ".html";
-            Files.writeString(articlesFolder.resolve(fileName), mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)));
+            Path htmlFile = articlesFolder.resolve("articles_" + mainArticlesPage.getLanguage(i) + ".html");
+            Files.writeString(htmlFile, mainArticlesPage.toHTML(mainArticlesPage.getLanguage(i)), StandardCharsets.UTF_8);
             System.out.println("Written main articles page of language " + mainArticlesPage.getLanguage(i));
+            
+            generatedURLs.add("/"+htmlFile.toString().replace('\\', '/'));
         }
 
         ISOLanguage[] languages = new ISOLanguage[mainArticlesPage.getNumberOfLanguages()];
@@ -126,9 +139,33 @@ public class Main {
                 IndexRedirectPage.generate(
                         mainArticlesPage.getKeywords(languages[0]),
                         languages
-                )
+                ),
+                StandardCharsets.UTF_8
         );
         System.out.println("Generated index.html");
+        generatedURLs.add("/index.html");
+        
+        {
+            
+            
+            final String indent = " ".repeat(4);
+            
+            StringBuilder b = new StringBuilder();
+            b.append("<!--\n");
+            b.append("Sitemap XML - Mechanically Generated File\n");
+            b.append("-->\n");
+            b.append("<urlset xmlns=\"https://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+            for (String url:generatedURLs) {
+                b.append(indent).append("<url>\n");
+                b.append(indent).append(indent).append("<loc>").append(url).append("</loc>\n");
+                b.append(indent).append("</url>\n");
+            }
+            b.append("</urlset>");
+            
+            Files.writeString(sitemapFile, b.toString(), StandardCharsets.UTF_8);
+        }
+        System.out.println("Generated sitemap.xml");
+        
     }
 
 }
