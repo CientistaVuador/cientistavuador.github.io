@@ -1,0 +1,17 @@
+h1, h2, h3, h4, h5, h6, h7 {display: block; line-height: 2em;}
+h1 {font-size: 200%;}
+h2 {font-size: 150%;}
+h3 {font-size: 130%;}
+h4 {font-size: 120%;}
+h5 {font-size: 110%;}
+h6 {font-size: 105%;}
+p {display: block; margin-top: 1em; margin-bottom: 1em;}
+code, pre {font-family: monospace;}
+pre {white-space: pre;}
+t:before {white-space: pre; content: "    ";}
+br:before {white-space: pre; content: "\0A";}
+b {font-weight: bold;}
+i {font-style: italic;}
+u {text-decoration: underline;}
+s {text-decoration: line-through;}
+sans {font-family: sans-serif;}
