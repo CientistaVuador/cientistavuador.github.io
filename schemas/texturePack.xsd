@@ -106,79 +106,57 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:attribute>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="data" minOccurs="1" maxOccurs="1">
+                            <xs:element name="meta" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The data of this texture.
+                                        The metadata.
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="meta" minOccurs="0" maxOccurs="1">
+                                        <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
                                             <xs:annotation>
                                                 <xs:documentation>
-                                                    The metadata.
+                                                    A metadata entry, must have a key.
                                                 </xs:documentation>
                                             </xs:annotation>
                                             <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
-                                                        <xs:annotation>
-                                                            <xs:documentation>
-                                                                A metadata entry, must have a key.
-                                                            </xs:documentation>
-                                                        </xs:annotation>
-                                                        <xs:complexType>
-                                                            <xs:simpleContent>
-                                                                <xs:extension base="xs:string">
-                                                                    <xs:attribute name="key" type="xs:string" use="required">
-                                                                        <xs:annotation>
-                                                                            <xs:documentation>
-                                                                                The key of this entry.
-                                                                            </xs:documentation>
-                                                                        </xs:annotation>
-                                                                    </xs:attribute>
-                                                                </xs:extension>
-                                                            </xs:simpleContent>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="images" minOccurs="1" maxOccurs="1">
-                                            <xs:annotation>
-                                                <xs:documentation>
-                                                    The images of this texture.
-                                                </xs:documentation>
-                                            </xs:annotation>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="cr_cg_cb_ca" type="xs:string" minOccurs="1" maxOccurs="1">
-                                                        <xs:annotation>
-                                                            <xs:documentation>
-                                                                The color (RGBA) of this texture.
-                                                            </xs:documentation>
-                                                        </xs:annotation>
-                                                    </xs:element>
-                                                    <xs:element name="ht_rg_mt_nx" type="xs:string" minOccurs="1" maxOccurs="1">
-                                                        <xs:annotation>
-                                                            <xs:documentation>
-                                                                The Height, Roughness, Metallic and Normal X of this texture.
-                                                            </xs:documentation>
-                                                        </xs:annotation>
-                                                    </xs:element>
-                                                    <xs:element name="wt_em_rf_ny" type="xs:string" minOccurs="1" maxOccurs="1">
-                                                        <xs:annotation>
-                                                            <xs:documentation>
-                                                                The Water, Emissive, Refraction Index and Normal Y of this texture.
-                                                            </xs:documentation>
-                                                        </xs:annotation>
-                                                    </xs:element>
-                                                </xs:sequence>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute name="key" type="xs:string" use="required">
+                                                            <xs:annotation>
+                                                                <xs:documentation>
+                                                                    The key of this entry.
+                                                                </xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
                                 </xs:complexType>
+                            </xs:element>
+                            <xs:element name="cr_cg_cb_ca" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The color (RGBA) of this texture.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="ht_rg_mt_nx" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The Height, Roughness, Metallic and Normal X of this texture.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="wt_em_rf_ny" type="xs:string" minOccurs="1" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The Water, Emissive, Refraction Index and Normal Y of this texture.
+                                    </xs:documentation>
+                                </xs:annotation>
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required">
