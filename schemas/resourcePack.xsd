@@ -28,23 +28,23 @@ For more information, please refer to <https://unlicense.org>
 
 <xs:schema 
     version="1.0"
-    xmlns="https://cientistavuador.github.io/schemas/texturePack.xsd"
+    xmlns="https://cientistavuador.github.io/schemas/resourcePack.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    targetNamespace="https://cientistavuador.github.io/schemas/texturePack.xsd"
+    targetNamespace="https://cientistavuador.github.io/schemas/resourcePack.xsd"
     elementFormDefault="qualified"
 >
-    <xs:element name="texturePack">
+    <xs:element name="resourcePack">
         <xs:annotation>
             <xs:documentation>
-                The root element of the texture pack.
+                The root element of the resource pack.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="texture" minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="resource" minOccurs="0" maxOccurs="unbounded">
                     <xs:annotation>
                         <xs:documentation>
-                            A texture of this texture pack.
+                            A resource of this resource pack.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
@@ -70,7 +70,7 @@ For more information, please refer to <https://unlicense.org>
                             <xs:element name="authorship" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The authorship of this texture.
+                                        The authorship of this resource.
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>
@@ -78,21 +78,21 @@ For more information, please refer to <https://unlicense.org>
                                         <xs:element name="preview" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
-                                                    The preview file image of this texture.
+                                                    The preview file image of this resource.
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
                                         <xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
-                                                    The title of this texture.
+                                                    The title of this resource.
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
                                         <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
-                                                    The description of this texture.
+                                                    The description of this resource.
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
@@ -100,7 +100,7 @@ For more information, please refer to <https://unlicense.org>
                                     <xs:attribute name="origin" type="xs:string" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
-                                                The origin of this texture.
+                                                The origin of this resource.
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
@@ -137,26 +137,36 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="cr_cg_cb_ca" type="xs:string" minOccurs="1" maxOccurs="1">
+                            <xs:element name="data" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The color (RGBA) of this texture.
+                                        The data of this resource.
                                     </xs:documentation>
                                 </xs:annotation>
-                            </xs:element>
-                            <xs:element name="ht_rg_mt_nx" type="xs:string" minOccurs="1" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        The Height, Roughness, Metallic and Normal X of this texture.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-                            <xs:element name="wt_em_rf_ny" type="xs:string" minOccurs="1" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        The Water, Emissive, Refraction Index and Normal Y of this texture.
-                                    </xs:documentation>
-                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="file" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    A file of this resource.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute name="type" type="xs:string" use="required">
+                                                            <xs:annotation>
+                                                                <xs:documentation>
+                                                                    The type of this file.
+                                                                </xs:documentation>
+                                                            </xs:annotation>
+                                                        </xs:attribute>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute name="id" type="xs:string" use="required">
