@@ -48,7 +48,14 @@ For more information, please refer to <https://unlicense.org>
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
-                        <xs:sequence>
+                        <xs:all>
+                            <xs:element name="priority" type="xs:integer" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The priority of this resource, the default is 0.
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                             <xs:element name="aliases" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
@@ -74,7 +81,7 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>
-                                    <xs:sequence>
+                                    <xs:all>
                                         <xs:element name="preview" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
@@ -96,7 +103,7 @@ For more information, please refer to <https://unlicense.org>
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
-                                    </xs:sequence>
+                                    </xs:all>
                                     <xs:attribute name="origin" type="xs:string" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
@@ -168,18 +175,30 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                        </xs:sequence>
+                            <xs:element name="extension" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        The extension element, must contain a element from another namespace.
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:any minOccurs="1" maxOccurs="1" namespace="##other" processContents="skip"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:all>
+                        <xs:attribute name="type" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The type of this resource.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
                         <xs:attribute name="id" type="xs:string" use="required">
                             <xs:annotation>
                                 <xs:documentation>
                                     The id of the texture.
-                                </xs:documentation>
-                            </xs:annotation>
-                        </xs:attribute>
-                        <xs:attribute name="priority" type="xs:integer" default="0">
-                            <xs:annotation>
-                                <xs:documentation>
-                                    The priority of this texture, the default is 0.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
