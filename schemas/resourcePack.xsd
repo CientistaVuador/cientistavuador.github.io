@@ -59,7 +59,7 @@ For more information, please refer to <https://unlicense.org>
                             <xs:element name="aliases" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The aliases of this texture.
+                                        The aliases of this resource.
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>
@@ -198,7 +198,7 @@ For more information, please refer to <https://unlicense.org>
                         <xs:attribute name="id" type="xs:string" use="required">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The id of the texture.
+                                    The id of the resource.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
