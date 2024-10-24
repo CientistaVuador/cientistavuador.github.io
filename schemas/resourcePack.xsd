@@ -195,7 +195,7 @@ For more information, please refer to <https://unlicense.org>
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="id" type="xs:integer" default="0">
+                        <xs:attribute name="priority" type="xs:integer" default="0">
                             <xs:annotation>
                                 <xs:documentation>
                                     The priority of this resource, the default is 0.
