@@ -49,13 +49,6 @@ For more information, please refer to <https://unlicense.org>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:all>
-                            <xs:element name="priority" type="xs:integer" minOccurs="0" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        The priority of this resource, the default is 0.
-                                    </xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
                             <xs:element name="aliases" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
@@ -82,6 +75,13 @@ For more information, please refer to <https://unlicense.org>
                                 </xs:annotation>
                                 <xs:complexType>
                                     <xs:all>
+                                        <xs:element name="origin" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    The origin of this resource.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
                                         <xs:element name="preview" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
@@ -104,13 +104,6 @@ For more information, please refer to <https://unlicense.org>
                                             </xs:annotation>
                                         </xs:element>
                                     </xs:all>
-                                    <xs:attribute name="origin" type="xs:string" use="required">
-                                        <xs:annotation>
-                                            <xs:documentation>
-                                                The origin of this resource.
-                                            </xs:documentation>
-                                        </xs:annotation>
-                                    </xs:attribute>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="meta" minOccurs="0" maxOccurs="1">
@@ -198,7 +191,14 @@ For more information, please refer to <https://unlicense.org>
                         <xs:attribute name="id" type="xs:string" use="required">
                             <xs:annotation>
                                 <xs:documentation>
-                                    The id of the resource.
+                                    The id of this resource.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="id" type="xs:integer" default="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The priority of this resource, the default is 0.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
