@@ -168,18 +168,6 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
-                            <xs:element name="extension" minOccurs="0" maxOccurs="1">
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        The extension element, must contain a element from another namespace.
-                                    </xs:documentation>
-                                </xs:annotation>
-                                <xs:complexType>
-                                    <xs:sequence>
-                                        <xs:any minOccurs="1" maxOccurs="1" namespace="##other" processContents="skip"/>
-                                    </xs:sequence>
-                                </xs:complexType>
-                            </xs:element>
                         </xs:all>
                         <xs:attribute name="type" type="xs:string" use="required">
                             <xs:annotation>
