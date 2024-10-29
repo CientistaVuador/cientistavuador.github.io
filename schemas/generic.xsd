@@ -1,0 +1,343 @@
+<?xml version="1.0"?>
+<!--
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <https://unlicense.org>
+-->
+
+<xs:schema 
+    version="1.0"
+    xmlns="https://cientistavuador.github.io/schemas/generic.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="https://cientistavuador.github.io/schemas/generic.xsd"
+    elementFormDefault="qualified"
+>
+    <xs:attributeGroup name="genericTypeKeyGroup">
+        <xs:attribute name="of" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The key of this element.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:complexType name="genericTypeKey">
+        <xs:attributeGroup ref="genericTypeKeyGroup"/>
+    </xs:complexType>
+    <xs:complexType name="rgb">
+        <xs:complexContent>
+            <xs:extension base="genericTypeKey">
+                <xs:sequence>
+                    <xs:element name="r" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The red component normalized.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="g" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The green component normalized.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="b" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The blue component normalized.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="rgba">
+        <xs:complexContent>
+            <xs:extension base="rgb">
+                <xs:sequence>
+                    <xs:element name="a" type="xs:float" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The alpha component normalized.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xy">
+        <xs:complexContent>
+            <xs:extension base="genericTypeKey">
+                <xs:sequence>
+                    <xs:element name="x" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The x coordinate.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="y" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The y coordinate.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xyz">
+        <xs:complexContent>
+            <xs:extension base="xy">
+                <xs:sequence>
+                    <xs:element name="z" type="xs:float" minOccurs="1">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The z coordinate.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="xyzw">
+        <xs:complexContent>
+            <xs:extension base="xyz">
+                <xs:sequence>
+                    <xs:element name="w" type="xs:float" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The w coordinate.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="generic">
+        <xs:annotation>
+            <xs:documentation>
+                The root element.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="rgb" type="rgb" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A rgb color.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="rgba" type="rgba" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A rgba color.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="xy" type="xy" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A xy vector.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="xyz" type="xyz" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A xyz vector.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="xyzw" type="xyzw" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A xyzw vector.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="float" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A float.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:float">
+                                    <xs:attributeGroup ref="genericTypeKeyGroup"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="int" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A int.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:int">
+                                    <xs:attributeGroup ref="genericTypeKeyGroup"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="reference" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A reference.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attributeGroup ref="genericTypeKeyGroup"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="string"  minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A string.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                    <xs:attributeGroup ref="genericTypeKeyGroup"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="quaternion" type="xyzw" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A quaternion.
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="floatArray" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A float array.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="genericTypeKey">
+                                    <xs:sequence>
+                                        <xs:element name="f" type="xs:float" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    A float element of this array.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="intArray" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A int array.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="genericTypeKey">
+                                    <xs:sequence>
+                                        <xs:element name="i" type="xs:int" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    A int element of this array.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="stringArray" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A string array.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="genericTypeKey">
+                                    <xs:sequence>
+                                        <xs:element name="s" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    A string element of this array.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="boolean" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                A boolean.
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:simpleContent>
+                                <xs:extension base="xs:boolean">
+                                    <xs:attributeGroup ref="genericTypeKeyGroup"/>
+                                </xs:extension>
+                            </xs:simpleContent>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attribute name="ofType" type="xs:string" use="required">
+                <xs:annotation>
+                    <xs:documentation>
+                        The type of this generic data.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
