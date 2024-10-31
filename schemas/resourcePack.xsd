@@ -82,6 +82,13 @@ For more information, please refer to <https://unlicense.org>
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
+                                        <xs:element name="license" type="xs:string" minOccurs="0" maxOccurs="1">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    The license text file of this resource.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
                                         <xs:element name="preview" type="xs:string" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
