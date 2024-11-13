@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="pt-br">
     <head>
         <title>Parallax Corrected Cubemaps</title>
         
         <!-- HTML Meta Tags -->
         <meta charset="UTF-8"/>
-        <meta name="keywords" content="extent, mostly, depend, seblagarde, paint, scenarios, without, let, moving, cubemapposition, going, inspired, version, as, extensions, slow, quaternion, looking, default, supports, perspective, where, so, lights, contain, noticed, sample, actually, weird, classic, complicated, intersecting, but, wordpress, added, scare, baking, bvh, intersection, solves, tip, up, has, generate, us, those, area, check, finding, look, know, some, doing, away, video, 2x2x2, load, ends, normal, apply, rotated, way, generic, what"/>
+        <meta name="keywords" content="seblagarde, pronto, específico, checagem, paint, pelo, luz, cubo, reflect, fiz, movendo, tem, cubemapposition, pela, olhando, vamos, clássico, junto, quaternion, estamos, versão, carregar, encontrado, luzes, funciona, sem, perspectiva, definido, conter, incorreta, palavra, área, estivesse, desative, sample, te, alguns, problemas, faça, todos, metade, meia, resolve, wordpress, rotacionada, enviá, correta, fora, parte, bem, onde, apenas, bvh, calcule, teto, correto, pudéssemos, simplificar, definida, bola, vemos, eu, eixo, câmera"/>
         <meta name="description" content="Like normal cubemaps but better"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
@@ -47,7 +47,7 @@
     
     For more information, please refer to <http://unlicense.org/>
     
-    en-us
+    pt-br
         Parallax Corrected Cubemaps
         Like normal cubemaps but better
         5
@@ -65,33 +65,33 @@
         <main class="article">
             <nav class="indices">
                 <ol>
-                    <li><a href="#1+Introduction">1 Introduction</a></li>
-                    <li><a href="#2+Classic+Cubemap+Reflection">2 Classic Cubemap Reflection</a></li>
+                    <li><a href="#1+Introdu%C3%A7%C3%A3o">1 Introdução</a></li>
+                    <li><a href="#2+Reflexo+Cl%C3%A1ssico+de+Cubemap">2 Reflexo Clássico de Cubemap</a></li>
                     <li><a href="#3+Parallax+Corrected+Cubemap">3 Parallax Corrected Cubemap</a></li>
                     <li><a href="#4+Raytracing">4 Raytracing</a></li>
                     <li>
                         <ol>
-                            <li><a href="#4.1+In+Code">4.1 In Code</a></li>
+                            <li><a href="#4.1+Em+C%C3%B3digo">4.1 Em Código</a></li>
                         </ol>
-                    </li><li><a href="#5+Final+Result">5 Final Result</a></li>
+                    </li><li><a href="#5+Resultado+Final">5 Resultado Final</a></li>
                 </ol>
             </nav>
-            <section id="1+Introduction">
-                <h2>1 Introduction</h2>
+            <section id="1+Introdu%C3%A7%C3%A3o">
+                <h2>1 Introdução</h2>
                 <p class="text">
-                    This article was inspired by
+                    Esse artigo foi inspirado por
                     <a target="_blank" href="https://seblagarde.wordpress.com/2012/09/29/image-based-lighting-approaches-and-parallax-corrected-cubemap/">Image-based Lighting approaches and parallax-corrected cubemap</a>
                 </p>
                 <p class="text">
-                    This article assumes that you already know how to load and bake cubemaps.
+                    Esse artigo assume que você já sabe como carregar e gerar cubemaps.
                 </p>
             </section>
-            <section id="2+Classic+Cubemap+Reflection">
-                <h2>2 Classic Cubemap Reflection</h2>
+            <section id="2+Reflexo+Cl%C3%A1ssico+de+Cubemap">
+                <h2>2 Reflexo Clássico de Cubemap</h2>
                 <p class="text">
-                    So, how is the default way of doing cubemap reflections? well, it&#39;s quite simple:
-                    calculate the view direction from the camera position to the fragment position,
-                    reflect it using the reflect function with the fragment normal and done!
+                    Então, qual é o jeito padrão de fazer reflexos de cubemap? bom, é simples:
+                    calcule a direção de view da posição da câmera para a posição do fragmento,
+                    reflita usando a função &quot;reflect&quot; com a normal do fragmento e pronto!
                 </p>
                 <ol class="code">
                     <li><code>vec3 viewDirection = normalize(worldPosition - viewPosition);</code></li>
@@ -103,55 +103,56 @@
                     <a href="/resources/5/Classic Cubemap Reflection.mp4" download="">Classic Cubemap Reflection.mp4</a>
                 </video>
                 <p class="text">
-                    As you can see, the reflection seems to be moving with us, like if it was very far
-                    away like the sky, which would be fine if this was a sky cubemap but this is
-                    a local cubemap baked from a specific location.
+                    Como pode ver, o reflexo parece estar se movendo conosco, como se estivesse bem
+                    longe como o céu, que seria bom se isso fosse um cubemap de céu mas isso é um
+                    cubemap local gerado a partir de um local específico.
                 </p>
                 <p class="fine">
-                    Tip: When baking cubemaps disable all specular reflections from lights and other cubemaps,
-                    because those depend on the view direction and it could look very weird when looking from
-                    other angles, cubemaps should generally contain only diffuse light.
+                    Dica: Quando estiver gerando cubemaps desative todos os reflexos de specular de luzes
+                    e outros cubemaps pois estes dependem da direção da view e poderia ficar muito esquisito
+                    olhando de outros ângulos, cubemaps geralmente só devem conter luz difusa.
                 </p>
                 <p class="text">
-                    If we draw this into paint.net, this is what we get:
+                    Se desenharmos isto no paint.net, é isso que temos:
                 </p>
                 <img class="image" src="/resources/5/Cubemap Reflection.png" alt="Cubemap Reflection"/>
                 <p class="text">
-                    Because we are sampling the cubemap using only our reflected direction &quot;R&quot; without
-                    taking the cubemap position into account (denoted by the ball), the cubemap ends
-                    up sampling the wrong position denoted by &quot;P?&quot; instead of the correct position
-                    denoted by &quot;P&quot; (which we don&#39;t have) and this is why we mostly see the ceiling
-                    instead of the walls in the video.
+                    Como estamos fazendo sampling do cubemap usando apenas a direção refletida &quot;R&quot; sem
+                    levar a posição do cubemap em conta (denotada pela bola), o cubemap acaba fazendo
+                    sampling da posição incorreta denotada por &quot;P?&quot; ao invés da posição correta denotada
+                    por &quot;P&quot; (que não temos) e é por isso que vemos grande parte do teto ao invés
+                    das paredes no vídeo.
                 </p>
             </section>
             <section id="3+Parallax+Corrected+Cubemap">
                 <h2>3 Parallax Corrected Cubemap</h2>
                 <p class="text">
-                    A Parallax Corrected Cubemap solves this issue by finding the correct P using
-                    raytracing and then sampling the cubemap using the direction from the cubemap
-                    position to P (the C direction).
+                    Um Parallax Corrected Cubemap resolve esse problema encontrado o P correto
+                    utilizando raytracing e então fazendo sampling do cubemap usando a direção
+                    da posição do cubemap para P (a direção C).
                 </p>
                 <img class="image" src="/resources/5/Parallax Corrected Cubemap.png" alt="Parallax Corrected Cubemap"/>
             </section>
             <section id="4+Raytracing">
                 <h2>4 Raytracing</h2>
                 <p class="text">
-                    Don&#39;t let the word &quot;raytracing&quot; scare you, even if we could generate
-                    a BVH from our scene and use it to find P, it would be too slow and
-                    complicated to use, instead we are going to simplify our scene
-                    to a user defined box and then intersect a ray from inside of it.
+                    Não deixe a palavra &quot;raytracing&quot; te assustar, mesmo se pudéssemos gerar
+                    um BVH de nossa cena e usar ele para encontrar P, seria muito lento
+                    e complicado para se usar, ao invés nós vamos simplificar nossa cena
+                    para um cubo definido pelo usuário e então fazer a intersecção de um raio
+                    por dentro dele.
                 </p>
-                <section id="4.1+In+Code">
-                    <h3>4.1 In Code</h3>
+                <section id="4.1+Em+C%C3%B3digo">
+                    <h3>4.1 Em Código</h3>
                     <p class="text">
-                        We only need a small function for intersecting a ray with a box
-                        from the inside.
+                        Só precisamos de uma pequena função para fazer a intersecção de um raio
+                        com uma caixa por dentro.
                     </p>
                     <p class="text">
-                        Using the code in the article mentioned at the introduction, I made
-                        a more generic version of it and I also added a aabb check to avoid
-                        the ray from being intersected from outside the box because I noticed
-                        it causes a lot of graphical issues in some scenarios.
+                        Usando o código no artigo mencionado na introdução, eu fiz uma versão
+                        mais genérica dele e também adicionei uma checagem de aabb para evitar
+                        que o raio faça intersecção por fora da caixa pois percebi que causa
+                        vários problemas gráficos em alguns cenários.
                     </p>
                     <ol class="code">
                         <li><code>//P is rayOrigin + (rayDirection * t)</code></li>
@@ -171,14 +172,14 @@
                         <li><code>}</code></li>
                     </ol>
                     <p class="text">
-                        Even if the function was made for a aabb, it actually supports any
-                        rotated or scaled box, because we apply the inverse of the box matrix
-                        to the ray (the worldToLocal matrix) instead of the box which is
-                        always a 2x2x2 AABB in the perspective of the function.
+                        Mesmo se a função foi feita para um aabb, ela na verdade suporta
+                        qualquer caixa rotacionada ou escalada, já que aplicamos o inverso
+                        da matriz da caixa ao raio (a matriz worldToLocal) ao invés da caixa
+                        que é sempre um AABB 2x2x2 na perspectiva da função.
                     </p>
                     <p class="text">
-                        On the CPU side, we only need to calculate the worldToLocal matrix
-                        and send it to the shader alongside the cubemap position.
+                        No lado da CPU, só precisamos calcular a matriz worldToLocal
+                        e enviá-la para o shader junto com a posição do cubemap.
                     </p>
                     <ol class="code">
                         <li><code>Vector3f position = new Vector3f(0f, 2f, 0f);</code></li>
@@ -195,24 +196,24 @@
                         <li><code>Vector3f cubemapPosition = new Vector3f(0f, 1.65f, 0f);</code></li>
                     </ol>
                     <p class="text">
-                        &quot;position&quot; is the position of the box, &quot;rotation&quot; is the rotation of the box
-                        defined by a quaternion, &quot;halfExtents&quot; is the half of the extensions of the
-                        box (a box of width 10.0 has a half extent of 5.0 in the X axis) and
-                        &quot;cubemapPosition&quot; is the cubemap position where it was baked at.
+                        &quot;position&quot; é a posição da caixa, &quot;rotation&quot; é a rotação da caixa definida
+                        por um quaternion, &quot;halfExtents&quot; é a metade das extensões da caixa
+                        (uma caixa de comprimento 10,0 tem uma meia extensão de 5.0 no eixo X) e
+                        &quot;cubemapPosition&quot; é a posição do cubemap de onde ele foi gerado.
                     </p>
                     <ol class="code">
                         <li><code>uniform mat4 cubemapWorldToLocal;</code></li>
                         <li><code>uniform vec3 cubemapPosition;</code></li>
                     </ol>
                     <p class="warning">
-                        Because the intersection only works if the fragment is inside
-                        the box, you should always make the box slightly larger than
-                        the area it represents.
+                        Como a intersecção só funciona se o fragmento estiver dentro
+                        da caixa, você deve fazer a caixa um pouco maior do que
+                        a área que ela representa.
                     </p>
                     <p class="text">
-                        And then, we only need to intersect a ray from the fragment position
-                        using the reflected direction to find P and sample the cubemap using
-                        the corrected direction.
+                        E então, só precisamos fazer a intersecção do raio da posição do fragmento
+                        usando a direção refletida para encontrar P e então fazer sample do cubemap
+                        usando a direção corrigida.
                     </p>
                     <ol class="code">
                         <li><code>vec3 viewDirection = normalize(worldPosition - viewPosition);</code></li>
@@ -227,10 +228,10 @@
                     </ol>
                 </section>
             </section>
-            <section id="5+Final+Result">
-                <h2>5 Final Result</h2>
+            <section id="5+Resultado+Final">
+                <h2>5 Resultado Final</h2>
                 <p class="text">
-                    And this is the final result:
+                    E esse é o resultado final:
                 </p>
                 <video class="video" preload="metadata" controls="">
                     <source src="/resources/5/Parallax Corrected Cubemap Video.mp4" type="video/mp4"/>
@@ -239,7 +240,7 @@
             </section>
         </main>
         <footer class="footer">
-            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <p><a href="articles_pt-br.html">&lt;&lt;&lt; Retornar para Artigos</a></p>
             <script src="https://utteranc.es/client.js"
                     repo="CientistaVuador/cientistavuador.github.io"
                     issue-term="Article 5"
@@ -249,7 +250,7 @@
                     async="async"
                     >
             </script>
-            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+            <p>A Licença desta página pode ser encontrada no código-fonte ou no <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">repositório do github</a>.</p>
         </footer>
     </body>
 </html>
