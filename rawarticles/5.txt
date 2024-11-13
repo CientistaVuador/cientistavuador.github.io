@@ -1,0 +1,162 @@
+[[id]] 5
+[[languages]] en-us
+
+[[title]] Parallax Corrected Cubemaps
+[[description]] Like normal cubemaps but better
+[[date]] 2024/11/13 02:16
+
+[[section]] Introduction
+
+[text]
+This article was inspired by 
+[[[https://seblagarde.wordpress.com/2012/09/29/image-based-lighting-approaches-and-parallax-corrected-cubemap/:::Image-based Lighting approaches and parallax-corrected cubemap]]]
+[;<;>]
+[text]
+This article assumes that you already know how to load and bake cubemaps.
+[;<;>]
+
+[[section]] Classic Cubemap Reflection
+
+[text]
+So, how is the default way of doing cubemap reflections? well, it's quite simple:
+calculate the view direction from the camera position to the fragment position,
+reflect it using the reflect function with the fragment normal and done!
+[;<;>]
+[code]
+vec3 viewDirection = normalize(worldPosition - viewPosition);
+vec3 reflectedDirection = reflect(viewDirection, normal);
+vec3 reflection = texture(reflectionCubemap, reflectedDirection).rgb;
+[;<;>]
+[[video]] /resources/5/Classic Cubemap Reflection.mp4
+[text]
+As you can see, the reflection seems to be moving with us, like if it was very far
+away like the sky, which would be fine if this was a sky cubemap but this is
+a local cubemap baked from a specific location.
+[;<;>]
+[fine]
+Tip: When baking cubemaps disable all specular reflections from lights and other cubemaps,
+because those depend on the view direction and it could look very weird when looking from
+other angles, cubemaps should generally contain only diffuse light.
+[;<;>]
+[text]
+If we draw this into paint.net, this is what we get:
+[;<;>]
+[[image]] /resources/5/Cubemap Reflection.png
+[text]
+Because we are sampling the cubemap using only our reflected direction "R" without
+taking the cubemap position into account (denoted by the ball), the cubemap ends
+up sampling the wrong position denoted by "P?" instead of the correct position
+denoted by "P" (which we don't have) and this is why we mostly see the ceiling
+instead of the walls in the video.
+[;<;>]
+
+[[section]] Parallax Corrected Cubemap
+
+[text]
+A Parallax Corrected Cubemap solves this issue by finding the correct P using
+raytracing and then sampling the cubemap using the direction from the cubemap
+position to P (the C direction).
+[;<;>]
+
+[[image]] /resources/5/Parallax Corrected Cubemap.png
+
+[[section]] Raytracing
+
+[text]
+Don't let the word "raytracing" scare you, even if we could generate
+a BVH from our scene and use it to find P, it would be too slow and
+complicated to use, instead we are going to simplify our scene
+to a user defined box and then intersect a ray from inside of it.
+[;<;>]
+
+[[subsection]] In Code
+
+[text]
+We only need a small function for intersecting a ray with a box
+from the inside.
+[;<;>]
+[text]
+Using the code in the article mentioned at the introduction, I made
+a more generic version of it and I also added a aabb check to avoid
+the ray from being intersected from outside the box because I noticed
+it causes a lot of graphical issues in some scenarios.
+[;<;>]
+[code]
+//P is rayOrigin + (rayDirection * t)
+//where t is the return value
+//returns -1.0 if the ray is outside the box
+float intersectRayInsideBox(vec3 rayOrigin, vec3 rayDirection, mat4 worldToLocal) {
+    vec3 localOrigin = (worldToLocal * vec4(rayOrigin, 1.0)).xyz;
+    vec3 aabbCheck = abs(localOrigin);
+    if (max(aabbCheck.x, max(aabbCheck.y, aabbCheck.z)) > 1.0) {
+        return -1.0;
+    }
+    vec3 localDirection = mat3(worldToLocal) * rayDirection;
+    vec3 firstPlane = (vec3(-1.0) - localOrigin) / localDirection;
+    vec3 secondPlane = (vec3(1.0) - localOrigin) / localDirection;
+    vec3 furthestPlane = max(firstPlane, secondPlane);
+    return min(furthestPlane.x, min(furthestPlane.y, furthestPlane.z));
+}
+[;<;>]
+[text]
+Even if the function was made for a aabb, it actually supports any
+rotated or scaled box, because we apply the inverse of the box matrix
+to the ray (the worldToLocal matrix) instead of the box which is
+always a 2x2x2 AABB in the perspective of the function.
+[;<;>]
+[text]
+On the CPU side, we only need to calculate the worldToLocal matrix
+and send it to the shader alongside the cubemap position.
+[;<;>]
+[code]
+Vector3f position = new Vector3f(0f, 2f, 0f);
+Quaternionf rotation = new Quaternionf(0f, 0f, 0f, 1f);
+Vector3f halfExtents = new Vector3f(5f, 2f, 5f);
+
+Matrix4f worldToLocal = new Matrix4f()
+    .translate(position)
+    .rotate(rotation)
+    .scale(halfExtents)
+    .invert()
+    ;
+
+Vector3f cubemapPosition = new Vector3f(0f, 1.65f, 0f);
+[;<;>]
+[text]
+"position" is the position of the box, "rotation" is the rotation of the box
+defined by a quaternion, "halfExtents" is the half of the extensions of the
+box (a box of width 10.0 has a half extent of 5.0 in the X axis) and 
+"cubemapPosition" is the cubemap position where it was baked at.
+[;<;>]
+[code]
+uniform mat4 cubemapWorldToLocal;
+uniform vec3 cubemapPosition;
+[;<;>]
+[warning]
+Because the intersection only works if the fragment is inside
+the box, you should always make the box slightly larger than
+the area it represents.
+[;<;>]
+[text]
+And then, we only need to intersect a ray from the fragment position
+using the reflected direction to find P and sample the cubemap using
+the corrected direction.
+[;<;>]
+[code]
+vec3 viewDirection = normalize(worldPosition - viewPosition);
+vec3 reflectedDirection = reflect(viewDirection, normal);
+vec3 reflection = vec3(0.0);
+float t = intersectRayInsideBox(worldPosition, reflectedDirection, cubemapWorldToLocal);
+if (t >= 0.0) {
+    vec3 P = worldPosition + (reflectedDirection * t);
+    vec3 correctedDirection = normalize(P - cubemapPosition);
+    reflection = texture(reflectionCubemap, correctedDirection).rgb;
+}
+[;<;>]
+
+[[section]] Final Result
+
+[text]
+And this is the final result:
+[;<;>]
+[[video]] /resources/5/Parallax Corrected Cubemap Video.mp4

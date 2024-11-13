@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Parallax Corrected Cubemaps</title>
+        
+        <!-- HTML Meta Tags -->
+        <meta charset="UTF-8"/>
+        <meta name="keywords" content="extent, mostly, depend, seblagarde, paint, scenarios, without, let, moving, cubemapposition, going, inspired, version, as, extensions, slow, quaternion, looking, default, supports, perspective, where, so, lights, contain, noticed, sample, actually, weird, classic, complicated, intersecting, but, wordpress, added, scare, baking, bvh, intersection, solves, tip, up, has, generate, us, those, area, check, finding, look, know, some, doing, away, video, 2x2x2, load, ends, normal, apply, rotated, way, generic, what"/>
+        <meta name="description" content="Like normal cubemaps but better"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <link rel="icon" type="image/x-icon" href="/data/icon.png"/>
+        <link rel="stylesheet" type="text/css" href="/data/style.css"/>
+        <!-- HTML Meta Tags -->
+        
+        <!-- OpenGraph -->
+        <meta name="og:title" content="Parallax Corrected Cubemaps"/>
+        <meta name="og:description" content="Like normal cubemaps but better"/>
+        <meta name="og:type" content="article"/>
+        <meta name="og:image" content="/data/icon.png"/>
+        <!-- OpenGraph -->
+    </head>
+    <!--
+    
+    This is free and unencumbered software released into the public domain.
+    
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.
+    
+    In jurisdictions that recognize copyright laws, the author or authors
+    of this software dedicate any and all copyright interest in the
+    software to the public domain. We make this dedication for the benefit
+    of the public at large and to the detriment of our heirs and
+    successors. We intend this dedication to be an overt act of
+    relinquishment in perpetuity of all present and future rights to this
+    software under copyright law.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+    OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+    
+    For more information, please refer to <http://unlicense.org/>
+    
+    en-us
+        Parallax Corrected Cubemaps
+        Like normal cubemaps but better
+        5
+        2024/11/13 02:16
+    
+    -->
+    <body class="body">
+        <header class="header">
+            <h1>Parallax Corrected Cubemaps</h1>
+            <h2>Like normal cubemaps but better</h2>
+            <h3>0005</h3>
+            <h3>2024/11/13 02:16</h3>
+            <h4><a href="5_en-us.html">EN-US</a></h4>
+        </header>
+        <main class="article">
+            <nav class="indices">
+                <ol>
+                    <li><a href="#1+Introduction">1 Introduction</a></li>
+                    <li><a href="#2+Classic+Cubemap+Reflection">2 Classic Cubemap Reflection</a></li>
+                    <li><a href="#3+Parallax+Corrected+Cubemap">3 Parallax Corrected Cubemap</a></li>
+                    <li><a href="#4+Raytracing">4 Raytracing</a></li>
+                    <li>
+                        <ol>
+                            <li><a href="#4.1+In+Code">4.1 In Code</a></li>
+                        </ol>
+                    </li><li><a href="#5+Final+Result">5 Final Result</a></li>
+                </ol>
+            </nav>
+            <section id="1+Introduction">
+                <h2>1 Introduction</h2>
+                <p class="text">
+                    This article was inspired by
+                    <a target="_blank" href="https://seblagarde.wordpress.com/2012/09/29/image-based-lighting-approaches-and-parallax-corrected-cubemap/">Image-based Lighting approaches and parallax-corrected cubemap</a>
+                </p>
+                <p class="text">
+                    This article assumes that you already know how to load and bake cubemaps.
+                </p>
+            </section>
+            <section id="2+Classic+Cubemap+Reflection">
+                <h2>2 Classic Cubemap Reflection</h2>
+                <p class="text">
+                    So, how is the default way of doing cubemap reflections? well, it&#39;s quite simple:
+                    calculate the view direction from the camera position to the fragment position,
+                    reflect it using the reflect function with the fragment normal and done!
+                </p>
+                <ol class="code">
+                    <li><code>vec3 viewDirection = normalize(worldPosition - viewPosition);</code></li>
+                    <li><code>vec3 reflectedDirection = reflect(viewDirection, normal);</code></li>
+                    <li><code>vec3 reflection = texture(reflectionCubemap, reflectedDirection).rgb;</code></li>
+                </ol>
+                <video class="video" preload="metadata" controls="">
+                    <source src="/resources/5/Classic Cubemap Reflection.mp4" type="video/mp4"/>
+                    <a href="/resources/5/Classic Cubemap Reflection.mp4" download="">Classic Cubemap Reflection.mp4</a>
+                </video>
+                <p class="text">
+                    As you can see, the reflection seems to be moving with us, like if it was very far
+                    away like the sky, which would be fine if this was a sky cubemap but this is
+                    a local cubemap baked from a specific location.
+                </p>
+                <p class="fine">
+                    Tip: When baking cubemaps disable all specular reflections from lights and other cubemaps,
+                    because those depend on the view direction and it could look very weird when looking from
+                    other angles, cubemaps should generally contain only diffuse light.
+                </p>
+                <p class="text">
+                    If we draw this into paint.net, this is what we get:
+                </p>
+                <img class="image" src="/resources/5/Cubemap Reflection.png" alt="Cubemap Reflection"/>
+                <p class="text">
+                    Because we are sampling the cubemap using only our reflected direction &quot;R&quot; without
+                    taking the cubemap position into account (denoted by the ball), the cubemap ends
+                    up sampling the wrong position denoted by &quot;P?&quot; instead of the correct position
+                    denoted by &quot;P&quot; (which we don&#39;t have) and this is why we mostly see the ceiling
+                    instead of the walls in the video.
+                </p>
+            </section>
+            <section id="3+Parallax+Corrected+Cubemap">
+                <h2>3 Parallax Corrected Cubemap</h2>
+                <p class="text">
+                    A Parallax Corrected Cubemap solves this issue by finding the correct P using
+                    raytracing and then sampling the cubemap using the direction from the cubemap
+                    position to P (the C direction).
+                </p>
+                <img class="image" src="/resources/5/Parallax Corrected Cubemap.png" alt="Parallax Corrected Cubemap"/>
+            </section>
+            <section id="4+Raytracing">
+                <h2>4 Raytracing</h2>
+                <p class="text">
+                    Don&#39;t let the word &quot;raytracing&quot; scare you, even if we could generate
+                    a BVH from our scene and use it to find P, it would be too slow and
+                    complicated to use, instead we are going to simplify our scene
+                    to a user defined box and then intersect a ray from inside of it.
+                </p>
+                <section id="4.1+In+Code">
+                    <h3>4.1 In Code</h3>
+                    <p class="text">
+                        We only need a small function for intersecting a ray with a box
+                        from the inside.
+                    </p>
+                    <p class="text">
+                        Using the code in the article mentioned at the introduction, I made
+                        a more generic version of it and I also added a aabb check to avoid
+                        the ray from being intersected from outside the box because I noticed
+                        it causes a lot of graphical issues in some scenarios.
+                    </p>
+                    <ol class="code">
+                        <li><code>//P is rayOrigin + (rayDirection * t)</code></li>
+                        <li><code>//where t is the return value</code></li>
+                        <li><code>//returns -1.0 if the ray is outside the box</code></li>
+                        <li><code>float intersectRayInsideBox(vec3 rayOrigin, vec3 rayDirection, mat4 worldToLocal) {</code></li>
+                        <li><code>    vec3 localOrigin = (worldToLocal * vec4(rayOrigin, 1.0)).xyz;</code></li>
+                        <li><code>    vec3 aabbCheck = abs(localOrigin);</code></li>
+                        <li><code>    if (max(aabbCheck.x, max(aabbCheck.y, aabbCheck.z)) &gt; 1.0) {</code></li>
+                        <li><code>        return -1.0;</code></li>
+                        <li><code>    }</code></li>
+                        <li><code>    vec3 localDirection = mat3(worldToLocal) * rayDirection;</code></li>
+                        <li><code>    vec3 firstPlane = (vec3(-1.0) - localOrigin) / localDirection;</code></li>
+                        <li><code>    vec3 secondPlane = (vec3(1.0) - localOrigin) / localDirection;</code></li>
+                        <li><code>    vec3 furthestPlane = max(firstPlane, secondPlane);</code></li>
+                        <li><code>    return min(furthestPlane.x, min(furthestPlane.y, furthestPlane.z));</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                    <p class="text">
+                        Even if the function was made for a aabb, it actually supports any
+                        rotated or scaled box, because we apply the inverse of the box matrix
+                        to the ray (the worldToLocal matrix) instead of the box which is
+                        always a 2x2x2 AABB in the perspective of the function.
+                    </p>
+                    <p class="text">
+                        On the CPU side, we only need to calculate the worldToLocal matrix
+                        and send it to the shader alongside the cubemap position.
+                    </p>
+                    <ol class="code">
+                        <li><code>Vector3f position = new Vector3f(0f, 2f, 0f);</code></li>
+                        <li><code>Quaternionf rotation = new Quaternionf(0f, 0f, 0f, 1f);</code></li>
+                        <li><code>Vector3f halfExtents = new Vector3f(5f, 2f, 5f);</code></li>
+                        <li><code></code></li>
+                        <li><code>Matrix4f worldToLocal = new Matrix4f()</code></li>
+                        <li><code>    .translate(position)</code></li>
+                        <li><code>    .rotate(rotation)</code></li>
+                        <li><code>    .scale(halfExtents)</code></li>
+                        <li><code>    .invert()</code></li>
+                        <li><code>    ;</code></li>
+                        <li><code></code></li>
+                        <li><code>Vector3f cubemapPosition = new Vector3f(0f, 1.65f, 0f);</code></li>
+                    </ol>
+                    <p class="text">
+                        &quot;position&quot; is the position of the box, &quot;rotation&quot; is the rotation of the box
+                        defined by a quaternion, &quot;halfExtents&quot; is the half of the extensions of the
+                        box (a box of width 10.0 has a half extent of 5.0 in the X axis) and
+                        &quot;cubemapPosition&quot; is the cubemap position where it was baked at.
+                    </p>
+                    <ol class="code">
+                        <li><code>uniform mat4 cubemapWorldToLocal;</code></li>
+                        <li><code>uniform vec3 cubemapPosition;</code></li>
+                    </ol>
+                    <p class="warning">
+                        Because the intersection only works if the fragment is inside
+                        the box, you should always make the box slightly larger than
+                        the area it represents.
+                    </p>
+                    <p class="text">
+                        And then, we only need to intersect a ray from the fragment position
+                        using the reflected direction to find P and sample the cubemap using
+                        the corrected direction.
+                    </p>
+                    <ol class="code">
+                        <li><code>vec3 viewDirection = normalize(worldPosition - viewPosition);</code></li>
+                        <li><code>vec3 reflectedDirection = reflect(viewDirection, normal);</code></li>
+                        <li><code>vec3 reflection = vec3(0.0);</code></li>
+                        <li><code>float t = intersectRayInsideBox(worldPosition, reflectedDirection, cubemapWorldToLocal);</code></li>
+                        <li><code>if (t &gt;= 0.0) {</code></li>
+                        <li><code>    vec3 P = worldPosition + (reflectedDirection * t);</code></li>
+                        <li><code>    vec3 correctedDirection = normalize(P - cubemapPosition);</code></li>
+                        <li><code>    reflection = texture(reflectionCubemap, correctedDirection).rgb;</code></li>
+                        <li><code>}</code></li>
+                    </ol>
+                </section>
+            </section>
+            <section id="5+Final+Result">
+                <h2>5 Final Result</h2>
+                <p class="text">
+                    And this is the final result:
+                </p>
+                <video class="video" preload="metadata" controls="">
+                    <source src="/resources/5/Parallax Corrected Cubemap Video.mp4" type="video/mp4"/>
+                    <a href="/resources/5/Parallax Corrected Cubemap Video.mp4" download="">Parallax Corrected Cubemap Video.mp4</a>
+                </video>
+            </section>
+        </main>
+        <footer class="footer">
+            <p><a href="articles_en-us.html">&lt;&lt;&lt; Return to Articles</a></p>
+            <script src="https://utteranc.es/client.js"
+                    repo="CientistaVuador/cientistavuador.github.io"
+                    issue-term="Article 5"
+                    label="comments"
+                    theme="github-dark"
+                    crossorigin="anonymous"
+                    async="async"
+                    >
+            </script>
+            <p>The license of this page can be found in the source code or in the <a target="_blank" href="https://github.com/CientistaVuador/cientistavuador.github.io">github repository</a>.</p>
+        </footer>
+    </body>
+</html>
