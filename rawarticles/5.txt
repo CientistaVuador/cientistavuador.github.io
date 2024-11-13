@@ -3,7 +3,7 @@
 
 [[title]] Parallax Corrected Cubemaps
 [[description<en-us>]] Like normal cubemaps but better
-[[description<pt-br>]] Like normal cubemaps but better
+[[description<pt-br>]] Como cubemaps normais mas melhor
 [[date]] 2024/11/13 02:16
 
 [[section<en-us>]] Introduction
