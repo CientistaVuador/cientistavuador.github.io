@@ -161,10 +161,10 @@ For more information, please refer to <https://unlicense.org>
                                             <xs:complexType>
                                                 <xs:simpleContent>
                                                     <xs:extension base="xs:string">
-                                                        <xs:attribute name="type" type="xs:string" use="required">
+                                                        <xs:attribute name="name" type="xs:string" use="required">
                                                             <xs:annotation>
                                                                 <xs:documentation>
-                                                                    The type of this file.
+                                                                    The name of this file.
                                                                 </xs:documentation>
                                                             </xs:annotation>
                                                         </xs:attribute>
