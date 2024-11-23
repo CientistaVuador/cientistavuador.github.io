@@ -34,21 +34,21 @@ For more information, please refer to <https://unlicense.org>
     elementFormDefault="qualified"
 >
     <xs:complexType name="vector3Type">
-        <xs:attribute name="x" type="xs:decimal" use="required">
+        <xs:attribute name="x" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The x coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="y" type="xs:decimal" use="required">
+        <xs:attribute name="y" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The y coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="z" type="xs:decimal" use="required">
+        <xs:attribute name="z" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The z coordinate.
@@ -80,28 +80,28 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>
-                                    <xs:attribute name="x" type="xs:decimal" use="required">
+                                    <xs:attribute name="x" type="xs:float" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
                                                 The x of this row
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
-                                    <xs:attribute name="y" type="xs:decimal" use="required">
+                                    <xs:attribute name="y" type="xs:float" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
                                                 The y of this row
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
-                                    <xs:attribute name="z" type="xs:decimal" use="required">
+                                    <xs:attribute name="z" type="xs:float" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
                                                 The z of this row
                                             </xs:documentation>
                                         </xs:annotation>
                                     </xs:attribute>
-                                    <xs:attribute name="w" type="xs:decimal" use="required">
+                                    <xs:attribute name="w" type="xs:float" use="required">
                                         <xs:annotation>
                                             <xs:documentation>
                                                 The w of this row
@@ -135,10 +135,10 @@ For more information, please refer to <https://unlicense.org>
                                     </xs:documentation>
                                 </xs:annotation>
                             </xs:element>
-                            <xs:element name="animation" minOccurs="0" maxOccurs="1">
+                            <xs:element name="animated" minOccurs="0" maxOccurs="1">
                                 <xs:annotation>
                                     <xs:documentation>
-                                        The animation of this geometry
+                                        The animated aabb of this geometry
                                     </xs:documentation>
                                 </xs:annotation>
                                 <xs:complexType>

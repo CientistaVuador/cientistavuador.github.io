@@ -46,8 +46,8 @@ Warning:
     />
     
     <!-- A positive non zero decimal -->
-    <xs:simpleType name="positiveNonZeroDecimalType">
-        <xs:restriction base="xs:decimal">
+    <xs:simpleType name="positiveNonZeroFloatType">
+        <xs:restriction base="xs:float">
             <xs:minExclusive value="0"/>
         </xs:restriction>
     </xs:simpleType>
@@ -87,21 +87,21 @@ Warning:
     </xs:complexType>
     
     <xs:complexType name="conicalFrustumType">
-        <xs:attribute name="a" type="positiveNonZeroDecimalType" use="required">
+        <xs:attribute name="a" type="positiveNonZeroFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The radius of the A base, must be positive and not zero.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="b" type="positiveNonZeroDecimalType" use="required">
+        <xs:attribute name="b" type="positiveNonZeroFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The radius of the B base, must be positive and not zero.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="height" type="positiveNonZeroDecimalType" use="required">
+        <xs:attribute name="height" type="positiveNonZeroFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The height, must be positive and not zero.
@@ -135,21 +135,21 @@ Warning:
     <xs:complexType name="planeType">
         <xs:complexContent>
             <xs:extension base="collisionShape:vector3Type">
-                <xs:attribute name="normalX" type="xs:decimal" use="required">
+                <xs:attribute name="normalX" type="xs:float" use="required">
                     <xs:annotation>
                         <xs:documentation>
                             The normal x.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="normalY" type="xs:decimal" use="required">
+                <xs:attribute name="normalY" type="xs:float" use="required">
                     <xs:annotation>
                         <xs:documentation>
                             The normal y.
                         </xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="normalZ" type="xs:decimal" use="required">
+                <xs:attribute name="normalZ" type="xs:float" use="required">
                     <xs:annotation>
                         <xs:documentation>
                             The normal z.
@@ -162,14 +162,14 @@ Warning:
     </xs:complexType>
     
     <xs:complexType name="sphericalSegmentType">
-        <xs:attribute name="radius" type="positiveNonZeroDecimalType" use="required">
+        <xs:attribute name="radius" type="positiveNonZeroFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The radius of the spherical segment, must be positive and not zero.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="yMax" type="xs:decimal" use="required">
+        <xs:attribute name="yMax" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                         <![CDATA[
@@ -178,7 +178,7 @@ Warning:
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="yMin" type="xs:decimal" use="required">
+        <xs:attribute name="yMin" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                         <![CDATA[

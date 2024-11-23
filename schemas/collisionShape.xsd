@@ -35,8 +35,8 @@ For more information, please refer to <https://unlicense.org>
     <!-- General purpose types start -->
     
     <!-- A positive decimal -->
-    <xs:simpleType name="positiveDecimalType">
-        <xs:restriction base="xs:decimal">
+    <xs:simpleType name="positiveFloatType">
+        <xs:restriction base="xs:float">
             <xs:minInclusive value="0"/>
         </xs:restriction>
     </xs:simpleType>
@@ -52,21 +52,21 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A xyz vector -->
     <xs:complexType name="vector3Type">
-        <xs:attribute name="x" type="xs:decimal" use="required">
+        <xs:attribute name="x" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The x coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="y" type="xs:decimal" use="required">
+        <xs:attribute name="y" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The y coordinate.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="z" type="xs:decimal" use="required">
+        <xs:attribute name="z" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The z coordinate.
@@ -77,21 +77,21 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- Euler angles in degrees -->
     <xs:complexType name="eulerAnglesType">
-        <xs:attribute name="pitch" type="xs:decimal" use="required">
+        <xs:attribute name="pitch" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The pitch in euler angles, in degrees.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="yaw" type="xs:decimal" use="required">
+        <xs:attribute name="yaw" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The yaw in euler angles, in degrees.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="roll" type="xs:decimal" use="required">
+        <xs:attribute name="roll" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The roll in euler angles, in degrees.
@@ -102,28 +102,28 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A quaternion -->
     <xs:complexType name="quaternionType">
-        <xs:attribute name="x" type="xs:decimal" use="required">
+        <xs:attribute name="x" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The x of the quaternion.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="y" type="xs:decimal" use="required">
+        <xs:attribute name="y" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The y of the quaternion.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="z" type="xs:decimal" use="required">
+        <xs:attribute name="z" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The z of the quaternion.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="w" type="xs:decimal" use="required">
+        <xs:attribute name="w" type="xs:float" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The w of the quaternion.
@@ -176,21 +176,21 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- a scale on the xyz axis -->
     <xs:attributeGroup name="xyzScale">
-        <xs:attribute name="xScale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="xScale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The scale on the X axis, the default is 1.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="yScale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="yScale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The scale on the Y axis, the default is 1.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="zScale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="zScale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The scale on the Z axis, the default is 1.
@@ -201,14 +201,14 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- a scale only on the radius and height of the shape -->
     <xs:attributeGroup name="limitedScale">
-        <xs:attribute name="radiusScale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="radiusScale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The scale on the radius of the shape, the default is 1.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="heightScale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="heightScale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The scale on the height of the shape, the default is 1.
@@ -219,7 +219,7 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- a uniform scale -->
     <xs:attributeGroup name="uniformScale">
-        <xs:attribute name="scale" type="positiveDecimalType" default="1" use="optional">
+        <xs:attribute name="scale" type="positiveFloatType" default="1" use="optional">
             <xs:annotation>
                 <xs:documentation>
                     The uniform scale on all axis, the default is 1.
@@ -269,21 +269,21 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A box shape -->
     <xs:complexType name="boxType">
-        <xs:attribute name="halfWidth" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfWidth" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The half width (half extent in the x axis) of the box, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="halfHeight" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfHeight" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The half height (half extent in the y axis) of the box, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="halfDepth" type="positiveDecimalType" use="required">
+        <xs:attribute name="halfDepth" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The half depth (half extent in the z axis) of the box, not negative.
@@ -295,14 +295,14 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A conical shape (cylinder, cone, capsule) -->
     <xs:complexType name="conicalType">
-        <xs:attribute name="radius" type="positiveDecimalType" use="required">
+        <xs:attribute name="radius" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The radius of the shape, not negative.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="height" type="positiveDecimalType" use="required">
+        <xs:attribute name="height" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The height of the shape, not negative.
@@ -338,7 +338,7 @@ For more information, please refer to <https://unlicense.org>
     
     <!-- A sphere shape -->
     <xs:complexType name="sphereType">
-        <xs:attribute name="radius" type="positiveDecimalType" use="required">
+        <xs:attribute name="radius" type="positiveFloatType" use="required">
             <xs:annotation>
                 <xs:documentation>
                     The radius of the sphere, not negative.
