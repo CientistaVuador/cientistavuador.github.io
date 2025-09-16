@@ -1,0 +1,61 @@
+[[id]] 6
+[[languages]] pt-br
+
+[[title]] Arquivo: O Tal Golpe no r/farialimabets e a tentativa no r/brasilivre
+[description]
+Para evitar uma possível tentativa de censura por parte do reddit, algumas prints dos acontecimentos
+do tal golpe no r/farialimabets e a da tentativa de obter mod no r/brasilivre serão guardadas aqui.
+[;<;>]
+[[date]] 2025/09/15 22:17
+
+[[section]] Introdução
+
+[text]
+O objetivo deste artigo é apenas arquivar e documentar acontecimentos e não incentivar qualquer
+tipo de perseguição ou ataque contra qualquer um dos envolvidos, nenhuma opinião pessoal minha
+será dada neste artigo, todas as informações aqui são públicas, as versões arquivadas foram
+retiradas do [[[https://arctic-shift.photon-reddit.com/search/:::arctic_shift]]].
+[;<;>]
+
+[[section]] O Tal Golpe No r/farialimabets
+
+[[text]] No dia 8 de setembro de 2025, o usuário u/Another_idiot7 fez o seguinte post:
+[[image]] /resources/6/arquivo_golpe_no_sub.png
+
+[[text]] O Post foi então removido pela moderação do r/farialimabets:
+[[image]] /resources/6/golpe_no_sub_removido.png
+
+[[text]] Uma razão foi dada pelo u/Knuckledust:
+[[image]] /resources/6/golpe_no_sub_removido_motivo.png
+
+[[section]] Resposta do Knuckledust
+
+[[text]] No mesmo dia um post de resposta foi feito por u/Knuckledust:
+[[image]] /resources/6/print_sobre_o_golpe_no_sub.png
+[[text]] Essa é a versão arquivada:
+[[image]] /resources/6/arquivo_sobre_o_golpe_no_sub.png
+
+[[section]] redditrequest: r/farialimabets
+
+[text]
+No dia 30 de agosto de 2025, o usuário u/Knuckledust fez um post no
+redditrequest pedindo top mod no r/farialimabets:
+[;<;>]
+[[image]] /resources/6/print_redditrequest_farialimabets.png
+
+[[text]] O post original foi apagado mas uma versão arquivada está disponível:
+[[image]] /resources/6/arquivo_redditrequest_farialimabets.png
+
+[[text]] Depois de um tempo o título foi trocado para "[ Conteúdo removido pela moderação ]":
+[[image]] /resources/6/print_redditrequest_farialimabets_depois.png
+
+[[section]] redditrequest: r/brasilivre
+
+[text]
+No dia 15 de setembro de 2025, o usuário u/Knuckledust fez outro post no redditrequest
+pedindo mod no r/brasilivre:
+[;<;>]
+[[image]] /resources/6/print_redditrequest_brasilivre.png
+
+[[text]] A seguinte justificativa foi dada:
+[[image]] /resources/6/print_redditrequest_brasilivre_motivo.png
