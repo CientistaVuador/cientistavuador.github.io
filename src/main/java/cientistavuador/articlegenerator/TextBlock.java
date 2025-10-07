@@ -321,6 +321,7 @@ public class TextBlock {
 
     private String titleFormatted = null;
     private Integer integerFormatted = null;
+    private Boolean booleanFormatted = null;
     private String paragraphFormatted = null;
     private String codeFormatted = null;
     private String[] listFormatted = null;
@@ -383,6 +384,13 @@ public class TextBlock {
             }
         }
         return this.integerFormatted;
+    }
+    
+    public boolean getBooleanFormatted() {
+        if (this.booleanFormatted == null) {
+            this.booleanFormatted = Boolean.valueOf(getTitleFormatted());
+        }
+        return this.booleanFormatted;
     }
 
     public String getParagraphFormatted() {

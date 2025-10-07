@@ -27,7 +27,6 @@
 package cientistavuador.articlegenerator;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -114,7 +113,9 @@ public class Main {
                 Files.writeString(htmlFile, c.toHTML(language), StandardCharsets.UTF_8);
                 System.out.println("Written " + c.getField(Localization.TITLE, language) + ", ID: " + c.getId() + ", Language: " + language);
                 
-                generatedURLs.add(htmlFile.toString());
+                if (!c.isHidden()) {
+                    generatedURLs.add(htmlFile.toString());
+                }
             }
         }
 

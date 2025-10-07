@@ -56,6 +56,7 @@ public class Article {
     private final List<TextBlock> bodyBlocks;
 
     private final int id;
+    private final boolean hidden;
     private final ISOLanguage[] languages;
     private final Set<ISOLanguage> languagesSet = new HashSet<>();
     private final Map<String, String> fields = new HashMap<>();
@@ -67,6 +68,7 @@ public class Article {
         }
 
         int articleId = -1;
+        boolean hiddenArticle = false;
         ISOLanguage[] langsArray = null;
 
         int headLength = -1;
@@ -74,12 +76,12 @@ public class Article {
         for (int i = 0; i < blocks.size(); i++) {
             TextBlock block = blocks.get(i);
             switch (block.getName()) {
-                case "id", "languages", "license", "title", "description", "date", "footer-return", "footer-notice" -> {
+                case "id", "languages", "license", "title", "description", "date", "footer-return", "footer-notice", "hidden" -> {
                     if (headLength != -1) {
                         throw new IllegalArgumentException("Invalid head block at line " + block.getLine());
                     }
                     switch (block.getName()) {
-                        case "id", "languages" -> {
+                        case "id", "languages", "hidden" -> {
                             if (block.hasAttribute()) {
                                 throw new IllegalArgumentException(block.getName() + " block must not contain a attribute at line " + block.getLine());
                             }
@@ -108,6 +110,9 @@ public class Article {
                                 throw new IllegalArgumentException("Duplicated languages at line " + block.getLine());
                             }
                             langsArray = articleLanguages;
+                        }
+                        case "hidden" -> {
+                            hiddenArticle = block.getBooleanFormatted();
                         }
                         default -> {
                             String key = block.getName() + "." + block.getAttributeLanguage();
@@ -146,17 +151,22 @@ public class Article {
         this.headBlocks = Collections.unmodifiableList(blocks.subList(0, headLength));
         this.bodyBlocks = Collections.unmodifiableList(blocks.subList(headLength, blocks.size()));
         this.id = articleId;
+        this.hidden = hiddenArticle;
 
         if (articleId == -1) {
             throw new IllegalArgumentException("id block not found.");
         }
-
+        
         if (this.languagesSet.isEmpty()) {
             throw new IllegalArgumentException("languages block not found.");
         }
-
+        
         this.languages = langsArray;
-
+        
+        if (this.hidden && this.id == 0) {
+            throw new IllegalArgumentException("article id 0 cannot be hidden.");
+        }
+        
         Map<ISOLanguage, StringBuilder> keywords = new HashMap<>();
         for (ISOLanguage e : this.languagesSet) {
             keywords.put(e, new StringBuilder());
@@ -191,7 +201,11 @@ public class Article {
     public int getId() {
         return id;
     }
-
+    
+    public boolean isHidden() {
+        return hidden;
+    }
+    
     public int getNumberOfLanguages() {
         return this.languages.length;
     }

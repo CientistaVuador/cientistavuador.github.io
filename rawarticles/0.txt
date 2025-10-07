@@ -12,9 +12,9 @@
 [[section<pt-br>]] Sobre Mim
 
 [text<en-us>]
-Hi, my name is Mateus Geraldini, brazilian, 21 years old, born in 2003 and
-I've been learning and programming in java since I was 12, I also
-know the basics of other languages such as Pascal, C, Javascript and Lua.
+Hi, my name is Mateus Geraldini and I've been learning and programming
+in java since I was 12, I also know the basics of other languages
+such as Pascal, C, Javascript and Lua.
 [;<;>]
 
 [text<en-us>]
@@ -24,9 +24,9 @@ cryptography and web development.
 [;<;>]
 
 [text<pt-br>]
-Oi, meu nome é Mateus Geraldini, brasileiro, 21 anos, nascido em 2003 e
-eu estive aprendendo e programando em java desde que tinha 12 anos, eu também
-sei os básicos de outras linguagens como Pascal, C, Javascript e Lua.
+Oi, meu nome é Mateus Geraldini eu estive aprendendo e programando em
+java desde que tinha 12 anos, eu também sei os básicos de outras
+linguagens como Pascal, C, Javascript e Lua.
 [;<;>]
 
 [text<pt-br>]

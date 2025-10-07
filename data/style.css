@@ -28,13 +28,15 @@ For more information, please refer to <https://unlicense.org>
     Created on : 26 de ago. de 2024, 20:15:55
     Author     : Cien
 */
-:root {
-    color-scheme: dark;
+a:link {
+    color: #005070;
+}
+a:visited {
+    color: #004F6B;
 }
 .body {
-    background-color: #303030;
-    color: #EEEEEE;
-    font-family: sans-serif;
+    color: #000000;
+    font-family: serif;
     line-height: 1.70em;
 }
 .body h1 {
@@ -50,7 +52,7 @@ For more information, please refer to <https://unlicense.org>
     font-size: 90%;
 }
 .article, .articles {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
 }
 .articles ol li h2, .articles ol li h3, .articles ol li p  {
@@ -105,12 +107,6 @@ For more information, please refer to <https://unlicense.org>
     padding: 0;
     margin: 0;
 }
-.indices a:link {
-    color: #DDDDDD;
-}
-.indices a:visited {
-    color: #DDDDDD;
-}
 .text {
     margin: 0;
     margin-top: 15px;
@@ -128,21 +124,21 @@ For more information, please refer to <https://unlicense.org>
     border-color: rgb(17, 160, 60);
 }
 .fine {
-    background-color: #42bc52;
-    border-color: rgb(17, 160, 60);
+    background-color: #81E534;
+    border-color: #5CA826;
 }
 .warning {
-    background-color: #ecab32;
-    border-color: #d39014;
+    background-color: #FF851C;
+    border-color: #D87B17;
 }
 .severe {
     color: #FFFFFF;
-    background-color: #9B1212;
+    background-color: #C41717;
     border-color: #6E0C0C;
 }
 .code {
     color: #eeeeee;
-    background-color: #272822;
+    background-color: #303030;
     overflow: auto;
     font-family: monospace;
     line-height: 1.25em;
@@ -195,30 +191,25 @@ For more information, please refer to <https://unlicense.org>
     overflow-x: auto;
 }
 .table th, .table td {
+    color: #000000;
     border: 1px;
-    border-color: #606060;
+    border-color: #404040;
     border-style: solid;
     padding: 4px;
     text-align: center;
 }
 .table th {
-    background-color: #d0d0d0;
-    color: #202020;
+    background-color: #FF8A2B;
 }
 .table tr:nth-child(odd) {
-    background-color: #404040;
+    background-color: #E0E0E0;
 }
 .footer {
+    color: #993600;
     font-family: monospace;
     text-align: center;
     margin-top: 30px;
     margin-bottom: 30px;
-}
-.footer a:link {
-    color: #DDDDDD;
-}
-.footer a:visited {
-    color: #DDDDDD;
 }
 .articles ol {
     list-style-type: none;
@@ -235,11 +226,4 @@ For more information, please refer to <https://unlicense.org>
     padding: 10px;
     padding-top: 3px;
     padding-bottom: 3px;
-    background-color: #272822;
-}
-.articles a:link {
-    color: #DDDDDD;
-}
-.articles a:visited {
-    color: #DDDDDD;
 }

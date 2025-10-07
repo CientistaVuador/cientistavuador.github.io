@@ -51,11 +51,14 @@ public class ArticlesPage {
     private final ISOLanguage[] languages;
     private final Set<ISOLanguage> languagesSet = new HashSet<>();
     private final Map<ISOLanguage, String> keywords;
-    
+
     public ArticlesPage(List<Article> articles) {
         Objects.requireNonNull(articles, "Articles is null.");
-        
+
         for (Article article : articles) {
+            if (article.isHidden()) {
+                continue;
+            }
             for (int i = 0; i < article.getNumberOfLanguages(); i++) {
                 this.languagesSet.add(article.getLanguage(i));
             }
@@ -70,7 +73,7 @@ public class ArticlesPage {
                     (o2.equals(defaultLanguage) ? 0 : 1)
             );
         });
-        
+
         Article articleZero = null;
         for (Article a : articles) {
             if (a.getId() == 0) {
@@ -87,57 +90,60 @@ public class ArticlesPage {
         if (articleZero != null) {
             sortedList.addFirst(articleZero);
         }
-        
+
         this.articles = Collections.unmodifiableList(sortedList);
-        
+
         Map<ISOLanguage, StringBuilder> keywordBuilder = new HashMap<>();
-        for (ISOLanguage lang:this.languages) {
+        for (ISOLanguage lang : this.languages) {
             keywordBuilder.put(lang, new StringBuilder());
         }
-        for (ISOLanguage lang:this.languages) {
+        for (ISOLanguage lang : this.languages) {
             StringBuilder b = keywordBuilder.get(lang);
-            for (Article article:this.articles) {
+            for (Article article : this.articles) {
+                if (article.isHidden()) {
+                    continue;
+                }
                 b.append(" ").append(article.getField(Article.KEYWORDS, article.findBestAvailableLanguage(lang)));
             }
         }
         Map<ISOLanguage, String> resultKeywords = new HashMap<>();
-        for (Entry<ISOLanguage, StringBuilder> entry:keywordBuilder.entrySet()) {
+        for (Entry<ISOLanguage, StringBuilder> entry : keywordBuilder.entrySet()) {
             resultKeywords.put(entry.getKey(), KeywordMapper.getKeywords(entry.getValue().toString()));
         }
         this.keywords = resultKeywords;
     }
-    
+
     public List<Article> getArticles() {
         return articles;
     }
-    
+
     public int getNumberOfLanguages() {
         return this.languages.length;
     }
-    
+
     public ISOLanguage getLanguage(int index) {
         return this.languages[index];
     }
-    
+
     public boolean containsLanguage(ISOLanguage language) {
         return this.languagesSet.contains(language);
     }
-    
+
     public String getKeywords(ISOLanguage language) {
         String keyword = this.keywords.get(language);
         if (keyword == null) {
-            throw new IllegalArgumentException("Invalid language "+language);
+            throw new IllegalArgumentException("Invalid language " + language);
         }
         return keyword;
     }
-    
+
     private String writeHead(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
 
         String headTitle = Localization.get().localize(Localization.ARTICLES, language);
         String headKeywords = getKeywords(language);
         String headDescription = headTitle;
-        
+
         String icon = FontFormatting.escape(Localization.get().localize(Localization.ICON, language));
         String stylesheet = FontFormatting.escape(Localization.get().localize(Localization.STYLESHEET, language));
 
@@ -193,14 +199,14 @@ public class ArticlesPage {
 
     private String writeArticle(ISOLanguage language, Article article) {
         StringBuilder b = new StringBuilder();
-        
+
         ISOLanguage articleLanguage = article.findBestAvailableLanguage(language);
 
         String articleLink = URLEncoder.encode(article.getId() + "_" + articleLanguage, StandardCharsets.UTF_8) + ".html";
         String articleTitle = FontFormatting.escapeAndFormat(article.getField(Localization.TITLE, articleLanguage));
         String articleDescription = FontFormatting.escapeAndFormat(article.getField(Localization.DESCRIPTION, articleLanguage));
         String articleDate = FontFormatting.escapeAndFormat(article.getField(Localization.DATE, articleLanguage));
-        
+
         b.append("<li>\n");
         b.append(INDENT.repeat(1)).append("<section>\n");
         b.append(INDENT.repeat(2)).append("<h2>").append(String.format("%04d", article.getId())).append("</h2>\n");
@@ -218,6 +224,9 @@ public class ArticlesPage {
 
         b.append("<ol>\n");
         for (Article a : this.articles) {
+            if (a.isHidden()) {
+                continue;
+            }
             b.append(writeArticle(language, a).indent(4));
         }
         b.append("</ol>");
@@ -269,17 +278,20 @@ public class ArticlesPage {
 
     private String writeBody(ISOLanguage language) {
         StringBuilder b = new StringBuilder();
-        
+
         String licenseText = FontFormatting.escapeComment(TextFormatting.getCodeFormatted(Localization.get().localize(Localization.LICENSE, language)));
-        
+
         b.append("<!--\n");
         b.append("\n");
         b.append(licenseText).append("\n");
         b.append("\n");
         b.append(language).append("\n");
         for (Article a : this.articles) {
+            if (a.isHidden()) {
+                continue;
+            }
             ISOLanguage articleLanguage = a.findBestAvailableLanguage(language);
-            
+
             String titleText = FontFormatting.escapeComment(a.getField(Localization.TITLE, articleLanguage));
             String descriptionText = FontFormatting.escapeComment(a.getField(Localization.DESCRIPTION, articleLanguage));
             int id = a.getId();
@@ -302,11 +314,11 @@ public class ArticlesPage {
 
     public String toHTML(ISOLanguage language) {
         if (!containsLanguage(language)) {
-            throw new IllegalArgumentException("Invalid language: "+language);
+            throw new IllegalArgumentException("Invalid language: " + language);
         }
-        
+
         StringBuilder b = new StringBuilder();
-        
+
         b.append("<!DOCTYPE html>\n");
         b.append("<html lang=\"").append(language).append("\">\n");
         b.append(writeHead(language).indent(4));

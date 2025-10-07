@@ -1,4 +1,5 @@
 [[id]] 6
+[[hidden]] true
 [[languages]] pt-br
 
 [[title]] Arquivo: O Tal Golpe no r/farialimabets e a tentativa no r/brasilivre
