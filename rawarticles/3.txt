@@ -5,10 +5,24 @@
 [[description<en-us>]] Follow up of the Roughness Article, now with Metallic Textures.
 [[title<pt-br>]] Blinn Phong com Textures de Metallic
 [[description<pt-br>]] Seguimento do Artigo de Roughness, agora com Texturas Metallic.
-[[date]] 2024/10/04 01:24
+
+[[date<en-us>]] 2024/10/04 01:24, Updated at 2026/07/15 20:53
+[[date<pt-br>]] 2024/10/04 01:24, Atualizado em 2026/07/15 20:53
 
 [[section<en-us>]] Introduction
 [[section<pt-br>]] Introdução
+
+[warning<pt-br>]
+Esse artigo é indicado apenas para pessoas que querem renderizar materiais PBR com
+uma precisão razoável sem ter todo o trabalho de implementar uma pipeline de PBR completa,
+não recomendo o seu uso em grandes projetos.
+[;<;>]
+
+[warning<en-us>]
+This article is indicated only for people who want to display PBR materials more
+or less accurately without going through all the effort to implement a true PBR pipeline, 
+I do not recommend it's use in large projects.
+[;<;>]
 
 [text<en-us>]
 This is a follow up of [[[/articles/1_en-us.html:::Blinn Phong with Roughness Textures]]]
